@@ -5,10 +5,10 @@ from django.db.models import Q
 
 class CustomLoginForm(AuthenticationForm):
     username = forms.CharField(
-        label="E-post / Användarnamn",
+        label="E-postadress",
         widget=forms.TextInput(attrs={
             'class': 'form-control',
-            'placeholder': 'namn@exempel.se eller användarnamn'
+            'placeholder': 'förnamn@efternamn.se'
         })
     )
     password = forms.CharField(

@@ -127,6 +127,19 @@ h1, h2, h3, h4, h5, h6, .brand-title {
     box-shadow: 0 0 15px var(--accent-emerald-glow);
 }
 
+.header-badge.interactive-badge {
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    text-decoration: none;
+}
+
+.header-badge.interactive-badge:hover {
+    background: rgba(16, 185, 129, 0.25);
+    border-color: rgba(16, 185, 129, 0.7);
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+    transform: translateY(-1px);
+}
+
 /* ==========================================
    CARDS & CONTAINERS
    ========================================== */

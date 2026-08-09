@@ -1,7 +1,7 @@
 from django.urls import path
 from django.contrib.auth.views import LogoutView
 from .views import (
-    CustomLoginView, dashboard_view, predictions_view, upload_avatar_view,
+    CustomLoginView, update_account_settings_view, dashboard_view, predictions_view, upload_avatar_view,
     hub_view, herrklubb_view, vote_bucket_item, toggle_bucket_dream,
     add_bucket_item, complete_bucket_item, save_user_bucket_votes,
     calendar_view, add_unavailability_view, delete_unavailability_view,
@@ -10,6 +10,7 @@ from .views import (
 
 urlpatterns = [
     path('', CustomLoginView.as_view(), name='login'),
+    path('account/settings/', update_account_settings_view, name='update_account_settings'),
     path('hub/', hub_view, name='hub'),
     path('herrklubb/', herrklubb_view, name='herrklubb'),
     path('herrklubb/save/', save_user_bucket_votes, name='herrklubb_save_votes'),

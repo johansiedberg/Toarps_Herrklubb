@@ -1,6 +1,7 @@
 import datetime
 import calendar
 import json
+import re
 from functools import wraps
 from django.utils import timezone
 from django.contrib.auth.views import LoginView
@@ -33,6 +34,11 @@ def herrklubb_member_required(view_func):
     return _wrapped_view
 
 
+from django.contrib.auth import update_session_auth_hash, get_user_model
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
+from django.db.models import Q
+
 class CustomLoginView(LoginView):
     template_name = 'tournament/login.html'
     form_class = CustomLoginForm
@@ -45,6 +51,54 @@ class CustomLoginView(LoginView):
             if profile.is_herrklubb_member or user.is_superuser:
                 return '/hub/'
         return '/predictions/'
+
+
+@login_required
+@require_POST
+def update_account_settings_view(request):
+    try:
+        data = json.loads(request.body)
+    except (json.JSONDecodeError, TypeError):
+        data = request.POST
+
+    email = data.get('email', '').strip()
+    password = data.get('password', '').strip()
+
+    if not email:
+        return JsonResponse({'success': False, 'error': 'E-postadress kan inte vara tom.'}, status=400)
+
+    try:
+        validate_email(email)
+    except ValidationError:
+        return JsonResponse({'success': False, 'error': 'Ange en giltig e-postadress.'}, status=400)
+
+    User = get_user_model()
+    existing_user = User.objects.filter(Q(email__iexact=email) | Q(username__iexact=email)).exclude(pk=request.user.pk).first()
+    if existing_user:
+        return JsonResponse({'success': False, 'error': 'E-postadressen används redan av en annan användare.'}, status=400)
+
+    if password:
+        if len(password) < 5:
+            return JsonResponse({'success': False, 'error': 'Lösenordet måste vara minst 5 tecken långt.'}, status=400)
+        if not re.search(r'\d', password):
+            return JsonResponse({'success': False, 'error': 'Lösenordet måste innehålla minst en siffra.'}, status=400)
+
+    user = request.user
+    user.email = email
+    user.username = email
+    if password:
+        user.set_password(password)
+    user.save()
+
+    if password:
+        update_session_auth_hash(request, user)
+
+    return JsonResponse({
+        'success': True,
+        'message': 'Dina kontoinställningar har sparats!',
+        'email': user.email,
+        'username': user.username
+    })
 
 
 def generate_ai_match_analysis(user_pred, match, all_preds_list, home_count, draw_count, away_count, total_preds):
