@@ -3,16 +3,16 @@
   "model": "auth.user",
   "pk": 1,
   "fields": {
-    "password": "pbkdf2_sha256$1500000$zrKKhS1Z8xrJoqFREND0ZL$E/v1dRJglycPPXuX/hiFzIuZg+jte0cOcDnwcrPtVtE=",
-    "last_login": null,
+    "password": "pbkdf2_sha256$1500000$mTTckaOck5KKQN3zrU8oXQ$YAk92JOPsmJIZOD0M8AnnbYOck7Y4S9C+y1h+ggmVwY=",
+    "last_login": "2026-08-15T08:55:09.633Z",
     "is_superuser": false,
-    "username": "johan.siedberg",
+    "username": "johan@siedberg.se",
     "first_name": "Johan",
     "last_name": "Siedberg",
-    "email": "johan.siedberg@toarpsherrklubb.se",
+    "email": "johan@siedberg.se",
     "is_staff": false,
     "is_active": true,
-    "date_joined": "2026-08-08T18:59:21.217Z",
+    "date_joined": "2026-08-14T20:33:09.086Z",
     "groups": [],
     "user_permissions": []
   }
@@ -21,16 +21,16 @@
   "model": "auth.user",
   "pk": 2,
   "fields": {
-    "password": "pbkdf2_sha256$1500000$YH3QiODOcl3hIt3PFmyI4A$9Rh5L4cTNBnREJBUK5+lcMjWdWUju0nSex+a2VaMSx4=",
+    "password": "pbkdf2_sha256$1500000$DQTU7RiQadfNBXxxwafQLB$i2903wyCfJnwxpLulAIlbCyXubHhX7QwXofhNcv0Rl8=",
     "last_login": null,
     "is_superuser": false,
-    "username": "mikael.dahl",
+    "username": "mikael@dahl.se",
     "first_name": "Mikael",
     "last_name": "Dahl",
-    "email": "mikael.dahl@toarpsherrklubb.se",
+    "email": "mikael@dahl.se",
     "is_staff": false,
     "is_active": true,
-    "date_joined": "2026-08-08T18:59:23.581Z",
+    "date_joined": "2026-08-14T20:33:22.237Z",
     "groups": [],
     "user_permissions": []
   }
@@ -39,16 +39,16 @@
   "model": "auth.user",
   "pk": 3,
   "fields": {
-    "password": "pbkdf2_sha256$1500000$iEGTUFiKetti32HiyMzlyC$5rSA7sNqJZlIyMMM/WyevwK0cCr53zDWx1H62/B2BOs=",
+    "password": "pbkdf2_sha256$1500000$qS7umrADQVS4fbPaUaX0FC$ZLcLxWahMtzlLr4I/K4rXo6en/GkFfSm8YbTZHZwSeA=",
     "last_login": null,
     "is_superuser": false,
-    "username": "andreas.larsson",
+    "username": "andreas@larsson.se",
     "first_name": "Andreas",
     "last_name": "Larsson",
-    "email": "andreas.larsson@toarpsherrklubb.se",
+    "email": "andreas@larsson.se",
     "is_staff": false,
     "is_active": true,
-    "date_joined": "2026-08-08T18:59:26.132Z",
+    "date_joined": "2026-08-14T20:33:34.815Z",
     "groups": [],
     "user_permissions": []
   }
@@ -57,16 +57,16 @@
   "model": "auth.user",
   "pk": 4,
   "fields": {
-    "password": "pbkdf2_sha256$1500000$bLkHbmYYNjXWpDk1s3yMX6$XCcKAz64ukbHXxQCsC6CI2lU4sSr6Fu7lAp7+Sm3pNc=",
+    "password": "pbkdf2_sha256$1500000$tgq7RBoJTzQTqfu9BRfV91$wI01M5xfi/Oc6w7s4/HucZEAJLbg4JlFzcCQsPb93ho=",
     "last_login": null,
     "is_superuser": false,
-    "username": "johan.svensson",
+    "username": "johan@svensson.se",
     "first_name": "Johan",
     "last_name": "Svensson",
-    "email": "johan.svensson@toarpsherrklubb.se",
+    "email": "johan@svensson.se",
     "is_staff": false,
     "is_active": true,
-    "date_joined": "2026-08-08T18:59:28.500Z",
+    "date_joined": "2026-08-14T20:33:47.886Z",
     "groups": [],
     "user_permissions": []
   }
@@ -75,16 +75,16 @@
   "model": "auth.user",
   "pk": 5,
   "fields": {
-    "password": "pbkdf2_sha256$1500000$NpnfaKw5CRdJCeamnip5Eh$DrKg2O/etkW8oZ07x42eZE5IJSohIINgqodDWzvONP8=",
+    "password": "pbkdf2_sha256$1500000$aPzgNPRXGJjKvq2zO3dU1G$MXvqNeO7dtGgAnMl4wGalpgdmFmu9w2ZJZbIK7CtMvE=",
     "last_login": null,
     "is_superuser": false,
-    "username": "johan.meldo",
+    "username": "johan@meldo.se",
     "first_name": "Johan",
     "last_name": "Meldo",
-    "email": "johan.meldo@toarpsherrklubb.se",
+    "email": "johan@meldo.se",
     "is_staff": false,
     "is_active": true,
-    "date_joined": "2026-08-08T18:59:30.694Z",
+    "date_joined": "2026-08-14T20:34:01.864Z",
     "groups": [],
     "user_permissions": []
   }
@@ -93,16 +93,16 @@
   "model": "auth.user",
   "pk": 6,
   "fields": {
-    "password": "pbkdf2_sha256$1500000$pEnbv3VseVrKFNDzCnRRqP$AJqugkFLDxWFvaSKVFeacrIjew2pVw5/ZcCIia7b23g=",
+    "password": "pbkdf2_sha256$1500000$B6t9ZBfmQklVY6qsSrQJby$fpWYra4wmYGFfyn/dXS/ipI2GqsRdG4E8xJ3s4OCo7c=",
     "last_login": null,
     "is_superuser": false,
-    "username": "erik.svensson",
+    "username": "erik@svensson.se",
     "first_name": "Erik",
     "last_name": "Svensson",
-    "email": "erik.svensson@toarpsherrklubb.se",
+    "email": "erik@svensson.se",
     "is_staff": false,
     "is_active": true,
-    "date_joined": "2026-08-08T18:59:32.485Z",
+    "date_joined": "2026-08-14T20:34:16.223Z",
     "groups": [],
     "user_permissions": []
   }
@@ -111,16 +111,16 @@
   "model": "auth.user",
   "pk": 7,
   "fields": {
-    "password": "pbkdf2_sha256$1500000$P5nXS9ucKbEjBltWEkxlmn$ypal09KCA4OlrYrXD/vbMMyivNFzqelREeG4qllqneM=",
+    "password": "pbkdf2_sha256$1500000$kb2vDB2Xdyczz0U8zRP0IF$F7Dr1pg3IWQWBoB41+cIlGNz5GsR/sqBKJr5VSGP87g=",
     "last_login": null,
     "is_superuser": false,
-    "username": "christoffer.ericsson",
+    "username": "christoffer@ericsson.se",
     "first_name": "Christoffer",
     "last_name": "Ericsson",
-    "email": "christoffer.ericsson@toarpsherrklubb.se",
+    "email": "christoffer@ericsson.se",
     "is_staff": false,
     "is_active": true,
-    "date_joined": "2026-08-08T18:59:34.438Z",
+    "date_joined": "2026-08-14T20:34:27.506Z",
     "groups": [],
     "user_permissions": []
   }
@@ -129,16 +129,16 @@
   "model": "auth.user",
   "pk": 8,
   "fields": {
-    "password": "pbkdf2_sha256$1500000$HSt5b7QgJEQG9n5kIKn3x0$Au2Zv5g75+7xHlJ0PVGy/ISlZPGMaz5DNhIDrE/dqH4=",
+    "password": "pbkdf2_sha256$1500000$U84NTKUY49bQlLzixOIBkF$QRDGrK2BueAOHmyJyfwr+qpZdYTGPPy8hlZx64sC49s=",
     "last_login": null,
     "is_superuser": false,
-    "username": "martin.gustafsson",
+    "username": "martin@gustafsson.se",
     "first_name": "Martin",
     "last_name": "Gustafsson",
-    "email": "martin.gustafsson@toarpsherrklubb.se",
+    "email": "martin@gustafsson.se",
     "is_staff": false,
     "is_active": true,
-    "date_joined": "2026-08-08T18:59:36.247Z",
+    "date_joined": "2026-08-14T20:34:38.329Z",
     "groups": [],
     "user_permissions": []
   }
@@ -147,16 +147,16 @@
   "model": "auth.user",
   "pk": 9,
   "fields": {
-    "password": "pbkdf2_sha256$1500000$cYC6Cb93BdAcOrXQVtGO7C$fVlwHcFWOHV96m2v2ISKUyi8pESkUnecLwUd/+4INdg=",
+    "password": "pbkdf2_sha256$1500000$CLaJJvVyJ5EZos5joEaI3O$tIsIrOarPUze0EZfTRywi2/6xqRzeDsSAeM+EBIpAEA=",
     "last_login": null,
     "is_superuser": false,
-    "username": "tommy.lycen",
+    "username": "tommy@lycen.se",
     "first_name": "Tommy",
     "last_name": "Lycen",
-    "email": "tommy.lycen@toarpsherrklubb.se",
+    "email": "tommy@lycen.se",
     "is_staff": false,
     "is_active": true,
-    "date_joined": "2026-08-08T18:59:38.322Z",
+    "date_joined": "2026-08-14T20:34:49.040Z",
     "groups": [],
     "user_permissions": []
   }
@@ -165,16 +165,16 @@
   "model": "auth.user",
   "pk": 10,
   "fields": {
-    "password": "pbkdf2_sha256$1500000$CI5FQru9grm2kQlseO9spu$e1TyJR5pUuPbQlz78D2MA6bKTWksrnL9TvIn3FTdmyc=",
+    "password": "pbkdf2_sha256$1500000$IQxanGxChWti2FkgX14Oqs$0pIxAZWCeJNaU6SBSRqAAawZ9rfb7sno/aHiFJwHM74=",
     "last_login": null,
     "is_superuser": false,
-    "username": "tommy.kallberg",
+    "username": "tommy@kallberg.se",
     "first_name": "Tommy",
     "last_name": "Källberg",
-    "email": "tommy.kallberg@toarpsherrklubb.se",
+    "email": "tommy@kallberg.se",
     "is_staff": false,
     "is_active": true,
-    "date_joined": "2026-08-08T18:59:41.996Z",
+    "date_joined": "2026-08-14T20:34:59.874Z",
     "groups": [],
     "user_permissions": []
   }
@@ -183,498 +183,117 @@
   "model": "auth.user",
   "pk": 11,
   "fields": {
-    "password": "pbkdf2_sha256$1500000$Di82ai9if4f1Y5ev6xhKrV$f+ShO4tCMTXeuqzIDi6fCPZ3A6A7xJX614yufe1Oiqw=",
+    "password": "pbkdf2_sha256$1500000$kYIU27cNRyq7tLjhmmoOwL$6CPLDijsxgdrcPyLcc89Vfs4M3xmY+QlD6hLMfTksbw=",
     "last_login": null,
     "is_superuser": false,
-    "username": "martin.krantz",
+    "username": "martin@krantz.se",
     "first_name": "Martin",
     "last_name": "Krantz",
-    "email": "martin.krantz@toarpsherrklubb.se",
+    "email": "martin@krantz.se",
     "is_staff": false,
     "is_active": true,
-    "date_joined": "2026-08-08T18:59:43.718Z",
+    "date_joined": "2026-08-14T20:35:10.982Z",
     "groups": [],
     "user_permissions": []
   }
 },
 {
-  "model": "tournament.userprofile",
+  "model": "herrklubb.userprofile",
   "pk": 1,
   "fields": {
     "user": 1,
     "avatar": "",
-    "last_selected_tournament": null,
     "is_herrklubb_member": true
   }
 },
 {
-  "model": "tournament.userprofile",
+  "model": "herrklubb.userprofile",
   "pk": 2,
   "fields": {
     "user": 2,
     "avatar": "",
-    "last_selected_tournament": null,
     "is_herrklubb_member": true
   }
 },
 {
-  "model": "tournament.userprofile",
+  "model": "herrklubb.userprofile",
   "pk": 3,
   "fields": {
     "user": 3,
     "avatar": "",
-    "last_selected_tournament": null,
     "is_herrklubb_member": true
   }
 },
 {
-  "model": "tournament.userprofile",
+  "model": "herrklubb.userprofile",
   "pk": 4,
   "fields": {
     "user": 4,
     "avatar": "",
-    "last_selected_tournament": null,
     "is_herrklubb_member": true
   }
 },
 {
-  "model": "tournament.userprofile",
+  "model": "herrklubb.userprofile",
   "pk": 5,
   "fields": {
     "user": 5,
     "avatar": "",
-    "last_selected_tournament": null,
     "is_herrklubb_member": true
   }
 },
 {
-  "model": "tournament.userprofile",
+  "model": "herrklubb.userprofile",
   "pk": 6,
   "fields": {
     "user": 6,
     "avatar": "",
-    "last_selected_tournament": null,
     "is_herrklubb_member": true
   }
 },
 {
-  "model": "tournament.userprofile",
+  "model": "herrklubb.userprofile",
   "pk": 7,
   "fields": {
     "user": 7,
     "avatar": "",
-    "last_selected_tournament": null,
     "is_herrklubb_member": true
   }
 },
 {
-  "model": "tournament.userprofile",
+  "model": "herrklubb.userprofile",
   "pk": 8,
   "fields": {
     "user": 8,
     "avatar": "",
-    "last_selected_tournament": null,
     "is_herrklubb_member": true
   }
 },
 {
-  "model": "tournament.userprofile",
+  "model": "herrklubb.userprofile",
   "pk": 9,
   "fields": {
     "user": 9,
     "avatar": "",
-    "last_selected_tournament": null,
     "is_herrklubb_member": true
   }
 },
 {
-  "model": "tournament.userprofile",
+  "model": "herrklubb.userprofile",
   "pk": 10,
   "fields": {
     "user": 10,
     "avatar": "",
-    "last_selected_tournament": null,
     "is_herrklubb_member": true
   }
 },
 {
-  "model": "tournament.userprofile",
+  "model": "herrklubb.userprofile",
   "pk": 11,
   "fields": {
     "user": 11,
     "avatar": "",
-    "last_selected_tournament": null,
     "is_herrklubb_member": true
-  }
-},
-{
-  "model": "tournament.bucketcategory",
-  "pk": 1,
-  "fields": {
-    "name": "Sport & Stora Evenemang",
-    "icon": "⚽",
-    "order": 1
-  }
-},
-{
-  "model": "tournament.bucketcategory",
-  "pk": 2,
-  "fields": {
-    "name": "Äventyr, Natur & Vinter",
-    "icon": "🏔️",
-    "order": 2
-  }
-},
-{
-  "model": "tournament.bucketcategory",
-  "pk": 3,
-  "fields": {
-    "name": "Temaresor: Mat, Dryck & Kultur",
-    "icon": "🍺",
-    "order": 3
-  }
-},
-{
-  "model": "tournament.bucketcategory",
-  "pk": 4,
-  "fields": {
-    "name": "Storstadsresor & Weekend",
-    "icon": "🏙️",
-    "order": 4
-  }
-},
-{
-  "model": "tournament.bucketcategory",
-  "pk": 5,
-  "fields": {
-    "name": "Gemenskap & Snabba Event",
-    "icon": "🎉",
-    "order": 5
-  }
-},
-{
-  "model": "tournament.bucketitem",
-  "pk": 1,
-  "fields": {
-    "title": "Fotbollsresa: Serie A (Italien)",
-    "category": 1,
-    "description": "T.ex. Milano-derby eller Rom-resa för klassisk italiensk läktarkultur.",
-    "created_by": null,
-    "is_completed": false,
-    "completed_date": null,
-    "created_at": "2026-08-08T18:59:03.482Z"
-  }
-},
-{
-  "model": "tournament.bucketitem",
-  "pk": 2,
-  "fields": {
-    "title": "Fotbollsresa: Premier League (England)",
-    "category": 1,
-    "description": "London eller Manchester – äkta brittisk fotbollspub och matchdag.",
-    "created_by": null,
-    "is_completed": false,
-    "completed_date": null,
-    "created_at": "2026-08-08T18:59:03.488Z"
-  }
-},
-{
-  "model": "tournament.bucketitem",
-  "pk": 3,
-  "fields": {
-    "title": "Fotbollsresa: Bundesliga (Tyskland)",
-    "category": 1,
-    "description": "Dortmund / Gelbe Wand eller München med episkt arrangemang.",
-    "created_by": null,
-    "is_completed": false,
-    "completed_date": null,
-    "created_at": "2026-08-08T18:59:03.493Z"
-  }
-},
-{
-  "model": "tournament.bucketitem",
-  "pk": 4,
-  "fields": {
-    "title": "Fotbollsresa: Old Firm (Skottland)",
-    "category": 1,
-    "description": "Celtic vs Rangers i Glasgow – ett av världens mäktigaste derbyn.",
-    "created_by": null,
-    "is_completed": false,
-    "completed_date": null,
-    "created_at": "2026-08-08T18:59:03.497Z"
-  }
-},
-{
-  "model": "tournament.bucketitem",
-  "pk": 5,
-  "fields": {
-    "title": "Fotbollsresa: EM eller VM",
-    "category": 1,
-    "description": "Landslagsturnering live från läktaren.",
-    "created_by": null,
-    "is_completed": false,
-    "completed_date": null,
-    "created_at": "2026-08-08T18:59:03.502Z"
-  }
-},
-{
-  "model": "tournament.bucketitem",
-  "pk": 6,
-  "fields": {
-    "title": "Stockholmsderby",
-    "category": 1,
-    "description": "AIK, Hammarby eller Djurgården i ett kokande allsvenskt derby.",
-    "created_by": null,
-    "is_completed": false,
-    "completed_date": null,
-    "created_at": "2026-08-08T18:59:03.506Z"
-  }
-},
-{
-  "model": "tournament.bucketitem",
-  "pk": 7,
-  "fields": {
-    "title": "Formel 1-lopp",
-    "category": 1,
-    "description": "Live Grand Prix med motorljud och VIP-stämning.",
-    "created_by": null,
-    "is_completed": false,
-    "completed_date": null,
-    "created_at": "2026-08-08T18:59:03.511Z"
-  }
-},
-{
-  "model": "tournament.bucketitem",
-  "pk": 8,
-  "fields": {
-    "title": "NHL-match & Nordamerika",
-    "category": 1,
-    "description": "Ishockeyresa till USA/Kanada för NHL i världsklass.",
-    "created_by": null,
-    "is_completed": false,
-    "completed_date": null,
-    "created_at": "2026-08-08T18:59:03.514Z"
-  }
-},
-{
-  "model": "tournament.bucketitem",
-  "pk": 9,
-  "fields": {
-    "title": "Tennis Grand Slam & Event",
-    "category": 1,
-    "description": "Franska Öppna (Paris), Australian Open eller Tennisveckan i Båstad.",
-    "created_by": null,
-    "is_completed": false,
-    "completed_date": null,
-    "created_at": "2026-08-08T18:59:03.519Z"
-  }
-},
-{
-  "model": "tournament.bucketitem",
-  "pk": 10,
-  "fields": {
-    "title": "Övrig Elitsport",
-    "category": 1,
-    "description": "Hockey-VM eller Handboll i Kiel.",
-    "created_by": null,
-    "is_completed": false,
-    "completed_date": null,
-    "created_at": "2026-08-08T18:59:03.527Z"
-  }
-},
-{
-  "model": "tournament.bucketitem",
-  "pk": 11,
-  "fields": {
-    "title": "Norgeresa till Coffe",
-    "category": 2,
-    "description": "Vandring, fjäll & storslagna norska äventyr.",
-    "created_by": null,
-    "is_completed": false,
-    "completed_date": null,
-    "created_at": "2026-08-08T18:59:03.542Z"
-  }
-},
-{
-  "model": "tournament.bucketitem",
-  "pk": 12,
-  "fields": {
-    "title": "Island",
-    "category": 2,
-    "description": "Vulkaner, gejsrar, varma källor & naturupplevelser.",
-    "created_by": null,
-    "is_completed": false,
-    "completed_date": null,
-    "created_at": "2026-08-08T18:59:03.547Z"
-  }
-},
-{
-  "model": "tournament.bucketitem",
-  "pk": 13,
-  "fields": {
-    "title": "Bestiga Kebnekaise",
-    "category": 2,
-    "description": "Utmaning och toppbestigning på Sveriges högsta berg.",
-    "created_by": null,
-    "is_completed": false,
-    "completed_date": null,
-    "created_at": "2026-08-08T18:59:03.554Z"
-  }
-},
-{
-  "model": "tournament.bucketitem",
-  "pk": 14,
-  "fields": {
-    "title": "Svensk Hajk & Friluftsliv",
-    "category": 2,
-    "description": "Övernattning i vildmarken, fiske och lägereld.",
-    "created_by": null,
-    "is_completed": false,
-    "completed_date": null,
-    "created_at": "2026-08-08T18:59:03.558Z"
-  }
-},
-{
-  "model": "tournament.bucketitem",
-  "pk": 15,
-  "fields": {
-    "title": "Skidresa",
-    "category": 2,
-    "description": "Alperna eller klassiska fjällen för skidåkning & after-ski.",
-    "created_by": null,
-    "is_completed": false,
-    "completed_date": null,
-    "created_at": "2026-08-08T18:59:03.563Z"
-  }
-},
-{
-  "model": "tournament.bucketitem",
-  "pk": 16,
-  "fields": {
-    "title": "Oktoberfest i München",
-    "category": 3,
-    "description": "Lederhosen, ölsejdlar och stämning i bayerska tält.",
-    "created_by": null,
-    "is_completed": false,
-    "completed_date": null,
-    "created_at": "2026-08-08T18:59:03.572Z"
-  }
-},
-{
-  "model": "tournament.bucketitem",
-  "pk": 17,
-  "fields": {
-    "title": "Skottland: Whiskyresa",
-    "category": 3,
-    "description": "Destilleriturer, provningar och skotsk kultur.",
-    "created_by": null,
-    "is_completed": false,
-    "completed_date": null,
-    "created_at": "2026-08-08T18:59:03.576Z"
-  }
-},
-{
-  "model": "tournament.bucketitem",
-  "pk": 18,
-  "fields": {
-    "title": "Toscana: Vin- & Matresa",
-    "category": 3,
-    "description": "Matlagningskurser, vingårdar och italiensk njutning.",
-    "created_by": null,
-    "is_completed": false,
-    "completed_date": null,
-    "created_at": "2026-08-08T18:59:03.580Z"
-  }
-},
-{
-  "model": "tournament.bucketitem",
-  "pk": 19,
-  "fields": {
-    "title": "Europa Storstad",
-    "category": 4,
-    "description": "Weekend i Prag, Warszawa, Budapest, Bukarest eller Florens.",
-    "created_by": null,
-    "is_completed": false,
-    "completed_date": null,
-    "created_at": "2026-08-08T18:59:03.589Z"
-  }
-},
-{
-  "model": "tournament.bucketitem",
-  "pk": 20,
-  "fields": {
-    "title": "Nordisk Weekend",
-    "category": 4,
-    "description": "Oslo, Gotland eller Tylösand.",
-    "created_by": null,
-    "is_completed": false,
-    "completed_date": null,
-    "created_at": "2026-08-08T18:59:03.594Z"
-  }
-},
-{
-  "model": "tournament.bucketitem",
-  "pk": 21,
-  "fields": {
-    "title": "Sydeuropa & Sol",
-    "category": 4,
-    "description": "Barcelona, Sicilien eller 1 vecka sol & charter.",
-    "created_by": null,
-    "is_completed": false,
-    "completed_date": null,
-    "created_at": "2026-08-08T18:59:03.598Z"
-  }
-},
-{
-  "model": "tournament.bucketitem",
-  "pk": 22,
-  "fields": {
-    "title": "Las Vegas & Kuba",
-    "category": 4,
-    "description": "Långväga äventyr – casino i Vegas eller Kuba-resa.",
-    "created_by": null,
-    "is_completed": false,
-    "completed_date": null,
-    "created_at": "2026-08-08T18:59:03.603Z"
-  }
-},
-{
-  "model": "tournament.bucketitem",
-  "pk": 23,
-  "fields": {
-    "title": "Hyra Hus tillsammans",
-    "category": 5,
-    "description": "Gemensam hussemester vid havet eller sjö.",
-    "created_by": null,
-    "is_completed": false,
-    "completed_date": null,
-    "created_at": "2026-08-08T18:59:03.614Z"
-  }
-},
-{
-  "model": "tournament.bucketitem",
-  "pk": 24,
-  "fields": {
-    "title": "Konsert & Live-event",
-    "category": 5,
-    "description": "Storkonsert eller festival tillsammans.",
-    "created_by": null,
-    "is_completed": false,
-    "completed_date": null,
-    "created_at": "2026-08-08T18:59:03.620Z"
-  }
-},
-{
-  "model": "tournament.bucketitem",
-  "pk": 25,
-  "fields": {
-    "title": "Helg-Pokerkväll",
-    "category": 5,
-    "description": "Klassisk pokerturnering med middag & god dryck.",
-    "created_by": null,
-    "is_completed": false,
-    "completed_date": null,
-    "created_at": "2026-08-08T18:59:03.625Z"
   }
 }
 ]
