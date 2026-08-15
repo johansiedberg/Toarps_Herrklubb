@@ -43,6 +43,17 @@ INSTALLED_APPS = [
 # Shared Single Sign-On Secret Key for redirect to Prediction Engine
 HERRKLUBB_SSO_SECRET = 'toarps-herrklubb-sso-secret-key-1981-2028'
 
+# CSRF & Session Isolation for local multi-app setup (port 1981)
+CSRF_COOKIE_NAME = 'toarps_herrklubb_csrftoken'
+SESSION_COOKIE_NAME = 'toarps_herrklubb_sessionid'
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://127.0.0.1:1981',
+    'http://localhost:1981',
+    'http://127.0.0.1',
+    'http://localhost',
+]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
