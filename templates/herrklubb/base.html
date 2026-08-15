@@ -1,0 +1,207 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="sv">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toarps Herrklubb</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="{% static 'herrklubb/img/ToarpsHK.webp' %}" type="image/x-icon">
+
+    <!-- Bootstrap 5 CSS & FontAwesome Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Custom Modern Stylesheet -->
+    <link href="{% static 'herrklubb/css/style.css' %}" rel="stylesheet">
+</head>
+
+<body style="background-color: #0B0F19; color: #F3F4F6; min-height: 100vh; display: flex; flex-direction: column;">
+
+    <!-- Header Section with Centered Backdrop Banner -->
+    <header class="tournament-header py-4 text-center mb-0"
+        style="background: linear-gradient(180deg, rgba(15, 23, 42, 0.80) 0%, rgba(11, 15, 25, 0.92) 100%), url('{% static "herrklubb/img/ToarpsHK_backdrop.svg" %}'); background-size: cover; background-position: center;">
+        <div class="container d-flex flex-column align-items-center justify-content-center text-center gap-2">
+
+            <!-- Centered Club Logo -->
+            <div class="d-flex align-items-center justify-content-center mb-1">
+                <img src="{% static 'herrklubb/img/ToarpsHK.webp' %}" alt="Toarps HK Logo"
+                    style="height: 70px; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.6));">
+            </div>
+
+            <!-- Centered Header Text -->
+            <h1 class="fw-extrabold text-white mb-0 display-6 brand-title text-center">Toarps Herrklubb</h1>
+
+            {% if request.user.is_authenticated %}
+            <div class="d-flex flex-wrap align-items-center justify-content-center gap-2 mt-1">
+                <button type="button" class="header-badge interactive-badge border-0" data-bs-toggle="modal" data-bs-target="#accountSettingsModal" title="Klicka för att ändra e-post eller lösenord">
+                    <i class="fa-solid fa-user-check me-1"></i>
+                    <span>Inloggad som: <strong id="headerUserDisplayName">{% if request.user.get_full_name %}{{ request.user.get_full_name }}{% else %}{{ request.user.email|default:request.user.username }}{% endif %}</strong>&nbsp;&nbsp;<i class="fa-solid fa-gear"></i></span>
+                </button>
+                <form action="{% url 'logout' %}" method="post" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-danger btn-sm py-0.5 px-2.5 fw-semibold"
+                        style="font-size: 0.75rem;">
+                        <i class="fa-solid fa-right-from-bracket me-1"></i>Logga ut
+                    </button>
+                </form>
+            </div>
+
+            {% if request.user.profile.is_herrklubb_member and request.resolver_match.url_name != 'hub' %}
+            <div class="d-flex align-items-center justify-content-center gap-2 mt-2">
+                <a href="{% url 'hub' %}" class="btn btn-sm btn-outline-light rounded-pill px-3 fw-semibold">
+                    <i class="fa-solid fa-house me-1"></i> Startsida
+                </a>
+            </div>
+            {% endif %}
+            {% endif %}
+
+        </div>
+    </header>
+
+    {% if request.user.is_authenticated %}
+    <!-- Account Settings Modal -->
+    <div class="modal fade" id="accountSettingsModal" tabindex="-1" aria-labelledby="accountSettingsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-start" style="background: #111827; border: 1px solid rgba(255, 255, 255, 0.15); color: #F3F4F6; border-radius: 1rem; backdrop-filter: blur(16px);">
+                <div class="modal-header border-bottom border-secondary border-opacity-25 pb-3">
+                    <h5 class="modal-title fw-bold text-white d-flex align-items-center gap-2" id="accountSettingsModalLabel">
+                        <i class="fa-solid fa-user-gear text-emerald"></i> Kontoinställningar
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Stäng"></button>
+                </div>
+                <form id="accountSettingsForm">
+                    {% csrf_token %}
+                    <div class="modal-body py-4">
+                        <div id="accountSettingsAlert" class="alert d-none py-2 px-3 small mb-3 text-center" role="alert"></div>
+
+                        <div class="mb-3">
+                            <label class="form-label text-secondary small fw-semibold">Medlem (Namn)</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-dark border-secondary border-opacity-50" style="color: #6B7280;"><i class="fa-solid fa-id-card"></i></span>
+                                <input type="text" class="form-control bg-dark border-secondary border-opacity-50" value="{% if request.user.get_full_name %}{{ request.user.get_full_name }}{% else %}{{ request.user.username }}{% endif %}" readonly disabled style="color: #6B7280; cursor: not-allowed; font-weight: 500;">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="modalUserEmail" class="form-label text-secondary small fw-semibold">E-postadress (Användarnamn)</label>
+                            <div class="input-group">
+                                <span class="input-group-text border-secondary border-opacity-30" style="background-color: rgba(31, 41, 55, 0.6); color: #9CA3AF;"><i class="fa-solid fa-envelope"></i></span>
+                                <input type="email" class="form-control border-secondary border-opacity-30 text-light" id="modalUserEmail" name="email" value="{{ request.user.email|default:request.user.username }}" placeholder="förnamn@efternamn.se" required style="background-color: rgba(31, 41, 55, 0.6); color: #F3F4F6;">
+                            </div>
+                            <div class="form-text text-muted small">Format: [förnamn]@[efternamn].se</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="modalUserPassword" class="form-label text-secondary small fw-semibold">Nytt Lösenord (minst 5 tecken, minst 1 siffra)</label>
+                            <div class="input-group">
+                                <span class="input-group-text border-secondary border-opacity-30" style="background-color: rgba(31, 41, 55, 0.6); color: #9CA3AF;"><i class="fa-solid fa-key"></i></span>
+                                <input type="password" class="form-control border-secondary border-opacity-30 text-light" id="modalUserPassword" name="password" placeholder="Minst 5 tecken (t.ex. minKod1)" minlength="5" style="background-color: rgba(31, 41, 55, 0.6); color: #F3F4F6;">
+                            </div>
+                            <div class="form-text text-muted small">Lämna tomt om du inte vill ändra lösenord. Måste bestå av minst 5 tecken och innehålla minst 1 siffra.</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-top border-secondary border-opacity-25 pt-3">
+                        <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill px-3" data-bs-dismiss="modal">Avbryt</button>
+                        <button type="submit" id="saveAccountSettingsBtn" class="btn btn-emerald btn-sm rounded-pill px-4 fw-semibold">
+                            <i class="fa-solid fa-floppy-disk me-1"></i>Spara ändringar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Main Content Container with dynamic backdrop -->
+    <div class="main-backdrop-section"
+        style="{% block backdrop_style %}background: linear-gradient(180deg, rgba(11, 15, 25, 0.78) 0%, rgba(11, 15, 25, 0.94) 100%), url('{% static "herrklubb/img/ToarpsHK_backdrop.svg" %}'); background-size: cover; background-position: center;
+        background-repeat: no-repeat;{% endblock %} flex-grow: 1; display: flex; flex-direction: column;">
+        <main class="container my-4 flex-grow-1">
+            {% block content %}
+            {% endblock %}
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center py-3">
+        <div class="container">
+            <p class="text-muted mb-0 small">&copy; 2026 Toarps HK • Modern Herrklubbstips Platform</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const settingsForm = document.getElementById('accountSettingsForm');
+        if (!settingsForm) return;
+
+        settingsForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const alertBox = document.getElementById('accountSettingsAlert');
+            const submitBtn = document.getElementById('saveAccountSettingsBtn');
+            const emailInput = document.getElementById('modalUserEmail').value.trim();
+            const passwordInput = document.getElementById('modalUserPassword').value.trim();
+
+            if (passwordInput && (passwordInput.length < 5 || !/\d/.test(passwordInput))) {
+                alertBox.className = 'alert alert-danger py-2 px-3 small mb-3 text-center';
+                alertBox.textContent = 'Lösenordet måste vara minst 5 tecken långt och innehålla minst en siffra.';
+                alertBox.classList.remove('d-none');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i>Sparar...';
+
+            fetch("{% url 'update_account_settings' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    email: emailInput,
+                    password: passwordInput
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fa-solid fa-floppy-disk me-1"></i>Spara ändringar';
+
+                if (data.success) {
+                    alertBox.className = 'alert alert-success py-2 px-3 small mb-3 text-center';
+                    alertBox.textContent = data.message;
+                    alertBox.classList.remove('d-none');
+                    document.getElementById('modalUserPassword').value = '';
+
+                    setTimeout(() => {
+                        const modalEl = document.getElementById('accountSettingsModal');
+                        const modal = bootstrap.Modal.getInstance(modalEl);
+                        if (modal) modal.hide();
+                        alertBox.classList.add('d-none');
+                    }, 1200);
+                } else {
+                    alertBox.className = 'alert alert-danger py-2 px-3 small mb-3 text-center';
+                    alertBox.textContent = data.error || 'Ett fel uppstod.';
+                    alertBox.classList.remove('d-none');
+                }
+            })
+            .catch(err => {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fa-solid fa-floppy-disk me-1"></i>Spara ändringar';
+                alertBox.className = 'alert alert-danger py-2 px-3 small mb-3 text-center';
+                alertBox.textContent = 'Nätverksfel. Försök igen.';
+                alertBox.classList.remove('d-none');
+            });
+        });
+    });
+    </script>
+    {% block extra_js %}
+    {% endblock %}
+</body>
+
+</html>

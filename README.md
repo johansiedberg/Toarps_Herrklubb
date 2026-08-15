@@ -1,106 +1,91 @@
-# Project Overview and Architecture: Toarps Herrklubb v2.0
+# Toarps Herrklubb
 
-## 1. Background and Objectives
-
-After successfully managing previous tournaments—most recently the 2026 Football World Cup—via advanced Excel macros to run leaderboards and point calculations, this project marks the next step in its evolution. The goal is to transition from manual, file-based administration to a modern, accessible web application built in Python and Django.
-
-The main objective of the platform is to digitize and automate the entire workflow for the tipping club:
-
-* **Automated Point Calculation:** The system automatically calculates tournament points and updates participant rankings based on match results.
-* **Centralized Data Management:** A relational database (via Django's ORM) ensures data integrity and enables advanced statistics and form forecasting.
-* **Improved User Experience:** Participants get a dedicated, constantly updated interface directly in their web browser.
-
-## 2. System Structure and User Roles
-
-The application relies on a clear division of responsibilities to separate system administration from the actual competition experience. The functionality is designed around two main interaction areas and roles:
-
-### Admin (Administrator)
-
-This role acts as the engine of the system. The interface (driven by Django's built-in admin panel) is used for system maintenance and quality control.
-
-* **Manage Users:** Register, update, and administer the participants.
-* **Manage Tournaments:** Set up new championships, define match rounds, and structure the underlying competition tree.
-* **Verify Predictions:** Ensure submitted predictions are valid, complete, and submitted before the deadline.
-* **Report Results:** Input actual match results after the final whistle, which in turn triggers the system's point calculation.
-
-### Player (End User)
-
-This is the public interface that participants interact with. The focus is on engagement, accessibility, and clear data visualization to enhance the competitive element.
-
-* **Submit Predictions:** An interactive flow to easily register and submit match predictions for upcoming rounds.
-* **View Results:** A personal view displaying history, individual accuracy, and earned points.
-* **View Leaderboard:** The central ranking table showing current standings, total points, and position changes week by week.
-* **Dashboard Comparisons:** Visual summaries and statistics where players can compare their form and picks against other participants.
-
-## 3. Project Structure (Tree) and Key Files
-
-To maintain order and separate responsibilities in the code, the project is set up according to Django's standard structure. The architecture separates database logic, routing, and user interface.
-
-Here is the comprehensive overview of the project's directory tree:
-
-```text
-HERRKLUBBSTIPS/
-│
-├── core/
-│   ├── __pycache__/
-│   ├── __init__.py
-│   ├── asgi.py
-│   ├── settings.py
-│   ├── urls.py
-│   └── wsgi.py
-│
-├── templates/
-│   ├── admin/
-│   │   └── tournament/
-│   ├── index_backup.html
-│   ├── login.html
-│   └── tournament/
-│       ├── base.html
-│       ├── index.html
-│       ├── login.html
-│       └── predictions.html
-│
-├── tournament/
-│   ├── __pycache__/
-│   ├── migrations/
-│   ├── static/
-│   │   └── tournament/
-│   │       ├── css/
-│   │       │   └── style.css
-│   │       ├── img/
-│   │       ├── admin_columns.css
-│   │       └── admin_enter.js
-│   ├── templatetags/
-│   ├── __init__.py
-│   ├── admin.py
-│   ├── apps.py
-│   ├── forms.py
-│   ├── models.py
-│   ├── tests.py
-│   ├── urls.py
-│   └── views.py
-│
-├── db.sqlite3
-├── Kod.txt
-├── manage.py
-├── README.md
-└── TemplateSyntaxError.txt
-```
-
-### Core Files Interaction
-
-When a *Player* wants to view the current Leaderboard, a request is sent to a specific URL (`urls.py`). This points to a function in `views.py`. The function retrieves all necessary data and current standings from the database via `models.py`, processes the data, and finally sends the result to `leaderboard.html` in the `templates/` directory where it is dynamically rendered for the user.
+Toarps Herrklubb is a centralized social planning and coordination platform customized for the 11 original members of the club. The platform's primary purpose is to manage social event calendars, identify mutual availability, track shared goals via a custom bucket list voting system, and offer secure Single Sign-On (SSO) integration with the standalone football predictions platform.
 
 ---
 
-## 4. Development & Workflow Conventions
+## 1. Core Objectives & Features
 
-* **Communication Language:** Discussion and planning are conducted in **English**.
-* **Code & Comments:** All code, function signatures, and comments must be written in **English**.
-* **App Output & UI Text:** Every user-facing text, label, and app output must be in **Swedish**.
-* **UI & Design Approvals:** All proposed design or UI layout changes **MUST** be presented to the user for review and explicit approval **before** writing or editing template/CSS code files.
-* **1X2 Prediction Frames:** Formatted in 4 distinct lines: (1) Outcome, (2) Team/Result, (3) % of predictions, (4) Player count (unmuted text).
-* **AI Analysis Tone & Structure:** Edgy, banter-filled text for childhood friends. 3 paragraphs: (1) Entire field match analysis, (2) Player's individual tip (strictly **1 emoji**), (3) Outliers, wild tips & rivalry impacts.
-* **Server Port Conventions:**
-  * **Toarps Herrklubb:** ALWAYS runs on port `1981` (`python manage.py runserver 1981`)
-  * **Prediction Engine:** ALWAYS runs on port `2028` (`python manage.py runserver 2028`)
+The platform focuses on three main pillars of interaction:
+
+### 📅 Hinderkalender & Golden Weekends
+* **Availability Heatmap:** Members log periods of unavailability (dates and optional descriptions) directly on a centralized calendar.
+* **Golden Weekend Scanner:** The platform automatically scans upcoming weekend dates to identify "Golden Weekends" — three-day weekend blocks (Friday through Sunday) where all 11 members are fully available.
+* **Event Coordinators:** Members can schedule next events, assign locations, set details, and volunteer as event coordinators.
+
+### 🪣 Herrklubbens Bucket List
+* **Marker Voting System:** Members organize shared bucket list items by category and cast votes using distinct Pokermarkers:
+  * **Svart Marker:** Highest priority (adds 100 points)
+  * **Grön Marker:** Medium priority (adds 50 points)
+  * **Röd Marker:** Standard support (adds 25 points)
+* **Högsta Dröm (Highest Dream):** Each member can select exactly one active bucket item as their ultimate dream.
+* **Planning Promotion:** Any bucket list proposal that receives at least 6 out of 11 votes is automatically promoted from the "Idébanken" queue to "Planerade Aktiviteter."
+* **Archiving & Completion:** Completing a bucket item archives the record and automatically frees up members' markers to be spent on other active proposals.
+
+### 🔑 Cryptographic Single Sign-On (SSO)
+* **Credentials-Free Prediction Entry:** The tournament prediction features have been fully decoupled into the standalone **Prediction Engine** (running on port `2028`).
+* **Redirection Flow:** From the Toarps Herrklubb Hub, members can click "Mästerskapstips" to access the predictions page. The platform generates a short-lived (60-second), cryptographically signed SSO token (via Django's `TimestampSigner` and a shared secret key) and redirects the user to the Prediction Engine. The engine verifies the signature, registers the user if they do not yet exist, and logs them in immediately.
+
+---
+
+## 2. Project Architecture & Directories
+
+The codebase is organized under a standard Django structure, following the rename from `tournament` to `herrklubb`:
+
+```text
+Toarps_Herrklubb/
+│
+├── core/
+│   ├── settings.py           # Contains global settings, database configuration, and SSO secret
+│   ├── urls.py               # Root url routing pointing to herrklubb app
+│   └── wsgi.py / asgi.py     # Deployment entry points
+│
+├── templates/
+│   ├── admin/                # Overrides for Django administration panels
+│   └── herrklubb/            # User-facing Swedish templates
+│       ├── base.html         # Base site layouts and navigation bar
+│       ├── hub.html          # Entry hub directing to Social Hub or Predictions
+│       ├── herrklubb.html    # The Bucket list, voting panel, and events coordinator
+│       ├── calendar.html     # Hinderkalender visual heat map and Golden Weekends
+│       └── login.html        # Secure entry page
+│
+├── herrklubb/
+│   ├── management/           # App-specific management commands
+│   │   ├── commands/
+│   │   │   ├── runserver.py  # Forces server to run on port 1981 by default
+│   │   │   ├── seed_members.py
+│   │   │   └── seed_herrklubb_bucketlist.py
+│   ├── static/
+│   │   └── herrklubb/        # Local static stylesheets, images (chips/backdrops), and scripts
+│   ├── admin.py              # Social models registration (UserProfile, Bucket items, etc.)
+│   ├── apps.py               # App configuration (HerrklubbConfig)
+│   ├── forms.py              # Extended user authentication form (email lookup support)
+│   ├── models.py             # Relational schema for social hub data
+│   ├── tests.py              # Test suite for events and marker votes logic
+│   ├── urls.py               # View endpoints routing
+│   └── views.py              # Event calendars logic, bucket voting logic, and SSO signer
+│
+├── db.sqlite3                # Local SQLite database
+├── manage.py                 # Django command-line utility
+└── requirements.txt          # Python packages listing
+```
+
+---
+
+## 3. Development Conventions
+
+To preserve readability and code quality, all modifications must adhere to the following developer rules:
+
+* **Language Rules:**
+  * **Code & Comments:** Written exclusively in **English**.
+  * **User Interface & Output:** Written exclusively in **Swedish** (to align with the childhood friends target group).
+* **Port Conventions:**
+  * **Toarps Herrklubb:** Always runs on port `1981` (can be launched with `./venv/bin/python manage.py runserver 1981`).
+  * **Prediction Engine:** Always runs on port `2028` (can be launched with `./venv/bin/python manage.py runserver 2028`).
+* **Database Rebuilding:**
+  To reset and seed the database environment clean:
+  1. Delete `db.sqlite3`.
+  2. Run migration compilation: `python manage.py makemigrations herrklubb` and `python manage.py migrate`.
+  3. Run seeders:
+     * `python manage.py seed_members`
+     * `python manage.py seed_herrklubb_bucketlist`

@@ -37,8 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'tournament',
+    'herrklubb',
 ]
+
+# Shared Single Sign-On Secret Key for redirect to Prediction Engine
+HERRKLUBB_SSO_SECRET = 'toarps-herrklubb-sso-secret-key-1981-2028'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -104,7 +108,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    BASE_DIR / 'tournament' / 'static',
+    BASE_DIR / 'herrklubb' / 'static',
 ]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
