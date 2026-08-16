@@ -74,7 +74,7 @@
                         <span class="text-warning fw-bold small">🪣 Högsta Dröm för:</span>
                         {% for d_user in item.dream_users %}
                             <span class="badge bg-warning text-dark fw-bold rounded-pill">
-                                {% if d_user.first_name %}{{ d_user.first_name }}{% else %}{{ d_user.username }}{% endif %}
+                                {% if d_user.first_name %}{{ d_user.first_name }}{% else %}{{ d_user.email }}{% endif %}
                             </span>
                         {% endfor %}
                     </div>

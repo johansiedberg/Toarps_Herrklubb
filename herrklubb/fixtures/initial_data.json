@@ -1,15 +1,16 @@
+VIEWS IMPORTED DATETIME: <module 'datetime' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/datetime.py'>
 [
 {
   "model": "auth.user",
   "pk": 1,
   "fields": {
-    "password": "pbkdf2_sha256$1500000$mTTckaOck5KKQN3zrU8oXQ$YAk92JOPsmJIZOD0M8AnnbYOck7Y4S9C+y1h+ggmVwY=",
+    "password": "pbkdf2_sha256$1500000$6OgJxkP1ilkpQtReNiFRFc$sV0y+ROVZTalHCScSn3KCNTbHYuYs8Fq8+2uilsII4U=",
     "last_login": "2026-08-15T08:55:09.633Z",
     "is_superuser": false,
-    "username": "johan@siedberg.se",
+    "username": "johan.siedberg@gmail.com",
     "first_name": "Johan",
     "last_name": "Siedberg",
-    "email": "johan@siedberg.se",
+    "email": "johan.siedberg@gmail.com",
     "is_staff": false,
     "is_active": true,
     "date_joined": "2026-08-14T20:33:09.086Z",
@@ -21,7 +22,7 @@
   "model": "auth.user",
   "pk": 2,
   "fields": {
-    "password": "pbkdf2_sha256$1500000$DQTU7RiQadfNBXxxwafQLB$i2903wyCfJnwxpLulAIlbCyXubHhX7QwXofhNcv0Rl8=",
+    "password": "pbkdf2_sha256$1500000$hywLqlWBZXLtFqf1e9x6YV$ZIFdRfm4qDPlELCarcjIKQrkOiOPAo1YqOnwAuSJ4R8=",
     "last_login": null,
     "is_superuser": false,
     "username": "mikael@dahl.se",
@@ -39,7 +40,7 @@
   "model": "auth.user",
   "pk": 3,
   "fields": {
-    "password": "pbkdf2_sha256$1500000$qS7umrADQVS4fbPaUaX0FC$ZLcLxWahMtzlLr4I/K4rXo6en/GkFfSm8YbTZHZwSeA=",
+    "password": "pbkdf2_sha256$1500000$HyFjP1ewPtwJ0fAKbjq1qT$XfnrpjP3pdXU4L1dMlSs367MAe4mjwDYVXl6uAGqnyw=",
     "last_login": null,
     "is_superuser": false,
     "username": "andreas@larsson.se",
@@ -57,13 +58,13 @@
   "model": "auth.user",
   "pk": 4,
   "fields": {
-    "password": "pbkdf2_sha256$1500000$tgq7RBoJTzQTqfu9BRfV91$wI01M5xfi/Oc6w7s4/HucZEAJLbg4JlFzcCQsPb93ho=",
+    "password": "pbkdf2_sha256$1500000$KuwxmOda2IRT8pyLlJ6hNU$1i+yCqmf0rhVaooksiSq7G6AH1pfYa/VWFJvJK3QqeE=",
     "last_login": null,
     "is_superuser": false,
-    "username": "johan@svensson.se",
+    "username": "svenjohansvensson@gmail.com",
     "first_name": "Johan",
     "last_name": "Svensson",
-    "email": "johan@svensson.se",
+    "email": "svenjohansvensson@gmail.com",
     "is_staff": false,
     "is_active": true,
     "date_joined": "2026-08-14T20:33:47.886Z",
@@ -75,7 +76,7 @@
   "model": "auth.user",
   "pk": 5,
   "fields": {
-    "password": "pbkdf2_sha256$1500000$aPzgNPRXGJjKvq2zO3dU1G$MXvqNeO7dtGgAnMl4wGalpgdmFmu9w2ZJZbIK7CtMvE=",
+    "password": "pbkdf2_sha256$1500000$BuhczA2AcBE5A6TQdCeJ88$E8sONR7kiIyaBnfp+MoZ/QYzQl7zT4zbPaK8t46ofWY=",
     "last_login": null,
     "is_superuser": false,
     "username": "johan@meldo.se",
@@ -93,13 +94,13 @@
   "model": "auth.user",
   "pk": 6,
   "fields": {
-    "password": "pbkdf2_sha256$1500000$B6t9ZBfmQklVY6qsSrQJby$fpWYra4wmYGFfyn/dXS/ipI2GqsRdG4E8xJ3s4OCo7c=",
+    "password": "pbkdf2_sha256$1500000$v9u4WqhcK943KPnEqQFpNL$mLeqGA5uDT8t4FxkLpjBwXkx2fk6/mvGkCStMGqLmAc=",
     "last_login": null,
     "is_superuser": false,
-    "username": "erik@svensson.se",
+    "username": "erik.sve@hotmail.com",
     "first_name": "Erik",
     "last_name": "Svensson",
-    "email": "erik@svensson.se",
+    "email": "erik.sve@hotmail.com",
     "is_staff": false,
     "is_active": true,
     "date_joined": "2026-08-14T20:34:16.223Z",
@@ -111,13 +112,13 @@
   "model": "auth.user",
   "pk": 7,
   "fields": {
-    "password": "pbkdf2_sha256$1500000$kb2vDB2Xdyczz0U8zRP0IF$F7Dr1pg3IWQWBoB41+cIlGNz5GsR/sqBKJr5VSGP87g=",
+    "password": "pbkdf2_sha256$1500000$e18CoezfrSRGNiKFMhCKP9$pP15NpxbRO6iDA0/iGBfUQC/tTSY/SVH4fhzHnEBnoI=",
     "last_login": null,
     "is_superuser": false,
-    "username": "christoffer@ericsson.se",
+    "username": "coff_erics@yahoo.se",
     "first_name": "Christoffer",
     "last_name": "Ericsson",
-    "email": "christoffer@ericsson.se",
+    "email": "coff_erics@yahoo.se",
     "is_staff": false,
     "is_active": true,
     "date_joined": "2026-08-14T20:34:27.506Z",
@@ -129,7 +130,7 @@
   "model": "auth.user",
   "pk": 8,
   "fields": {
-    "password": "pbkdf2_sha256$1500000$U84NTKUY49bQlLzixOIBkF$QRDGrK2BueAOHmyJyfwr+qpZdYTGPPy8hlZx64sC49s=",
+    "password": "pbkdf2_sha256$1500000$XbNuKB4wqRIXeys5IfmSIE$ajElxH5DHAIlUHA+uq4wvQptSTDLKyx9rEYH+w4jUX4=",
     "last_login": null,
     "is_superuser": false,
     "username": "martin@gustafsson.se",
@@ -147,7 +148,7 @@
   "model": "auth.user",
   "pk": 9,
   "fields": {
-    "password": "pbkdf2_sha256$1500000$CLaJJvVyJ5EZos5joEaI3O$tIsIrOarPUze0EZfTRywi2/6xqRzeDsSAeM+EBIpAEA=",
+    "password": "pbkdf2_sha256$1500000$E6kdx2l0ArUGm8ciDQHvRj$flE6Sh6JPn7gcr0lUOIc2DQk9G1zlWKH1E+f4rX97Vs=",
     "last_login": null,
     "is_superuser": false,
     "username": "tommy@lycen.se",
@@ -165,13 +166,13 @@
   "model": "auth.user",
   "pk": 10,
   "fields": {
-    "password": "pbkdf2_sha256$1500000$IQxanGxChWti2FkgX14Oqs$0pIxAZWCeJNaU6SBSRqAAawZ9rfb7sno/aHiFJwHM74=",
+    "password": "pbkdf2_sha256$1500000$ttz6GuG7jihfNqiwVnfDn9$Uio3WS6Uvo4Yx8KFJvrIkkFlEqzNNS1Udsis4UCYkbA=",
     "last_login": null,
     "is_superuser": false,
-    "username": "tommy@kallberg.se",
+    "username": "anymaztic@hotmail.com",
     "first_name": "Tommy",
     "last_name": "Källberg",
-    "email": "tommy@kallberg.se",
+    "email": "anymaztic@hotmail.com",
     "is_staff": false,
     "is_active": true,
     "date_joined": "2026-08-14T20:34:59.874Z",
@@ -183,7 +184,7 @@
   "model": "auth.user",
   "pk": 11,
   "fields": {
-    "password": "pbkdf2_sha256$1500000$kYIU27cNRyq7tLjhmmoOwL$6CPLDijsxgdrcPyLcc89Vfs4M3xmY+QlD6hLMfTksbw=",
+    "password": "pbkdf2_sha256$1500000$EMtIKbhvzEUgiYWpHP2vai$EEBTzflI9LuxDcJxyjJbUNtCJfNCqQ3/DaON+0FNf0U=",
     "last_login": null,
     "is_superuser": false,
     "username": "martin@krantz.se",
@@ -195,105 +196,6 @@
     "date_joined": "2026-08-14T20:35:10.982Z",
     "groups": [],
     "user_permissions": []
-  }
-},
-{
-  "model": "herrklubb.userprofile",
-  "pk": 1,
-  "fields": {
-    "user": 1,
-    "avatar": "",
-    "is_herrklubb_member": true
-  }
-},
-{
-  "model": "herrklubb.userprofile",
-  "pk": 2,
-  "fields": {
-    "user": 2,
-    "avatar": "",
-    "is_herrklubb_member": true
-  }
-},
-{
-  "model": "herrklubb.userprofile",
-  "pk": 3,
-  "fields": {
-    "user": 3,
-    "avatar": "",
-    "is_herrklubb_member": true
-  }
-},
-{
-  "model": "herrklubb.userprofile",
-  "pk": 4,
-  "fields": {
-    "user": 4,
-    "avatar": "",
-    "is_herrklubb_member": true
-  }
-},
-{
-  "model": "herrklubb.userprofile",
-  "pk": 5,
-  "fields": {
-    "user": 5,
-    "avatar": "",
-    "is_herrklubb_member": true
-  }
-},
-{
-  "model": "herrklubb.userprofile",
-  "pk": 6,
-  "fields": {
-    "user": 6,
-    "avatar": "",
-    "is_herrklubb_member": true
-  }
-},
-{
-  "model": "herrklubb.userprofile",
-  "pk": 7,
-  "fields": {
-    "user": 7,
-    "avatar": "",
-    "is_herrklubb_member": true
-  }
-},
-{
-  "model": "herrklubb.userprofile",
-  "pk": 8,
-  "fields": {
-    "user": 8,
-    "avatar": "",
-    "is_herrklubb_member": true
-  }
-},
-{
-  "model": "herrklubb.userprofile",
-  "pk": 9,
-  "fields": {
-    "user": 9,
-    "avatar": "",
-    "is_herrklubb_member": true
-  }
-},
-{
-  "model": "herrklubb.userprofile",
-  "pk": 10,
-  "fields": {
-    "user": 10,
-    "avatar": "",
-    "is_herrklubb_member": true
-  }
-},
-{
-  "model": "herrklubb.userprofile",
-  "pk": 11,
-  "fields": {
-    "user": 11,
-    "avatar": "",
-    "is_herrklubb_member": true
   }
 }
 ]

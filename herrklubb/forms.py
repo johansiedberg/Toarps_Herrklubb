@@ -4,18 +4,20 @@ from django.contrib.auth import get_user_model
 from django.db.models import Q
 
 class CustomLoginForm(AuthenticationForm):
-    username = forms.CharField(
+    username = forms.EmailField(
         label="E-postadress",
-        widget=forms.TextInput(attrs={
+        widget=forms.EmailInput(attrs={
             'class': 'form-control',
-            'placeholder': 'förnamn@efternamn.se'
+            'placeholder': 'namn@epost.se',
+            'autocomplete': 'email',
         })
     )
     password = forms.CharField(
         label="Lösenord",
         widget=forms.PasswordInput(attrs={
             'class': 'form-control',
-            'placeholder': '••••••••'
+            'placeholder': '••••••••',
+            'autocomplete': 'current-password',
         })
     )
 

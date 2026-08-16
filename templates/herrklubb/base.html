@@ -38,7 +38,7 @@
             <div class="d-flex flex-wrap align-items-center justify-content-center gap-2 mt-1">
                 <button type="button" class="header-badge interactive-badge border-0" data-bs-toggle="modal" data-bs-target="#accountSettingsModal" title="Klicka för att ändra e-post eller lösenord">
                     <i class="fa-solid fa-user-check me-1"></i>
-                    <span>Inloggad som: <strong id="headerUserDisplayName">{% if request.user.get_full_name %}{{ request.user.get_full_name }}{% else %}{{ request.user.email|default:request.user.username }}{% endif %}</strong>&nbsp;&nbsp;<i class="fa-solid fa-gear"></i></span>
+                    <span>Inloggad som: <strong id="headerUserDisplayName">{% if request.user.get_full_name %}{{ request.user.get_full_name }}{% else %}{{ request.user.email }}{% endif %}</strong>&nbsp;&nbsp;<i class="fa-solid fa-gear"></i></span>
                 </button>
                 <form action="{% url 'logout' %}" method="post" class="d-inline">
                     {% csrf_token %}
@@ -81,17 +81,16 @@
                             <label class="form-label text-secondary small fw-semibold">Medlem (Namn)</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-dark border-secondary border-opacity-50" style="color: #6B7280;"><i class="fa-solid fa-id-card"></i></span>
-                                <input type="text" class="form-control bg-dark border-secondary border-opacity-50" value="{% if request.user.get_full_name %}{{ request.user.get_full_name }}{% else %}{{ request.user.username }}{% endif %}" readonly disabled style="color: #6B7280; cursor: not-allowed; font-weight: 500;">
+                                <input type="text" class="form-control bg-dark border-secondary border-opacity-50" value="{% if request.user.get_full_name %}{{ request.user.get_full_name }}{% else %}{{ request.user.email }}{% endif %}" readonly disabled style="color: #6B7280; cursor: not-allowed; font-weight: 500;">
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label for="modalUserEmail" class="form-label text-secondary small fw-semibold">E-postadress (Användarnamn)</label>
+                            <label for="modalUserEmail" class="form-label text-secondary small fw-semibold">E-postadress</label>
                             <div class="input-group">
                                 <span class="input-group-text border-secondary border-opacity-30" style="background-color: rgba(31, 41, 55, 0.6); color: #9CA3AF;"><i class="fa-solid fa-envelope"></i></span>
-                                <input type="email" class="form-control border-secondary border-opacity-30 text-light" id="modalUserEmail" name="email" value="{{ request.user.email|default:request.user.username }}" placeholder="förnamn@efternamn.se" required style="background-color: rgba(31, 41, 55, 0.6); color: #F3F4F6;">
+                                <input type="email" class="form-control border-secondary border-opacity-30 text-light" id="modalUserEmail" name="email" value="{{ request.user.email }}" placeholder="din.epost@adress.se" required style="background-color: rgba(31, 41, 55, 0.6); color: #F3F4F6;">
                             </div>
-                            <div class="form-text text-muted small">Format: [förnamn]@[efternamn].se</div>
                         </div>
 
                         <div class="mb-3">

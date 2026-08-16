@@ -9,50 +9,61 @@ class Command(BaseCommand):
         self.stdout.write("Seeding Toarps Herrklubb members...")
 
         personas = [
-          {
-            "id": 1,
-            "full_name": "Johan Siedberg"
-          },
-          {
-            "id": 2,
-            "full_name": "Mikael Dahl"
-          },
-          {
-            "id": 3,
-            "full_name": "Andreas Larsson"
-          },
-          {
-            "id": 4,
-            "full_name": "Johan Svensson"
-          },
-          {
-            "id": 5,
-            "full_name": "Johan Meldo"
-          },
-          {
-            "id": 6,
-            "full_name": "Erik Svensson"
-          },
-          {
-            "id": 7,
-            "full_name": "Christoffer Ericsson"
-          },
-          {
-            "id": 8,
-            "full_name": "Martin Gustafsson"
-          },
-          {
-            "id": 9,
-            "full_name": "Tommy Lycen"
-          },
-          {
-            "id": 10,
-            "full_name": "Tommy Källberg"
-          },
-          {
-            "id": 11,
-            "full_name": "Martin Krantz"
-          }
+            {
+                "id": 1,
+                "full_name": "Johan Siedberg",
+                "email": "johan.siedberg@gmail.com"
+            },
+            {
+                "id": 2,
+                "full_name": "Mikael Dahl",
+                "email": "mikael@dahl.se"
+            },
+            {
+                "id": 3,
+                "full_name": "Andreas Larsson",
+                "email": "andreas@larsson.se"
+            },
+            {
+                "id": 4,
+                "full_name": "Johan Svensson",
+                "email": "svenjohansvensson@gmail.com"
+            },
+            {
+                "id": 5,
+                "full_name": "Johan Meldo",
+                "email": "johan@meldo.se"
+            },
+            {
+                "id": 6,
+                "full_name": "Erik Svensson",
+                "email": "erik.sve@hotmail.com"
+            },
+            {
+                "id": 7,
+                "full_name": "Christoffer Ericsson",
+                "email": "coff_erics@yahoo.se"
+            },
+            {
+                "id": 8,
+                "full_name": "Martin Gustafsson",
+                "email": "martin@gustafsson.se"
+            },
+            {
+                "id": 9,
+                "full_name": "Tommy Lycen",
+                "email": "tommy@lycen.se"
+            },
+            {
+                "id": 10,
+                "full_name": "Tommy Källberg",
+                "email": "anymaztic@hotmail.com"
+            },
+            {
+                "id": 11,
+                "full_name": "Martin Krantz",
+                "email": "martin@krantz.se"
+            }
         ]
 
         created_count = 0
@@ -64,20 +75,21 @@ class Command(BaseCommand):
             first_name = name_parts[0]
             last_name = name_parts[1] if len(name_parts) > 1 else name_parts[0]
 
-            first_name_clean = first_name.lower().replace('ä', 'a').replace('å', 'a').replace('ö', 'o').replace(' ', '')
             surname_clean = last_name.lower().replace('ä', 'a').replace('å', 'a').replace('ö', 'o').replace(' ', '')
-            
-            email = f"{first_name_clean}@{surname_clean}.se"
+            email = p['email'].strip().lower()
             username = email
             password = f"{surname_clean}2026"
 
-            user = User.objects.filter(email=email).first()
-            if not user:
-                old_username = full_name.lower().replace(' ', '.').replace('ä', 'a').replace('å', 'a').replace('ö', 'o')
-                user = User.objects.filter(username=old_username).first()
+            # Match user by pk, email, or first_name & last_name
+            user = (
+                User.objects.filter(pk=p['id']).first() or
+                User.objects.filter(email__iexact=email).first() or
+                User.objects.filter(first_name=first_name, last_name=last_name).first()
+            )
 
             if not user:
                 user = User.objects.create(
+                    pk=p['id'],
                     username=username,
                     first_name=first_name,
                     last_name=last_name,
@@ -105,5 +117,5 @@ class Command(BaseCommand):
                 updated_count += 1
 
         self.stdout.write(self.style.SUCCESS(
-            f"Successfully processed {len(personas)} members ({created_count} created, {updated_count} passwords updated)."
+            f"Successfully processed {len(personas)} members ({created_count} created, {updated_count} updated)."
         ))

@@ -14,7 +14,8 @@ class UserProfile(models.Model):
         return None
 
     def __str__(self):
-        return f"Profil för {self.user.username} (Herrklubb: {self.is_herrklubb_member})"
+        display_name = self.user.get_full_name() or self.user.email
+        return f"Profil för {display_name} (Herrklubb: {self.is_herrklubb_member})"
 
 
 @receiver(post_save, sender=User)
@@ -110,7 +111,8 @@ class BucketVote(models.Model):
         verbose_name_plural = "Bucket Votes"
 
     def __str__(self):
-        return f"{self.user.username} -> {self.item.title} ({self.marker})"
+        display_name = self.user.get_full_name() or self.user.email
+        return f"{display_name} -> {self.item.title} ({self.marker})"
 
 
 class BucketDream(models.Model):
@@ -123,7 +125,8 @@ class BucketDream(models.Model):
         verbose_name_plural = "Bucket Dreams (Högsta Dröm)"
 
     def __str__(self):
-        return f"🪣 {self.user.username}'s Högsta Dröm -> {self.item.title}"
+        display_name = self.user.get_full_name() or self.user.email
+        return f"🪣 {display_name}'s Högsta Dröm -> {self.item.title}"
 
 
 # --- HERRKLUBBEN CALENDAR AND EVENT MODELS ---
@@ -141,7 +144,8 @@ class UserUnavailability(models.Model):
         verbose_name_plural = "Hinder / Frånvaro"
 
     def __str__(self):
-        return f"{self.user.username}: {self.start_date} - {self.end_date}"
+        display_name = self.user.get_full_name() or self.user.email
+        return f"{display_name}: {self.start_date} - {self.end_date}"
 
 
 class HerrklubbEvent(models.Model):

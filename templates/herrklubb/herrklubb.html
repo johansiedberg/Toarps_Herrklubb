@@ -353,7 +353,7 @@
                                     {% for coord in next_event.coordinators.all %}
                                         <span class="badge bg-primary bg-opacity-25 text-info border border-info border-opacity-50 rounded-pill px-3 py-2 fs-6 d-inline-flex align-items-center gap-1.5">
                                             <i class="fa-solid fa-user-gear me-1"></i>
-                                            {% if coord.get_full_name %}{{ coord.get_full_name }}{% elif coord.first_name %}{{ coord.first_name }} {{ coord.last_name }}{% else %}{{ coord.username }}{% endif %}
+                                            {% if coord.get_full_name %}{{ coord.get_full_name }}{% elif coord.first_name %}{{ coord.first_name }} {{ coord.last_name }}{% else %}{{ coord.email }}{% endif %}
                                             {% if coord == request.user %}
                                                 <form action="{% url 'toggle_event_coordinator' next_event.id %}" method="post" class="d-inline ms-1">
                                                     {% csrf_token %}

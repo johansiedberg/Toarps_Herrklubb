@@ -83,7 +83,7 @@
                       data-bs-toggle="modal" 
                       data-bs-target="#dreamUsersModal"
                       data-item-title="{{ item.title }}"
-                      data-users="{% for d_user in item.dream_users %}{% if d_user.get_full_name %}{{ d_user.get_full_name }}{% elif d_user.first_name %}{{ d_user.first_name }} {{ d_user.last_name }}{% else %}{{ d_user.username }}{% endif %}{% if not forloop.last %}, {% endif %}{% endfor %}"
+                      data-users="{% for d_user in item.dream_users %}{% if d_user.get_full_name %}{{ d_user.get_full_name }}{% elif d_user.first_name %}{{ d_user.first_name }} {{ d_user.last_name }}{% else %}{{ d_user.email }}{% endif %}{% if not forloop.last %}, {% endif %}{% endfor %}"
                       title="Klicka för att se vem som har val/hink på denna aktivitet">
                     🪣
                 </span>

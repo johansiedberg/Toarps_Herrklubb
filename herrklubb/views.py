@@ -122,7 +122,7 @@ def predictions_sso_login(request):
 def hub_view(request):
     """Startsida for Herrklubben members after login."""
     profile, _ = UserProfile.objects.get_or_create(user=request.user)
-    user_nickname = request.user.first_name or request.user.username
+    user_nickname = request.user.first_name or request.user.email
 
     context = {
         'profile': profile,

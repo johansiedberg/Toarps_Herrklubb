@@ -146,7 +146,7 @@
                                                 {% else %}
                                                     background: linear-gradient(145deg, rgba(153, 27, 27, 0.3) 0%, rgba(15, 23, 42, 0.95) 100%); border: 1.5px solid rgba(239, 68, 68, 0.6) !important;
                                                 {% endif %}"
-                                         {% if day.blocked_users %}data-bs-toggle="tooltip" data-bs-html="true" title="<strong>{{ day.weekday_name }} {{ day.day_num }} {{ month.month_name }}</strong><br>{% if day.is_user_blocked %}<span class='text-warning fw-bold'>Du har förhinder!</span><br>{% endif %}Förhindrade: {% for u in day.blocked_users %}{% if u.get_full_name %}{{ u.get_full_name }}{% elif u.first_name %}{{ u.first_name }} {{ u.last_name }}{% else %}{{ u.username }}{% endif %}{% if not forloop.last %}, {% endif %}{% endfor %}"{% endif %}>
+                                         {% if day.blocked_users %}data-bs-toggle="tooltip" data-bs-html="true" title="<strong>{{ day.weekday_name }} {{ day.day_num }} {{ month.month_name }}</strong><br>{% if day.is_user_blocked %}<span class='text-warning fw-bold'>Du har förhinder!</span><br>{% endif %}Förhindrade: {% for u in day.blocked_users %}{% if u.get_full_name %}{{ u.get_full_name }}{% elif u.first_name %}{{ u.first_name }} {{ u.last_name }}{% else %}{{ u.email }}{% endif %}{% if not forloop.last %}, {% endif %}{% endfor %}"{% endif %}>
                                         
                                         <!-- Top: Weekday Badge -->
                                         <span class="d-block fw-bold font-monospace text-uppercase {% if day.is_weekend %}text-warning{% else %}text-white-50{% endif %}" style="font-size: 0.64rem; line-height: 1;">
@@ -211,7 +211,7 @@
                                                 {% else %}
                                                     background: linear-gradient(145deg, rgba(153, 27, 27, 0.3) 0%, rgba(15, 23, 42, 0.95) 100%); border: 1.5px solid rgba(239, 68, 68, 0.6) !important;
                                                 {% endif %}"
-                                         {% if day.blocked_users %}data-bs-toggle="tooltip" data-bs-html="true" title="<strong>{{ day.weekday_name }} {{ day.day_num }} {{ month.month_name }}</strong><br>{% if day.is_user_blocked %}<span class='text-warning fw-bold'>Du har förhinder!</span><br>{% endif %}Förhindrade: {% for u in day.blocked_users %}{% if u.get_full_name %}{{ u.get_full_name }}{% elif u.first_name %}{{ u.first_name }} {{ u.last_name }}{% else %}{{ u.username }}{% endif %}{% if not forloop.last %}, {% endif %}{% endfor %}"{% endif %}>
+                                         {% if day.blocked_users %}data-bs-toggle="tooltip" data-bs-html="true" title="<strong>{{ day.weekday_name }} {{ day.day_num }} {{ month.month_name }}</strong><br>{% if day.is_user_blocked %}<span class='text-warning fw-bold'>Du har förhinder!</span><br>{% endif %}Förhindrade: {% for u in day.blocked_users %}{% if u.get_full_name %}{{ u.get_full_name }}{% elif u.first_name %}{{ u.first_name }} {{ u.last_name }}{% else %}{{ u.email }}{% endif %}{% if not forloop.last %}, {% endif %}{% endfor %}"{% endif %}>
                                         
                                         <!-- Top: Weekday Badge -->
                                         <span class="d-block fw-bold font-monospace text-uppercase {% if day.is_weekend %}text-warning{% else %}text-white-50{% endif %}" style="font-size: 0.64rem; line-height: 1;">
@@ -297,7 +297,7 @@
                                 <div class="list-group-item bg-transparent text-white border-secondary border-opacity-25 py-2 px-2 d-flex align-items-center justify-content-between">
                                     <div class="d-flex align-items-center gap-2">
                                         <span class="badge bg-warning text-dark rounded-pill px-2.5 py-1 small fw-bold">
-                                            {% if u.user.get_full_name %}{{ u.user.get_full_name }}{% elif u.user.first_name %}{{ u.user.first_name }} {{ u.user.last_name }}{% else %}{{ u.user.username }}{% endif %}
+                                            {% if u.user.get_full_name %}{{ u.user.get_full_name }}{% elif u.user.first_name %}{{ u.user.first_name }} {{ u.user.last_name }}{% else %}{{ u.user.email }}{% endif %}
                                         </span>
                                         <span class="text-white small">{{ u.start_date|date:"d/m" }} - {{ u.end_date|date:"d/m" }}</span>
                                     </div>
