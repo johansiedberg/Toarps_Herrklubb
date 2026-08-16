@@ -416,16 +416,15 @@ def build_calendar_context(request):
     all_upcoming = UserUnavailability.objects.filter(end_date__gte=today).select_related('user').order_by('start_date')
 
     prev_month = req_month - 1
-    prev_year = req_year
     if prev_month < 1:
         prev_month = 12
-        prev_year -= 1
 
     next_month = req_month + 1
-    next_year = req_year
     if next_month > 12:
         next_month = 1
-        next_year += 1
+
+    prev_year = req_year - 1
+    next_year = req_year + 1
 
     # Build 12-month structured data for 6-row half-year views (Jan-June / July-Dec)
     yearly_months = []
@@ -479,7 +478,13 @@ def build_calendar_context(request):
 
     half1_months = yearly_months[0:6]   # Jan - June
     half2_months = yearly_months[6:12]  # July - Dec
-    active_half = 1 if today.month <= 6 else 2
+    half_param = request.GET.get('half')
+    if half_param in ['1', '2']:
+        active_half = int(half_param)
+    elif req_year == today.year:
+        active_half = 1 if today.month <= 6 else 2
+    else:
+        active_half = 1
 
     return {
         'req_year': req_year,

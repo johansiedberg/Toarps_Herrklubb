@@ -141,8 +141,8 @@
                                                     border-warning border-2 shadow-lg
                                                 {% elif day.is_user_blocked %}
                                                     border-warning border-2
-                                                {% elif day.is_weekend and day.available_count == total_members %}
-                                                    border-secondary border-opacity-40
+                                                {% elif day.is_weekend %}
+                                                    border-secondary
                                                 {% elif day.available_count == total_members %}
                                                     border-secondary border-opacity-25
                                                 {% else %}
@@ -152,10 +152,12 @@
                                          style="width: 54px; min-height: 72px; 
                                                 {% if day.is_planned_event %}
                                                     background: linear-gradient(145deg, rgba(234, 179, 8, 0.38) 0%, rgba(15, 23, 42, 0.95) 100%); border: 2px solid #FACC15 !important; box-shadow: 0 0 12px rgba(250, 204, 21, 0.35);
-                                                {% elif day.is_golden %}
-                                                    background: linear-gradient(145deg, rgba(21, 128, 61, 0.35) 0%, rgba(15, 23, 42, 0.95) 100%); border: 1.5px solid #22c55e !important;
+                                                {% elif day.is_user_blocked %}
+                                                    background: linear-gradient(145deg, rgba(153, 27, 27, 0.4) 0%, rgba(15, 23, 42, 0.95) 100%); border: 2px solid #FACC15 !important;
                                                 {% elif day.is_weekend and day.available_count == total_members %}
-                                                    background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(203, 213, 225, 0.35) !important;
+                                                    background: linear-gradient(145deg, rgba(51, 65, 85, 0.5) 0%, rgba(15, 23, 42, 0.95) 100%); border: 1.5px solid #CBD5E1 !important; box-shadow: 0 0 8px rgba(203, 213, 225, 0.25);
+                                                {% elif day.is_weekend %}
+                                                    background: linear-gradient(145deg, rgba(153, 27, 27, 0.35) 0%, rgba(15, 23, 42, 0.95) 100%); border: 1.5px solid #CBD5E1 !important;
                                                 {% elif day.available_count == total_members %}
                                                     background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(255, 255, 255, 0.12) !important;
                                                 {% else %}
@@ -164,7 +166,7 @@
                                          {% if day.is_planned_event or day.blocked_users %}data-bs-toggle="tooltip" data-bs-html="true" title="<strong>{{ day.weekday_name }} {{ day.day_num }} {{ month.month_name }}</strong><br>{% if day.is_planned_event %}<span class='text-warning fw-bold'>🏆 Planerat Event: {{ day.planned_event.title }}</span><br>{% endif %}{% if day.is_user_blocked %}<span class='text-warning fw-bold'>Du har förhinder!</span><br>{% endif %}{% if day.blocked_users %}Förhindrade: {% for u in day.blocked_users %}{% if u.get_full_name %}{{ u.get_full_name }}{% elif u.first_name %}{{ u.first_name }} {{ u.last_name }}{% else %}{{ u.email }}{% endif %}{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}"{% endif %}>
                                         
                                         <!-- Top: Weekday Badge -->
-                                        <span class="d-block fw-bold font-monospace text-uppercase" style="font-size: 0.64rem; line-height: 1; {% if day.is_planned_event %}color: #FEF08A;{% elif day.is_weekend %}color: #CBD5E1;{% else %}color: rgba(255, 255, 255, 0.5);{% endif %}">
+                                        <span class="d-block fw-bold font-monospace text-uppercase" style="font-size: 0.64rem; line-height: 1; {% if day.is_planned_event %}color: #FEF08A;{% elif day.is_weekend %}color: #E2E8F0; font-weight: 800;{% else %}color: rgba(255, 255, 255, 0.5);{% endif %}">
                                             {{ day.weekday_name }}
                                         </span>
 
@@ -178,10 +180,8 @@
                                             <span class="badge text-dark p-0 px-1 fw-extrabold w-100" style="background-color: #FACC15; font-size: 0.55rem; line-height: 1.2;">Event</span>
                                         {% elif day.is_user_blocked %}
                                             <span class="badge text-dark p-0 px-1 fw-bold w-100" style="background-color: #facc15; font-size: 0.55rem; line-height: 1.2;">Mitt</span>
-                                        {% elif day.is_golden %}
-                                            <span class="badge text-white p-0 px-1 fw-bold w-100" style="background-color: #15803d; font-size: 0.55rem; line-height: 1.2;">11/11</span>
                                         {% elif day.available_count == total_members %}
-                                            <span class="badge text-white-50 p-0 px-1 fw-bold w-100" style="background-color: rgba(255,255,255,0.1); font-size: 0.55rem; line-height: 1.2;">11/11</span>
+                                            <span class="badge text-white p-0 px-1 fw-bold w-100" style="background-color: #15803d; font-size: 0.55rem; line-height: 1.2;">11/11</span>
                                         {% else %}
                                             <span class="badge text-white p-0 px-1 fw-bold w-100" style="background-color: #991b1b; font-size: 0.55rem; line-height: 1.2;">{{ day.available_count }}/11</span>
                                         {% endif %}
@@ -214,8 +214,8 @@
                                                     border-warning border-2 shadow-lg
                                                 {% elif day.is_user_blocked %}
                                                     border-warning border-2
-                                                {% elif day.is_weekend and day.available_count == total_members %}
-                                                    border-secondary border-opacity-40
+                                                {% elif day.is_weekend %}
+                                                    border-secondary
                                                 {% elif day.available_count == total_members %}
                                                     border-secondary border-opacity-25
                                                 {% else %}
@@ -225,10 +225,12 @@
                                          style="width: 54px; min-height: 72px; 
                                                 {% if day.is_planned_event %}
                                                     background: linear-gradient(145deg, rgba(234, 179, 8, 0.38) 0%, rgba(15, 23, 42, 0.95) 100%); border: 2px solid #FACC15 !important; box-shadow: 0 0 12px rgba(250, 204, 21, 0.35);
-                                                {% elif day.is_golden %}
-                                                    background: linear-gradient(145deg, rgba(21, 128, 61, 0.35) 0%, rgba(15, 23, 42, 0.95) 100%); border: 1.5px solid #22c55e !important;
+                                                {% elif day.is_user_blocked %}
+                                                    background: linear-gradient(145deg, rgba(153, 27, 27, 0.4) 0%, rgba(15, 23, 42, 0.95) 100%); border: 2px solid #FACC15 !important;
                                                 {% elif day.is_weekend and day.available_count == total_members %}
-                                                    background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(203, 213, 225, 0.35) !important;
+                                                    background: linear-gradient(145deg, rgba(51, 65, 85, 0.5) 0%, rgba(15, 23, 42, 0.95) 100%); border: 1.5px solid #CBD5E1 !important; box-shadow: 0 0 8px rgba(203, 213, 225, 0.25);
+                                                {% elif day.is_weekend %}
+                                                    background: linear-gradient(145deg, rgba(153, 27, 27, 0.35) 0%, rgba(15, 23, 42, 0.95) 100%); border: 1.5px solid #CBD5E1 !important;
                                                 {% elif day.available_count == total_members %}
                                                     background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(255, 255, 255, 0.12) !important;
                                                 {% else %}
@@ -237,7 +239,7 @@
                                          {% if day.is_planned_event or day.blocked_users %}data-bs-toggle="tooltip" data-bs-html="true" title="<strong>{{ day.weekday_name }} {{ day.day_num }} {{ month.month_name }}</strong><br>{% if day.is_planned_event %}<span class='text-warning fw-bold'>🏆 Planerat Event: {{ day.planned_event.title }}</span><br>{% endif %}{% if day.is_user_blocked %}<span class='text-warning fw-bold'>Du har förhinder!</span><br>{% endif %}{% if day.blocked_users %}Förhindrade: {% for u in day.blocked_users %}{% if u.get_full_name %}{{ u.get_full_name }}{% elif u.first_name %}{{ u.first_name }} {{ u.last_name }}{% else %}{{ u.email }}{% endif %}{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}"{% endif %}>
                                         
                                         <!-- Top: Weekday Badge -->
-                                        <span class="d-block fw-bold font-monospace text-uppercase" style="font-size: 0.64rem; line-height: 1; {% if day.is_planned_event %}color: #FEF08A;{% elif day.is_weekend %}color: #CBD5E1;{% else %}color: rgba(255, 255, 255, 0.5);{% endif %}">
+                                        <span class="d-block fw-bold font-monospace text-uppercase" style="font-size: 0.64rem; line-height: 1; {% if day.is_planned_event %}color: #FEF08A;{% elif day.is_weekend %}color: #E2E8F0; font-weight: 800;{% else %}color: rgba(255, 255, 255, 0.5);{% endif %}">
                                             {{ day.weekday_name }}
                                         </span>
 
@@ -251,10 +253,8 @@
                                             <span class="badge text-dark p-0 px-1 fw-extrabold w-100" style="background-color: #FACC15; font-size: 0.55rem; line-height: 1.2;">Event</span>
                                         {% elif day.is_user_blocked %}
                                             <span class="badge text-dark p-0 px-1 fw-bold w-100" style="background-color: #facc15; font-size: 0.55rem; line-height: 1.2;">Mitt</span>
-                                        {% elif day.is_golden %}
-                                            <span class="badge text-white p-0 px-1 fw-bold w-100" style="background-color: #15803d; font-size: 0.55rem; line-height: 1.2;">11/11</span>
                                         {% elif day.available_count == total_members %}
-                                            <span class="badge text-white-50 p-0 px-1 fw-bold w-100" style="background-color: rgba(255,255,255,0.1); font-size: 0.55rem; line-height: 1.2;">11/11</span>
+                                            <span class="badge text-white p-0 px-1 fw-bold w-100" style="background-color: #15803d; font-size: 0.55rem; line-height: 1.2;">11/11</span>
                                         {% else %}
                                             <span class="badge text-white p-0 px-1 fw-bold w-100" style="background-color: #991b1b; font-size: 0.55rem; line-height: 1.2;">{{ day.available_count }}/11</span>
                                         {% endif %}
