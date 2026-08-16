@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
+from django.db.models import Q
 from herrklubb.models import UserProfile
 
 class Command(BaseCommand):
@@ -10,57 +11,46 @@ class Command(BaseCommand):
 
         personas = [
             {
-                "id": 1,
                 "full_name": "Johan Siedberg",
                 "email": "johan.siedberg@gmail.com"
             },
             {
-                "id": 2,
                 "full_name": "Mikael Dahl",
                 "email": "mikael@dahl.se"
             },
             {
-                "id": 3,
                 "full_name": "Andreas Larsson",
                 "email": "andreas@larsson.se"
             },
             {
-                "id": 4,
                 "full_name": "Johan Svensson",
                 "email": "svenjohansvensson@gmail.com"
             },
             {
-                "id": 5,
                 "full_name": "Johan Meldo",
                 "email": "johan@meldo.se"
             },
             {
-                "id": 6,
                 "full_name": "Erik Svensson",
                 "email": "erik.sve@hotmail.com"
             },
             {
-                "id": 7,
                 "full_name": "Christoffer Ericsson",
                 "email": "coff_erics@yahoo.se"
             },
             {
-                "id": 8,
                 "full_name": "Martin Gustafsson",
                 "email": "martin@gustafsson.se"
             },
             {
-                "id": 9,
                 "full_name": "Tommy Lycen",
                 "email": "tommy@lycen.se"
             },
             {
-                "id": 10,
                 "full_name": "Tommy Källberg",
                 "email": "anymaztic@hotmail.com"
             },
             {
-                "id": 11,
                 "full_name": "Martin Krantz",
                 "email": "martin@krantz.se"
             }
@@ -76,20 +66,23 @@ class Command(BaseCommand):
             last_name = name_parts[1] if len(name_parts) > 1 else name_parts[0]
 
             surname_clean = last_name.lower().replace('ä', 'a').replace('å', 'a').replace('ö', 'o').replace(' ', '')
+            first_name_clean = first_name.lower().replace('ä', 'a').replace('å', 'a').replace('ö', 'o').replace(' ', '')
             email = p['email'].strip().lower()
+            old_email_pattern = f"{first_name_clean}@{surname_clean}.se"
             username = email
             password = f"{surname_clean}2026"
 
-            # Match user by pk, email, or first_name & last_name
+            # Match user by exact full name or emails
             user = (
-                User.objects.filter(pk=p['id']).first() or
+                User.objects.filter(first_name__iexact=first_name, last_name__iexact=last_name).first() or
                 User.objects.filter(email__iexact=email).first() or
-                User.objects.filter(first_name=first_name, last_name=last_name).first()
+                User.objects.filter(username__iexact=email).first() or
+                User.objects.filter(email__iexact=old_email_pattern).first() or
+                User.objects.filter(username__iexact=old_email_pattern).first()
             )
 
             if not user:
                 user = User.objects.create(
-                    pk=p['id'],
                     username=username,
                     first_name=first_name,
                     last_name=last_name,
