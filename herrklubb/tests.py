@@ -49,3 +49,16 @@ class HerrklubbTestCase(TestCase):
         response = self.client.get('/herrklubb/')
         self.assertEqual(response.status_code, 302) # redirected to SSO predictions login
         self.assertIn('/predictions/login/', response.url)
+
+    def test_wan_https_access(self):
+        # Simulate request over WAN via Caddy HTTPS reverse proxy on port 1981
+        self.client.login(username='john', password='password')
+        response = self.client.get(
+            '/hub/',
+            HTTP_HOST='217.31.171.173:1981',
+            HTTP_X_FORWARDED_PROTO='https',
+            secure=True
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Toarps HK Herrklubb')
+

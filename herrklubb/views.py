@@ -111,8 +111,9 @@ def predictions_sso_login(request):
     }
     signer = TimestampSigner(key=settings.HERRKLUBB_SSO_SECRET, salt='sso-salt')
     token = signer.sign_object(payload)
-    # Redirect to Prediction Engine running on port 2028
-    return redirect(f"http://127.0.0.1:2028/sso/login/?token={token}")
+    # Redirect to Prediction Engine running on port 2028 (HTTPS-aware)
+    scheme = 'https' if request.is_secure() else 'http'
+    return redirect(f"{scheme}://127.0.0.1:2028/sso/login/?token={token}")
 
 
 # --- HERRKLUBBEN VIEWS ---

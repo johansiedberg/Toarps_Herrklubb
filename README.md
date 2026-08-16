@@ -80,8 +80,11 @@ To preserve readability and code quality, all modifications must adhere to the f
   * **Code & Comments:** Written exclusively in **English**.
   * **User Interface & Output:** Written exclusively in **Swedish** (to align with the childhood friends target group).
 * **Port Conventions:**
-  * **Toarps Herrklubb:** Always runs on port `1981` (can be launched with `./venv/bin/python manage.py runserver 1981`).
+* **Toarps Herrklubb:** Always runs on port `1981` (can be launched with `./venv/bin/python manage.py runserver 1981`).
+  * Access at: `https://127.0.0.1:1981` (or `http://` in local dev)
   * **Prediction Engine:** Always runs on port `2028` (can be launched with `./venv/bin/python manage.py runserver 2028`).
+  * Access at: `https://127.0.0.1:2028` (or `http://` in local dev)
+* **HTTPS Security:** Both projects enforce HTTPS standards in production (`SECURE_PROXY_SSL_HEADER`, `SESSION_COOKIE_SECURE`, `CSRF_COOKIE_SECURE`, `SECURE_HSTS_SECONDS`, `SECURE_REFERRER_POLICY`). SSO redirects dynamically use `https://` when behind a TLS-terminating proxy.
 * **Database Rebuilding:**
   To reset and seed the database environment clean:
   1. Delete `db.sqlite3`.

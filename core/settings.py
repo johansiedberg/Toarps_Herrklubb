@@ -48,11 +48,32 @@ CSRF_COOKIE_NAME = 'toarps_herrklubb_csrftoken'
 SESSION_COOKIE_NAME = 'toarps_herrklubb_sessionid'
 
 CSRF_TRUSTED_ORIGINS = [
+    # Production (external IP via Caddy HTTPS)
+    'https://217.31.171.173:1981',
+    'https://217.31.171.173',
+    # Local development
+    'https://127.0.0.1:1981',
+    'https://localhost:1981',
+    'https://127.0.0.1',
+    'https://localhost',
     'http://127.0.0.1:1981',
     'http://localhost:1981',
     'http://127.0.0.1',
     'http://localhost',
 ]
+
+# HTTPS & Security Header Settings
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
+SECURE_SSL_REDIRECT = False if DEBUG else True
+SECURE_HSTS_SECONDS = 31536000 if not DEBUG else 0
+SECURE_HSTS_INCLUDE_SUBDOMAINS = not DEBUG
+SECURE_HSTS_PRELOAD = not DEBUG
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
+
 
 
 MIDDLEWARE = [
