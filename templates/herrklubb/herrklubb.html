@@ -9,17 +9,12 @@
     <!-- Header & Title -->
     <div class="p-4 rounded-4 shadow-lg mb-4 text-white position-relative overflow-hidden" 
          style="background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.90) 100%); border: 1px solid rgba(234, 179, 8, 0.3);">
-        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
-            <div class="d-flex align-items-center gap-3">
-                <span class="fs-1">🪣</span>
-                <div>
-                    <h1 class="display-6 fw-extrabold mb-0 text-white">Herrklubbens Bucketlist</h1>
-                    <p class="text-warning fw-semibold mb-0">Demokratisk rankning & röstning för nästa äventyr</p>
-                </div>
+        <div class="d-flex align-items-center gap-3">
+            <span class="fs-1">🪣</span>
+            <div>
+                <h1 class="display-6 fw-extrabold mb-0 text-white">Herrklubbens Bucketlist</h1>
+                <p class="text-warning fw-semibold mb-0">Demokratisk rankning & röstning för nästa äventyr</p>
             </div>
-            <button type="button" class="btn btn-sm btn-outline-warning rounded-pill px-3 py-1.5 fw-semibold" data-bs-toggle="modal" data-bs-target="#addItemModal">
-                <i class="fa-solid fa-plus me-1.5"></i>Nytt förslag
-            </button>
         </div>
     </div>
 
@@ -134,11 +129,11 @@
                                     <div class="d-flex align-items-center gap-2.5">
                                         <img src="{% static 'herrklubb/img/chip_green.svg' %}" alt="Green Chip 50" width="40" height="40">
                                         <div>
-                                            <strong class="d-block text-success fw-bold" style="font-size: 0.95rem;">Grön Marker</strong>
+                                            <strong class="d-block fw-bold" style="font-size: 0.95rem; color: #4ade80;">Grön Marker</strong>
                                             <span class="text-secondary small" style="font-size: 0.72rem;">Mellanpoäng</span>
                                         </div>
                                     </div>
-                                    <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-50 rounded-pill px-2.5 py-1 small fw-bold">
+                                    <span class="badge rounded-pill px-2.5 py-1 small fw-bold" style="background: rgba(21, 128, 61, 0.45); color: #86efac; border: 1.5px solid #22c55e; font-size: 0.78rem; text-shadow: 0 1px 2px rgba(0,0,0,0.6);">
                                         50 P
                                     </span>
                                 </div>
@@ -158,7 +153,7 @@
                                 </select>
                             </div>
                             {% if user_placed_gron %}
-                                <div class="mt-2 pt-2 border-top border-success border-opacity-20 d-flex align-items-center gap-1.5 text-success" style="font-size: 0.75rem;">
+                                <div class="mt-2 pt-2 border-top border-success border-opacity-20 d-flex align-items-center gap-1.5" style="font-size: 0.75rem; color: #4ade80;">
                                     <i class="fa-solid fa-circle-check"></i> <span class="text-truncate">Aktiv: {{ user_placed_gron.item.title }}</span>
                                 </div>
                             {% endif %}
@@ -394,10 +389,13 @@
     <div class="card bg-dark text-white border-0 shadow-lg rounded-4 overflow-hidden mb-5" 
          style="background: linear-gradient(145deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%); border: 1px solid rgba(255, 255, 255, 0.1) !important;">
         
-        <div class="card-header bg-dark bg-opacity-50 border-secondary border-opacity-25 py-3 px-4 d-flex align-items-center justify-content-between">
+        <div class="card-header bg-dark bg-opacity-50 border-secondary border-opacity-25 py-3 px-4 d-flex flex-wrap align-items-center justify-content-between gap-2">
             <h3 class="h5 fw-bold text-white mb-0">
                 <i class="fa-solid fa-list-ol text-warning me-2"></i>Rankad Bucketlist
             </h3>
+            <button type="button" class="btn btn-sm btn-outline-warning rounded-pill px-3 py-1.5 fw-semibold" data-bs-toggle="modal" data-bs-target="#addItemModal">
+                <i class="fa-solid fa-plus me-1.5"></i>Nytt förslag
+            </button>
         </div>
 
         <div class="list-group list-group-flush">

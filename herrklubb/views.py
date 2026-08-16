@@ -340,6 +340,7 @@ def build_calendar_context(request):
 
     unavailabilities = list(UserUnavailability.objects.select_related('user').all())
     user_unavailabilities = UserUnavailability.objects.filter(user=request.user, end_date__gte=today).order_by('start_date')
+    planned_events = list(HerrklubbEvent.objects.filter(is_active=True))
 
     swedish_months = [
         "", "Januari", "Februari", "Mars", "April", "Maj", "Juni",
@@ -365,6 +366,16 @@ def build_calendar_context(request):
             is_weekend = day.weekday() in [4, 5, 6]
             is_golden = (available_count == total_members) and is_weekend and not is_other_month
 
+            day_events = [
+                ev for ev in planned_events
+                if ev.event_date and (
+                    (ev.end_date and ev.event_date <= day <= ev.end_date) or
+                    (not ev.end_date and ev.event_date == day)
+                )
+            ]
+            is_planned_event = len(day_events) > 0
+            planned_event = day_events[0] if day_events else None
+
             days_data.append({
                 'date': day,
                 'day_num': day.day,
@@ -377,6 +388,8 @@ def build_calendar_context(request):
                 'blocked_users': blocked_users,
                 'is_user_blocked': (request.user in blocked_users),
                 'is_golden': is_golden,
+                'is_planned_event': is_planned_event,
+                'planned_event': planned_event,
             })
 
     golden_weekends = []
@@ -434,6 +447,16 @@ def build_calendar_context(request):
                 is_weekend = day.weekday() in [4, 5, 6]
                 is_golden = (available_count == total_members) and is_weekend
 
+                day_events = [
+                    ev for ev in planned_events
+                    if ev.event_date and (
+                        (ev.end_date and ev.event_date <= day <= ev.end_date) or
+                        (not ev.end_date and ev.event_date == day)
+                    )
+                ]
+                is_planned_event = len(day_events) > 0
+                planned_event = day_events[0] if day_events else None
+
                 m_days_data.append({
                     'date': day,
                     'day_num': day.day,
@@ -445,6 +468,8 @@ def build_calendar_context(request):
                     'blocked_users': blocked_users,
                     'is_user_blocked': (request.user in blocked_users),
                     'is_golden': is_golden,
+                    'is_planned_event': is_planned_event,
+                    'planned_event': planned_event,
                 })
         yearly_months.append({
             'month_num': m,

@@ -58,6 +58,7 @@ class Command(BaseCommand):
 
         created_count = 0
         updated_count = 0
+        active_member_user_ids = []
 
         for p in personas:
             full_name = p['full_name']
@@ -104,11 +105,19 @@ class Command(BaseCommand):
             profile.is_herrklubb_member = True
             profile.save()
 
+            active_member_user_ids.append(user.id)
+
             if created:
                 created_count += 1
             else:
                 updated_count += 1
 
+        # Ensure only the 11 active personas are flagged as Herrklubb members
+        UserProfile.objects.exclude(user_id__in=active_member_user_ids).update(is_herrklubb_member=False)
+
+        # Clean up obsolete duplicate accounts without associated data
+        User.objects.filter(username='johansiedberg').exclude(id__in=active_member_user_ids).delete()
+
         self.stdout.write(self.style.SUCCESS(
-            f"Successfully processed {len(personas)} members ({created_count} created, {updated_count} updated)."
+            f"Successfully processed {len(personas)} members ({created_count} created, {updated_count} updated). Active Herrklubb members: {len(active_member_user_ids)}."
         ))

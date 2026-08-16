@@ -37,17 +37,17 @@
                 <!-- Subtotals of Markers -->
                 <div class="d-flex gap-1 ms-auto">
                     {% if item.count_svart > 0 %}
-                        <span class="badge bg-dark border border-light text-white rounded-pill px-2 py-1" title="Svarta marker (6p)">
+                        <span class="badge bg-dark border border-light text-white rounded-pill px-2 py-1" title="Svarta marker (100p)">
                             ♠ {{ item.count_svart }}
                         </span>
                     {% endif %}
                     {% if item.count_gron > 0 %}
-                        <span class="badge bg-success text-white rounded-pill px-2 py-1" title="Gröna marker (3p)">
+                        <span class="badge bg-success text-white rounded-pill px-2 py-1" title="Gröna marker (50p)">
                             ♣ {{ item.count_gron }}
                         </span>
                     {% endif %}
                     {% if item.count_rod > 0 %}
-                        <span class="badge bg-danger text-white rounded-pill px-2 py-1" title="Röda marker (2p)">
+                        <span class="badge bg-danger text-white rounded-pill px-2 py-1" title="Röda marker (25p)">
                             ♦ {{ item.count_rod }}
                         </span>
                     {% endif %}
@@ -88,22 +88,22 @@
                 
                 <!-- Voting Markers Buttons -->
                 <div class="d-flex flex-wrap gap-1.5">
-                    <!-- Svart Marker (6p) -->
+                    <!-- Svart Marker (100p) -->
                     <button type="button" onclick="voteItem('{{ item.id }}', 'SVART')" 
                             class="btn btn-sm rounded-pill fw-bold {% if user_placed_svart and user_placed_svart.item.id == item.id %}btn-dark border border-warning text-warning shadow-sm{% else %}btn-outline-dark text-white border-secondary{% endif %}" style="font-size: 0.8rem;">
-                        ♠ Svart (6p)
+                         Svart (100p)
                     </button>
 
-                    <!-- Grön Marker (3p) -->
+                    <!-- Grön Marker (50p) -->
                     <button type="button" onclick="voteItem('{{ item.id }}', 'GRON')" 
                             class="btn btn-sm rounded-pill fw-bold {% if user_placed_gron and user_placed_gron.item.id == item.id %}btn-success text-white shadow-sm{% else %}btn-outline-success text-success border-success border-opacity-50{% endif %}" style="font-size: 0.8rem;">
-                        ♣ Grön (3p)
+                        ♣ Grön (50p)
                     </button>
 
-                    <!-- Röd Marker (2p) -->
+                    <!-- Röd Marker (25p) -->
                     <button type="button" onclick="voteItem('{{ item.id }}', 'ROD')" 
                             class="btn btn-sm rounded-pill fw-bold {% if user_placed_rod and user_placed_rod.item.id == item.id %}btn-danger text-white shadow-sm{% else %}btn-outline-danger text-danger border-danger border-opacity-50{% endif %}" style="font-size: 0.8rem;">
-                        ♦ Röd (2p)
+                        ♦ Röd (25p)
                     </button>
 
                     <!-- Högsta Dröm Button -->
