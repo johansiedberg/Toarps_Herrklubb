@@ -84,11 +84,8 @@
                     Alla lediga
                 </span>
                 <span class="d-inline-flex align-items-center gap-1.5 text-white">
-                    <span class="d-inline-block rounded-pill px-2 py-0.5 small fw-bold" style="background-color: rgba(153, 27, 27, 0.7); border: 1.5px solid rgba(239, 68, 68, 0.5);">Förhinder</span>
-                </span>
-                <span class="d-inline-flex align-items-center gap-1.5 text-warning fw-bold">
-                    <span class="d-inline-block rounded-circle bg-warning" style="width: 10px; height: 10px;"></span>
-                    Ditt hinder
+                    <span class="d-inline-block rounded-pill px-2 py-0.5 small fw-bold" style="background-color: rgba(153, 27, 27, 0.7); border: 1.5px solid rgba(239, 68, 68, 0.5);">10/11</span>
+                    Förhinder (Faded röd)
                 </span>
                 <span class="d-inline-flex align-items-center gap-1.5 text-warning fw-bold">
                     <span class="d-inline-block rounded-pill px-2 py-0.5 small fw-bold" style="background-color: #facc15; color: #000; border: 1px solid #eab308;">Event</span>
@@ -139,8 +136,6 @@
                                     <div class="calendar-day-tile flex-shrink-0 p-1.5 rounded-3 text-center border transition-all
                                                 {% if day.is_planned_event %}
                                                     border-warning border-2 shadow-lg
-                                                {% elif day.is_user_blocked %}
-                                                    border-warning border-2
                                                 {% elif day.available_count < total_members %}
                                                     border-danger border-opacity-50
                                                 {% elif day.is_weekend %}
@@ -152,8 +147,6 @@
                                          style="width: 54px; min-height: 72px; 
                                                 {% if day.is_planned_event %}
                                                     background: linear-gradient(145deg, rgba(234, 179, 8, 0.38) 0%, rgba(15, 23, 42, 0.95) 100%); border: 2px solid #FACC15 !important; box-shadow: 0 0 12px rgba(250, 204, 21, 0.35);
-                                                {% elif day.is_user_blocked %}
-                                                    background: linear-gradient(145deg, rgba(153, 27, 27, 0.4) 0%, rgba(15, 23, 42, 0.95) 100%); border: 2px solid #FACC15 !important;
                                                 {% elif day.available_count < total_members %}
                                                     background: linear-gradient(145deg, rgba(153, 27, 27, 0.25) 0%, rgba(15, 23, 42, 0.95) 100%); border: 1.5px solid rgba(239, 68, 68, 0.45) !important; box-shadow: 0 0 8px rgba(239, 68, 68, 0.2);
                                                 {% elif day.is_weekend %}
@@ -161,7 +154,7 @@
                                                 {% else %}
                                                     background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(255, 255, 255, 0.12) !important;
                                                 {% endif %}"
-                                         {% if day.is_planned_event or day.blocked_users %}data-bs-toggle="tooltip" data-bs-html="true" title="<strong>{{ day.weekday_name }} {{ day.day_num }} {{ month.month_name }}</strong><br>{% if day.is_planned_event %}<span class='text-warning fw-bold'>🏆 Planerat Event: {{ day.planned_event.title }}</span><br>{% endif %}{% if day.is_user_blocked %}<span class='text-warning fw-bold'>Du har förhinder!</span><br>{% endif %}{% if day.blocked_users %}Förhindrade: {% for u in day.blocked_users %}{% if u.get_full_name %}{{ u.get_full_name }}{% elif u.first_name %}{{ u.first_name }} {{ u.last_name }}{% else %}{{ u.email }}{% endif %}{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}"{% endif %}>
+                                         {% if day.is_planned_event or day.blocked_users %}data-bs-toggle="tooltip" data-bs-html="true" title="<strong>{{ day.weekday_name }} {{ day.day_num }} {{ month.month_name }}</strong><br>{% if day.is_planned_event %}<span class='text-warning fw-bold'>🏆 Planerat Event: {{ day.planned_event.title }}</span><br>{% endif %}{% if day.blocked_users %}Förhindrade ({{ day.unavailable_count }} st): {% for u in day.blocked_users %}{% if u.get_full_name %}{{ u.get_full_name }}{% elif u.first_name %}{{ u.first_name }} {{ u.last_name }}{% else %}{{ u.email }}{% endif %}{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}"{% endif %}>
                                         
                                         <!-- Top: Weekday Badge -->
                                         <span class="d-block fw-bold font-monospace text-uppercase" style="font-size: 0.64rem; line-height: 1; {% if day.is_planned_event %}color: #FEF08A;{% elif day.is_weekend %}color: #E2E8F0; font-weight: 800;{% else %}color: rgba(255, 255, 255, 0.5);{% endif %}">
@@ -176,12 +169,10 @@
                                         <!-- Bottom: Status Badge -->
                                         {% if day.is_planned_event %}
                                             <span class="badge text-dark p-0 px-1 fw-extrabold w-100" style="background-color: #FACC15; font-size: 0.55rem; line-height: 1.2;">Event</span>
-                                        {% elif day.is_user_blocked %}
-                                            <span class="badge text-dark p-0 px-1 fw-bold w-100" style="background-color: #facc15; font-size: 0.55rem; line-height: 1.2;">Mitt</span>
                                         {% elif day.available_count == total_members %}
                                             <span class="badge text-white p-0 px-1 fw-bold w-100" style="background-color: #15803d; font-size: 0.55rem; line-height: 1.2;">11/11</span>
                                         {% else %}
-                                            <span class="badge text-white p-0 px-1 fw-bold w-100" style="background-color: #991b1b; font-size: 0.55rem; line-height: 1.2;">{{ day.available_count }}/11</span>
+                                            <span class="badge text-white p-0 px-1 fw-bold w-100" style="background-color: #991b1b; font-size: 0.55rem; line-height: 1.2;">{{ day.available_count }}/{{ total_members }}</span>
                                         {% endif %}
                                     </div>
                                 {% endfor %}
@@ -210,8 +201,6 @@
                                     <div class="calendar-day-tile flex-shrink-0 p-1.5 rounded-3 text-center border transition-all
                                                 {% if day.is_planned_event %}
                                                     border-warning border-2 shadow-lg
-                                                {% elif day.is_user_blocked %}
-                                                    border-warning border-2
                                                 {% elif day.available_count < total_members %}
                                                     border-danger border-opacity-50
                                                 {% elif day.is_weekend %}
@@ -223,8 +212,6 @@
                                          style="width: 54px; min-height: 72px; 
                                                 {% if day.is_planned_event %}
                                                     background: linear-gradient(145deg, rgba(234, 179, 8, 0.38) 0%, rgba(15, 23, 42, 0.95) 100%); border: 2px solid #FACC15 !important; box-shadow: 0 0 12px rgba(250, 204, 21, 0.35);
-                                                {% elif day.is_user_blocked %}
-                                                    background: linear-gradient(145deg, rgba(153, 27, 27, 0.4) 0%, rgba(15, 23, 42, 0.95) 100%); border: 2px solid #FACC15 !important;
                                                 {% elif day.available_count < total_members %}
                                                     background: linear-gradient(145deg, rgba(153, 27, 27, 0.25) 0%, rgba(15, 23, 42, 0.95) 100%); border: 1.5px solid rgba(239, 68, 68, 0.45) !important; box-shadow: 0 0 8px rgba(239, 68, 68, 0.2);
                                                 {% elif day.is_weekend %}
@@ -232,7 +219,7 @@
                                                 {% else %}
                                                     background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(255, 255, 255, 0.12) !important;
                                                 {% endif %}"
-                                         {% if day.is_planned_event or day.blocked_users %}data-bs-toggle="tooltip" data-bs-html="true" title="<strong>{{ day.weekday_name }} {{ day.day_num }} {{ month.month_name }}</strong><br>{% if day.is_planned_event %}<span class='text-warning fw-bold'>🏆 Planerat Event: {{ day.planned_event.title }}</span><br>{% endif %}{% if day.is_user_blocked %}<span class='text-warning fw-bold'>Du har förhinder!</span><br>{% endif %}{% if day.blocked_users %}Förhindrade: {% for u in day.blocked_users %}{% if u.get_full_name %}{{ u.get_full_name }}{% elif u.first_name %}{{ u.first_name }} {{ u.last_name }}{% else %}{{ u.email }}{% endif %}{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}"{% endif %}>
+                                         {% if day.is_planned_event or day.blocked_users %}data-bs-toggle="tooltip" data-bs-html="true" title="<strong>{{ day.weekday_name }} {{ day.day_num }} {{ month.month_name }}</strong><br>{% if day.is_planned_event %}<span class='text-warning fw-bold'>🏆 Planerat Event: {{ day.planned_event.title }}</span><br>{% endif %}{% if day.blocked_users %}Förhindrade ({{ day.unavailable_count }} st): {% for u in day.blocked_users %}{% if u.get_full_name %}{{ u.get_full_name }}{% elif u.first_name %}{{ u.first_name }} {{ u.last_name }}{% else %}{{ u.email }}{% endif %}{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}"{% endif %}>
                                         
                                         <!-- Top: Weekday Badge -->
                                         <span class="d-block fw-bold font-monospace text-uppercase" style="font-size: 0.64rem; line-height: 1; {% if day.is_planned_event %}color: #FEF08A;{% elif day.is_weekend %}color: #E2E8F0; font-weight: 800;{% else %}color: rgba(255, 255, 255, 0.5);{% endif %}">
@@ -247,12 +234,10 @@
                                         <!-- Bottom: Status Badge -->
                                         {% if day.is_planned_event %}
                                             <span class="badge text-dark p-0 px-1 fw-extrabold w-100" style="background-color: #FACC15; font-size: 0.55rem; line-height: 1.2;">Event</span>
-                                        {% elif day.is_user_blocked %}
-                                            <span class="badge text-dark p-0 px-1 fw-bold w-100" style="background-color: #facc15; font-size: 0.55rem; line-height: 1.2;">Mitt</span>
                                         {% elif day.available_count == total_members %}
                                             <span class="badge text-white p-0 px-1 fw-bold w-100" style="background-color: #15803d; font-size: 0.55rem; line-height: 1.2;">11/11</span>
                                         {% else %}
-                                            <span class="badge text-white p-0 px-1 fw-bold w-100" style="background-color: #991b1b; font-size: 0.55rem; line-height: 1.2;">{{ day.available_count }}/11</span>
+                                            <span class="badge text-white p-0 px-1 fw-bold w-100" style="background-color: #991b1b; font-size: 0.55rem; line-height: 1.2;">{{ day.available_count }}/{{ total_members }}</span>
                                         {% endif %}
                                     </div>
                                 {% endfor %}
