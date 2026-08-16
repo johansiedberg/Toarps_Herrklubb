@@ -1,10 +1,9 @@
-VIEWS IMPORTED DATETIME: <module 'datetime' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/datetime.py'>
 [
 {
   "model": "auth.user",
   "pk": 1,
   "fields": {
-    "password": "pbkdf2_sha256$1500000$6OgJxkP1ilkpQtReNiFRFc$sV0y+ROVZTalHCScSn3KCNTbHYuYs8Fq8+2uilsII4U=",
+    "password": "pbkdf2_sha256$1500000$UxAMJBsV6mCTS6t1qTdUkl$W86HUV81k41cZZ3Lh/9tcoEnRLRqNdNukh//yJEdBLQ=",
     "last_login": "2026-08-15T08:55:09.633Z",
     "is_superuser": false,
     "username": "johan.siedberg@gmail.com",
@@ -22,13 +21,13 @@ VIEWS IMPORTED DATETIME: <module 'datetime' from '/Library/Frameworks/Python.fra
   "model": "auth.user",
   "pk": 2,
   "fields": {
-    "password": "pbkdf2_sha256$1500000$hywLqlWBZXLtFqf1e9x6YV$ZIFdRfm4qDPlELCarcjIKQrkOiOPAo1YqOnwAuSJ4R8=",
+    "password": "pbkdf2_sha256$1500000$9a35DiZ4tYLQ3jlxKX5vzM$XVVRztDY7S4JGjMlcTnebgiNGFejnfAhu0M8sQCEgSQ=",
     "last_login": null,
     "is_superuser": false,
-    "username": "mikael@dahl.se",
+    "username": "mikaeld81@gmail.com",
     "first_name": "Mikael",
     "last_name": "Dahl",
-    "email": "mikael@dahl.se",
+    "email": "mikaeld81@gmail.com",
     "is_staff": false,
     "is_active": true,
     "date_joined": "2026-08-14T20:33:22.237Z",
@@ -40,13 +39,13 @@ VIEWS IMPORTED DATETIME: <module 'datetime' from '/Library/Frameworks/Python.fra
   "model": "auth.user",
   "pk": 3,
   "fields": {
-    "password": "pbkdf2_sha256$1500000$HyFjP1ewPtwJ0fAKbjq1qT$XfnrpjP3pdXU4L1dMlSs367MAe4mjwDYVXl6uAGqnyw=",
+    "password": "pbkdf2_sha256$1500000$uyHRI8c5i7Itd3d7pdE8c4$7xZHtbzIOc4zb2XMIIsdYOwgg81QyvDIHx27fmKGNnA=",
     "last_login": null,
     "is_superuser": false,
-    "username": "andreas@larsson.se",
+    "username": "senasa9@gmail.com",
     "first_name": "Andreas",
     "last_name": "Larsson",
-    "email": "andreas@larsson.se",
+    "email": "senasa9@gmail.com",
     "is_staff": false,
     "is_active": true,
     "date_joined": "2026-08-14T20:33:34.815Z",
@@ -58,7 +57,7 @@ VIEWS IMPORTED DATETIME: <module 'datetime' from '/Library/Frameworks/Python.fra
   "model": "auth.user",
   "pk": 4,
   "fields": {
-    "password": "pbkdf2_sha256$1500000$KuwxmOda2IRT8pyLlJ6hNU$1i+yCqmf0rhVaooksiSq7G6AH1pfYa/VWFJvJK3QqeE=",
+    "password": "pbkdf2_sha256$1500000$DdrLzIHLLv6zZVVqt3X8t7$lg6a951q8mEInRZpYFswLSZ3+2rRkuvrrmUx3k3B8JY=",
     "last_login": null,
     "is_superuser": false,
     "username": "svenjohansvensson@gmail.com",
@@ -76,13 +75,13 @@ VIEWS IMPORTED DATETIME: <module 'datetime' from '/Library/Frameworks/Python.fra
   "model": "auth.user",
   "pk": 5,
   "fields": {
-    "password": "pbkdf2_sha256$1500000$BuhczA2AcBE5A6TQdCeJ88$E8sONR7kiIyaBnfp+MoZ/QYzQl7zT4zbPaK8t46ofWY=",
+    "password": "pbkdf2_sha256$1500000$B44YVDVRwcCc7xW9u5SqIJ$PshQlu98pgpfXLJu3iE5/bMEy3Yjit72IUp5Z47pjSw=",
     "last_login": null,
     "is_superuser": false,
-    "username": "johan@meldo.se",
+    "username": "jmeldo@gmail.com",
     "first_name": "Johan",
     "last_name": "Meldo",
-    "email": "johan@meldo.se",
+    "email": "jmeldo@gmail.com",
     "is_staff": false,
     "is_active": true,
     "date_joined": "2026-08-14T20:34:01.864Z",
@@ -94,7 +93,7 @@ VIEWS IMPORTED DATETIME: <module 'datetime' from '/Library/Frameworks/Python.fra
   "model": "auth.user",
   "pk": 6,
   "fields": {
-    "password": "pbkdf2_sha256$1500000$v9u4WqhcK943KPnEqQFpNL$mLeqGA5uDT8t4FxkLpjBwXkx2fk6/mvGkCStMGqLmAc=",
+    "password": "pbkdf2_sha256$1500000$Roa5YbEh5obsOffdufHiH5$TH261+3ZEV12Zjl7SBRuV3VA3FBhka3y45ek22I2PD4=",
     "last_login": null,
     "is_superuser": false,
     "username": "erik.sve@hotmail.com",
@@ -112,7 +111,7 @@ VIEWS IMPORTED DATETIME: <module 'datetime' from '/Library/Frameworks/Python.fra
   "model": "auth.user",
   "pk": 7,
   "fields": {
-    "password": "pbkdf2_sha256$1500000$e18CoezfrSRGNiKFMhCKP9$pP15NpxbRO6iDA0/iGBfUQC/tTSY/SVH4fhzHnEBnoI=",
+    "password": "pbkdf2_sha256$1500000$MLWrvKL3ZwDt0Wt5NBBda3$PEut7Qyzp97VHBCbudqnlAakdEkUzPeJXmPZ9FM0kLE=",
     "last_login": null,
     "is_superuser": false,
     "username": "coff_erics@yahoo.se",
@@ -130,13 +129,13 @@ VIEWS IMPORTED DATETIME: <module 'datetime' from '/Library/Frameworks/Python.fra
   "model": "auth.user",
   "pk": 8,
   "fields": {
-    "password": "pbkdf2_sha256$1500000$XbNuKB4wqRIXeys5IfmSIE$ajElxH5DHAIlUHA+uq4wvQptSTDLKyx9rEYH+w4jUX4=",
+    "password": "pbkdf2_sha256$1500000$CXZDRcF015mTWMzFu2aWRs$aHu8Ri8G9IRVn3RyNILB+VouMOa+Z8XTyvCGxmAKpLM=",
     "last_login": null,
     "is_superuser": false,
-    "username": "martin@gustafsson.se",
+    "username": "martin.gustafson1@gmail.com",
     "first_name": "Martin",
-    "last_name": "Gustafsson",
-    "email": "martin@gustafsson.se",
+    "last_name": "Gustafson",
+    "email": "martin.gustafson1@gmail.com",
     "is_staff": false,
     "is_active": true,
     "date_joined": "2026-08-14T20:34:38.329Z",
@@ -148,13 +147,13 @@ VIEWS IMPORTED DATETIME: <module 'datetime' from '/Library/Frameworks/Python.fra
   "model": "auth.user",
   "pk": 9,
   "fields": {
-    "password": "pbkdf2_sha256$1500000$E6kdx2l0ArUGm8ciDQHvRj$flE6Sh6JPn7gcr0lUOIc2DQk9G1zlWKH1E+f4rX97Vs=",
+    "password": "pbkdf2_sha256$1500000$EJT0tJncATSGeqolhcXcxQ$Lh0rVs5lhai1fsASJ+2MtTvpsxniENH3RcMd9L3+drI=",
     "last_login": null,
     "is_superuser": false,
-    "username": "tommy@lycen.se",
+    "username": "t.lycen@gmail.com",
     "first_name": "Tommy",
     "last_name": "Lycen",
-    "email": "tommy@lycen.se",
+    "email": "t.lycen@gmail.com",
     "is_staff": false,
     "is_active": true,
     "date_joined": "2026-08-14T20:34:49.040Z",
@@ -166,7 +165,7 @@ VIEWS IMPORTED DATETIME: <module 'datetime' from '/Library/Frameworks/Python.fra
   "model": "auth.user",
   "pk": 10,
   "fields": {
-    "password": "pbkdf2_sha256$1500000$ttz6GuG7jihfNqiwVnfDn9$Uio3WS6Uvo4Yx8KFJvrIkkFlEqzNNS1Udsis4UCYkbA=",
+    "password": "pbkdf2_sha256$1500000$ANY9DFT1WU2sIbLoLx9saw$mcMTgFRTlGReRlER66k/AiBnPnfYYZ8MH/oz/lY3sLg=",
     "last_login": null,
     "is_superuser": false,
     "username": "anymaztic@hotmail.com",
@@ -184,18 +183,500 @@ VIEWS IMPORTED DATETIME: <module 'datetime' from '/Library/Frameworks/Python.fra
   "model": "auth.user",
   "pk": 11,
   "fields": {
-    "password": "pbkdf2_sha256$1500000$EMtIKbhvzEUgiYWpHP2vai$EEBTzflI9LuxDcJxyjJbUNtCJfNCqQ3/DaON+0FNf0U=",
+    "password": "pbkdf2_sha256$1500000$9M0CwnXlNf8oLDvINoVAQj$eLS5yTlHLoh0nDK88EjzSsGPUIBRuRJOS3Y+7WKQKaw=",
     "last_login": null,
     "is_superuser": false,
-    "username": "martin@krantz.se",
+    "username": "martin@meritel.se",
     "first_name": "Martin",
     "last_name": "Krantz",
-    "email": "martin@krantz.se",
+    "email": "martin@meritel.se",
     "is_staff": false,
     "is_active": true,
     "date_joined": "2026-08-14T20:35:10.982Z",
     "groups": [],
     "user_permissions": []
+  }
+},
+{
+  "model": "herrklubb.userprofile",
+  "pk": 1,
+  "fields": {
+    "user": 1,
+    "avatar": "",
+    "is_herrklubb_member": true
+  }
+},
+{
+  "model": "herrklubb.userprofile",
+  "pk": 2,
+  "fields": {
+    "user": 2,
+    "avatar": "",
+    "is_herrklubb_member": true
+  }
+},
+{
+  "model": "herrklubb.userprofile",
+  "pk": 3,
+  "fields": {
+    "user": 3,
+    "avatar": "",
+    "is_herrklubb_member": true
+  }
+},
+{
+  "model": "herrklubb.userprofile",
+  "pk": 4,
+  "fields": {
+    "user": 4,
+    "avatar": "",
+    "is_herrklubb_member": true
+  }
+},
+{
+  "model": "herrklubb.userprofile",
+  "pk": 5,
+  "fields": {
+    "user": 5,
+    "avatar": "",
+    "is_herrklubb_member": true
+  }
+},
+{
+  "model": "herrklubb.userprofile",
+  "pk": 6,
+  "fields": {
+    "user": 6,
+    "avatar": "",
+    "is_herrklubb_member": true
+  }
+},
+{
+  "model": "herrklubb.userprofile",
+  "pk": 7,
+  "fields": {
+    "user": 7,
+    "avatar": "",
+    "is_herrklubb_member": true
+  }
+},
+{
+  "model": "herrklubb.userprofile",
+  "pk": 8,
+  "fields": {
+    "user": 8,
+    "avatar": "",
+    "is_herrklubb_member": true
+  }
+},
+{
+  "model": "herrklubb.userprofile",
+  "pk": 9,
+  "fields": {
+    "user": 9,
+    "avatar": "",
+    "is_herrklubb_member": true
+  }
+},
+{
+  "model": "herrklubb.userprofile",
+  "pk": 10,
+  "fields": {
+    "user": 10,
+    "avatar": "",
+    "is_herrklubb_member": true
+  }
+},
+{
+  "model": "herrklubb.userprofile",
+  "pk": 11,
+  "fields": {
+    "user": 11,
+    "avatar": "",
+    "is_herrklubb_member": true
+  }
+},
+{
+  "model": "herrklubb.bucketcategory",
+  "pk": 1,
+  "fields": {
+    "name": "Sport & Stora Evenemang",
+    "icon": "⚽",
+    "order": 1
+  }
+},
+{
+  "model": "herrklubb.bucketcategory",
+  "pk": 2,
+  "fields": {
+    "name": "Äventyr, Natur & Vinter",
+    "icon": "🏔️",
+    "order": 2
+  }
+},
+{
+  "model": "herrklubb.bucketcategory",
+  "pk": 3,
+  "fields": {
+    "name": "Temaresor: Mat, Dryck & Kultur",
+    "icon": "🍺",
+    "order": 3
+  }
+},
+{
+  "model": "herrklubb.bucketcategory",
+  "pk": 4,
+  "fields": {
+    "name": "Storstadsresor & Weekend",
+    "icon": "🏙️",
+    "order": 4
+  }
+},
+{
+  "model": "herrklubb.bucketcategory",
+  "pk": 5,
+  "fields": {
+    "name": "Gemenskap & Snabba Event",
+    "icon": "🎉",
+    "order": 5
+  }
+},
+{
+  "model": "herrklubb.bucketitem",
+  "pk": 1,
+  "fields": {
+    "title": "Fotbollsresa: Serie A (Italien)",
+    "category": 1,
+    "description": "T.ex. Milano-derby eller Rom-resa för klassisk italiensk läktarkultur.",
+    "created_by": null,
+    "is_completed": false,
+    "completed_date": null,
+    "created_at": "2026-08-14T20:35:36.956Z"
+  }
+},
+{
+  "model": "herrklubb.bucketitem",
+  "pk": 2,
+  "fields": {
+    "title": "Fotbollsresa: Premier League (England)",
+    "category": 1,
+    "description": "London eller Manchester – äkta brittisk fotbollspub och matchdag.",
+    "created_by": null,
+    "is_completed": false,
+    "completed_date": null,
+    "created_at": "2026-08-14T20:35:36.967Z"
+  }
+},
+{
+  "model": "herrklubb.bucketitem",
+  "pk": 3,
+  "fields": {
+    "title": "Fotbollsresa: Bundesliga (Tyskland)",
+    "category": 1,
+    "description": "Dortmund / Gelbe Wand eller München med episkt arrangemang.",
+    "created_by": null,
+    "is_completed": false,
+    "completed_date": null,
+    "created_at": "2026-08-14T20:35:36.974Z"
+  }
+},
+{
+  "model": "herrklubb.bucketitem",
+  "pk": 4,
+  "fields": {
+    "title": "Fotbollsresa: Old Firm (Skottland)",
+    "category": 1,
+    "description": "Celtic vs Rangers i Glasgow – ett av världens mäktigaste derbyn.",
+    "created_by": null,
+    "is_completed": false,
+    "completed_date": null,
+    "created_at": "2026-08-14T20:35:36.982Z"
+  }
+},
+{
+  "model": "herrklubb.bucketitem",
+  "pk": 5,
+  "fields": {
+    "title": "Fotbollsresa: EM eller VM",
+    "category": 1,
+    "description": "Landslagsturnering live från läktaren.",
+    "created_by": null,
+    "is_completed": false,
+    "completed_date": null,
+    "created_at": "2026-08-14T20:35:36.986Z"
+  }
+},
+{
+  "model": "herrklubb.bucketitem",
+  "pk": 6,
+  "fields": {
+    "title": "Stockholmsderby",
+    "category": 1,
+    "description": "AIK, Hammarby eller Djurgården i ett kokande allsvenskt derby.",
+    "created_by": null,
+    "is_completed": false,
+    "completed_date": null,
+    "created_at": "2026-08-14T20:35:37.418Z"
+  }
+},
+{
+  "model": "herrklubb.bucketitem",
+  "pk": 7,
+  "fields": {
+    "title": "Formel 1-lopp",
+    "category": 1,
+    "description": "Live Grand Prix med motorljud och VIP-stämning.",
+    "created_by": null,
+    "is_completed": false,
+    "completed_date": null,
+    "created_at": "2026-08-14T20:35:37.423Z"
+  }
+},
+{
+  "model": "herrklubb.bucketitem",
+  "pk": 8,
+  "fields": {
+    "title": "NHL-match & Nordamerika",
+    "category": 1,
+    "description": "Ishockeyresa till USA/Kanada för NHL i världsklass.",
+    "created_by": null,
+    "is_completed": false,
+    "completed_date": null,
+    "created_at": "2026-08-14T20:35:37.428Z"
+  }
+},
+{
+  "model": "herrklubb.bucketitem",
+  "pk": 9,
+  "fields": {
+    "title": "Tennis Grand Slam & Event",
+    "category": 1,
+    "description": "Franska Öppna (Paris), Australian Open eller Tennisveckan i Båstad.",
+    "created_by": null,
+    "is_completed": false,
+    "completed_date": null,
+    "created_at": "2026-08-14T20:35:37.435Z"
+  }
+},
+{
+  "model": "herrklubb.bucketitem",
+  "pk": 10,
+  "fields": {
+    "title": "Övrig Elitsport",
+    "category": 1,
+    "description": "Hockey-VM eller Handboll i Kiel.",
+    "created_by": null,
+    "is_completed": false,
+    "completed_date": null,
+    "created_at": "2026-08-14T20:35:37.439Z"
+  }
+},
+{
+  "model": "herrklubb.bucketitem",
+  "pk": 11,
+  "fields": {
+    "title": "Norgeresa till Coffe",
+    "category": 2,
+    "description": "Vandring, fjäll & storslagna norska äventyr.",
+    "created_by": null,
+    "is_completed": false,
+    "completed_date": null,
+    "created_at": "2026-08-14T20:35:37.452Z"
+  }
+},
+{
+  "model": "herrklubb.bucketitem",
+  "pk": 12,
+  "fields": {
+    "title": "Island",
+    "category": 2,
+    "description": "Vulkaner, gejsrar, varma källor & naturupplevelser.",
+    "created_by": null,
+    "is_completed": false,
+    "completed_date": null,
+    "created_at": "2026-08-14T20:35:37.457Z"
+  }
+},
+{
+  "model": "herrklubb.bucketitem",
+  "pk": 13,
+  "fields": {
+    "title": "Bestiga Kebnekaise",
+    "category": 2,
+    "description": "Utmaning och toppbestigning på Sveriges högsta berg.",
+    "created_by": null,
+    "is_completed": false,
+    "completed_date": null,
+    "created_at": "2026-08-14T20:35:37.461Z"
+  }
+},
+{
+  "model": "herrklubb.bucketitem",
+  "pk": 14,
+  "fields": {
+    "title": "Svensk Hajk & Friluftsliv",
+    "category": 2,
+    "description": "Övernattning i vildmarken, fiske och lägereld.",
+    "created_by": null,
+    "is_completed": false,
+    "completed_date": null,
+    "created_at": "2026-08-14T20:35:37.469Z"
+  }
+},
+{
+  "model": "herrklubb.bucketitem",
+  "pk": 15,
+  "fields": {
+    "title": "Skidresa",
+    "category": 2,
+    "description": "Alperna eller klassiska fjällen för skidåkning & after-ski.",
+    "created_by": null,
+    "is_completed": false,
+    "completed_date": null,
+    "created_at": "2026-08-14T20:35:37.475Z"
+  }
+},
+{
+  "model": "herrklubb.bucketitem",
+  "pk": 16,
+  "fields": {
+    "title": "Oktoberfest i München",
+    "category": 3,
+    "description": "Lederhosen, ölsejdlar och stämning i bayerska tält.",
+    "created_by": null,
+    "is_completed": false,
+    "completed_date": null,
+    "created_at": "2026-08-14T20:35:37.491Z"
+  }
+},
+{
+  "model": "herrklubb.bucketitem",
+  "pk": 17,
+  "fields": {
+    "title": "Skottland: Whiskyresa",
+    "category": 3,
+    "description": "Destilleriturer, provningar och skotsk kultur.",
+    "created_by": null,
+    "is_completed": false,
+    "completed_date": null,
+    "created_at": "2026-08-14T20:35:37.777Z"
+  }
+},
+{
+  "model": "herrklubb.bucketitem",
+  "pk": 18,
+  "fields": {
+    "title": "Toscana: Vin- & Matresa",
+    "category": 3,
+    "description": "Matlagningskurser, vingårdar och italiensk njutning.",
+    "created_by": null,
+    "is_completed": false,
+    "completed_date": null,
+    "created_at": "2026-08-14T20:35:37.791Z"
+  }
+},
+{
+  "model": "herrklubb.bucketitem",
+  "pk": 19,
+  "fields": {
+    "title": "Europa Storstad",
+    "category": 4,
+    "description": "Weekend i Prag, Warszawa, Budapest, Bukarest eller Florens.",
+    "created_by": null,
+    "is_completed": false,
+    "completed_date": null,
+    "created_at": "2026-08-14T20:35:37.805Z"
+  }
+},
+{
+  "model": "herrklubb.bucketitem",
+  "pk": 20,
+  "fields": {
+    "title": "Nordisk Weekend",
+    "category": 4,
+    "description": "Oslo, Gotland eller Tylösand.",
+    "created_by": null,
+    "is_completed": false,
+    "completed_date": null,
+    "created_at": "2026-08-14T20:35:37.810Z"
+  }
+},
+{
+  "model": "herrklubb.bucketitem",
+  "pk": 21,
+  "fields": {
+    "title": "Sydeuropa & Sol",
+    "category": 4,
+    "description": "Barcelona, Sicilien eller 1 vecka sol & charter.",
+    "created_by": null,
+    "is_completed": false,
+    "completed_date": null,
+    "created_at": "2026-08-14T20:35:37.817Z"
+  }
+},
+{
+  "model": "herrklubb.bucketitem",
+  "pk": 22,
+  "fields": {
+    "title": "Las Vegas & Kuba",
+    "category": 4,
+    "description": "Långväga äventyr – casino i Vegas eller Kuba-resa.",
+    "created_by": null,
+    "is_completed": false,
+    "completed_date": null,
+    "created_at": "2026-08-14T20:35:37.822Z"
+  }
+},
+{
+  "model": "herrklubb.bucketitem",
+  "pk": 23,
+  "fields": {
+    "title": "Hyra Hus tillsammans",
+    "category": 5,
+    "description": "Gemensam hussemester vid havet eller sjö.",
+    "created_by": null,
+    "is_completed": false,
+    "completed_date": null,
+    "created_at": "2026-08-14T20:35:37.833Z"
+  }
+},
+{
+  "model": "herrklubb.bucketitem",
+  "pk": 24,
+  "fields": {
+    "title": "Konsert & Live-event",
+    "category": 5,
+    "description": "Storkonsert eller festival tillsammans.",
+    "created_by": null,
+    "is_completed": false,
+    "completed_date": null,
+    "created_at": "2026-08-14T20:35:37.838Z"
+  }
+},
+{
+  "model": "herrklubb.bucketitem",
+  "pk": 25,
+  "fields": {
+    "title": "Helg-Pokerkväll",
+    "category": 5,
+    "description": "Klassisk pokerturnering med middag & god dryck.",
+    "created_by": null,
+    "is_completed": false,
+    "completed_date": null,
+    "created_at": "2026-08-14T20:35:37.842Z"
+  }
+},
+{
+  "model": "herrklubb.bucketitem",
+  "pk": 26,
+  "fields": {
+    "title": "Sunkiga hak i Göteborg",
+    "category": 3,
+    "description": "Klassisk barrunda och pubkväll bland Göteborgs legendariska och opretentiösa hak.",
+    "created_by": null,
+    "is_completed": false,
+    "completed_date": null,
+    "created_at": "2026-08-16T10:02:58.208Z"
   }
 }
 ]

@@ -11,48 +11,71 @@ class Command(BaseCommand):
 
         personas = [
             {
-                "full_name": "Johan Siedberg",
-                "email": "johan.siedberg@gmail.com"
+                "first_name": "Johan",
+                "last_name": "Siedberg",
+                "email": "johan.siedberg@gmail.com",
+                "old_emails": ["johan.siedberg@siedberg.se", "johan@siedberg.se"]
             },
             {
-                "full_name": "Mikael Dahl",
-                "email": "mikael@dahl.se"
+                "first_name": "Mikael",
+                "last_name": "Dahl",
+                "email": "mikaeld81@gmail.com",
+                "old_emails": ["mikael@dahl.se"]
             },
             {
-                "full_name": "Andreas Larsson",
-                "email": "andreas@larsson.se"
+                "first_name": "Andreas",
+                "last_name": "Larsson",
+                "email": "senasa9@gmail.com",
+                "old_emails": ["andreas@larsson.se"]
             },
             {
-                "full_name": "Johan Svensson",
-                "email": "svenjohansvensson@gmail.com"
+                "first_name": "Johan",
+                "last_name": "Svensson",
+                "email": "svenjohansvensson@gmail.com",
+                "old_emails": ["johan@svensson.se"]
             },
             {
-                "full_name": "Johan Meldo",
-                "email": "johan@meldo.se"
+                "first_name": "Johan",
+                "last_name": "Meldo",
+                "email": "jmeldo@gmail.com",
+                "old_emails": ["johan@meldo.se"]
             },
             {
-                "full_name": "Erik Svensson",
-                "email": "erik.sve@hotmail.com"
+                "first_name": "Erik",
+                "last_name": "Svensson",
+                "email": "erik.sve@hotmail.com",
+                "old_emails": ["erik@svensson.se"]
             },
             {
-                "full_name": "Christoffer Ericsson",
-                "email": "coff_erics@yahoo.se"
+                "first_name": "Christoffer",
+                "last_name": "Ericsson",
+                "email": "coff_erics@yahoo.se",
+                "old_emails": ["christoffer@ericsson.se"]
             },
             {
-                "full_name": "Martin Gustafsson",
-                "email": "martin@gustafsson.se"
+                "first_name": "Martin",
+                "last_name": "Gustafson",
+                "email": "martin.gustafson1@gmail.com",
+                "old_emails": ["martin@gustafsson.se", "martin.gustafsson@gmail.com", "martin@gustafson.se", "martin.gustafsson@gustafsson.se"],
+                "old_last_names": ["Gustafsson"]
             },
             {
-                "full_name": "Tommy Lycen",
-                "email": "tommy@lycen.se"
+                "first_name": "Tommy",
+                "last_name": "Lycen",
+                "email": "t.lycen@gmail.com",
+                "old_emails": ["tommy@lycen.se", "tommy.lycen@lycen.se"]
             },
             {
-                "full_name": "Tommy Källberg",
-                "email": "anymaztic@hotmail.com"
+                "first_name": "Tommy",
+                "last_name": "Källberg",
+                "email": "anymaztic@hotmail.com",
+                "old_emails": ["tommy@kallberg.se", "tommy@kaellberg.se"]
             },
             {
-                "full_name": "Martin Krantz",
-                "email": "martin@krantz.se"
+                "first_name": "Martin",
+                "last_name": "Krantz",
+                "email": "martin@meritel.se",
+                "old_emails": ["martin@krantz.se"]
             }
         ]
 
@@ -61,26 +84,20 @@ class Command(BaseCommand):
         active_member_user_ids = []
 
         for p in personas:
-            full_name = p['full_name']
-            name_parts = full_name.split(' ', 1)
-            first_name = name_parts[0]
-            last_name = name_parts[1] if len(name_parts) > 1 else name_parts[0]
-
-            surname_clean = last_name.lower().replace('ä', 'a').replace('å', 'a').replace('ö', 'o').replace(' ', '')
-            first_name_clean = first_name.lower().replace('ä', 'a').replace('å', 'a').replace('ö', 'o').replace(' ', '')
+            first_name = p['first_name']
+            last_name = p['last_name']
             email = p['email'].strip().lower()
-            old_email_pattern = f"{first_name_clean}@{surname_clean}.se"
+            surname_clean = last_name.lower().replace('ä', 'a').replace('å', 'a').replace('ö', 'o').replace(' ', '')
             username = email
             password = f"{surname_clean}2026"
 
-            # Match user by exact full name or emails
-            user = (
-                User.objects.filter(first_name__iexact=first_name, last_name__iexact=last_name).first() or
-                User.objects.filter(email__iexact=email).first() or
-                User.objects.filter(username__iexact=email).first() or
-                User.objects.filter(email__iexact=old_email_pattern).first() or
-                User.objects.filter(username__iexact=old_email_pattern).first()
-            )
+            q = Q(email__iexact=email) | Q(username__iexact=email) | Q(first_name__iexact=first_name, last_name__iexact=last_name)
+            for old_e in p.get('old_emails', []):
+                q |= Q(email__iexact=old_e) | Q(username__iexact=old_e)
+            for old_ln in p.get('old_last_names', []):
+                q |= Q(first_name__iexact=first_name, last_name__iexact=old_ln)
+
+            user = User.objects.filter(q).first()
 
             if not user:
                 user = User.objects.create(

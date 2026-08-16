@@ -1,22 +1,12 @@
 from django.core.management.base import BaseCommand
-from django.contrib.auth.models import User
-from herrklubb.models import UserProfile, BucketCategory, BucketItem
+from herrklubb.models import BucketCategory, BucketItem
 
 class Command(BaseCommand):
-    help = "Seeds initial Herrklubben Bucket List categories, items, and sets Herrklubb status for users."
+    help = "Seeds initial Herrklubben Bucket List categories and suggested events without modifying user votes or dreams."
 
     def handle(self, *args, **options):
-        self.stdout.write("Seeding Herrklubben Bucket List data...")
+        self.stdout.write("Seeding Herrklubben Bucket List suggested events...")
 
-        # 1. Update user profiles (Set existing users as Herrklubb members by default)
-        users = User.objects.all()
-        for u in users:
-            profile, created = UserProfile.objects.get_or_create(user=u)
-            profile.is_herrklubb_member = True
-            profile.save()
-        self.stdout.write(self.style.SUCCESS(f"Updated {users.count()} users with Herrklubb membership."))
-
-        # 2. Seed Categories
         categories_data = [
             {
                 "name": "Sport & Stora Evenemang",
@@ -55,6 +45,7 @@ class Command(BaseCommand):
                     ("Oktoberfest i München", "Lederhosen, ölsejdlar och stämning i bayerska tält."),
                     ("Skottland: Whiskyresa", "Destilleriturer, provningar och skotsk kultur."),
                     ("Toscana: Vin- & Matresa", "Matlagningskurser, vingårdar och italiensk njutning."),
+                    ("Sunkiga hak i Göteborg", "Klassisk barrunda och pubkväll bland Göteborgs legendariska och opretentiösa hak."),
                 ]
             },
             {
@@ -81,6 +72,8 @@ class Command(BaseCommand):
         ]
 
         total_items_created = 0
+        total_items_updated = 0
+
         for cat_info in categories_data:
             cat, _ = BucketCategory.objects.get_or_create(
                 name=cat_info["name"],
@@ -93,10 +86,17 @@ class Command(BaseCommand):
             for item_title, item_desc in cat_info["items"]:
                 item, created = BucketItem.objects.get_or_create(
                     title=item_title,
-                    category=cat,
-                    defaults={"description": item_desc}
+                    defaults={"description": item_desc, "category": cat}
                 )
-                if created:
+                if not created and item.category != cat:
+                    item.category = cat
+                    item.description = item_desc
+                    item.save()
+                    total_items_updated += 1
+                elif created:
                     total_items_created += 1
 
-        self.stdout.write(self.style.SUCCESS(f"Successfully seeded categories and created {total_items_created} bucket items."))
+        total_items = BucketItem.objects.count()
+        self.stdout.write(self.style.SUCCESS(
+            f"Successfully seeded categories and suggested events ({total_items_created} created, {total_items_updated} updated). Total events in database: {total_items}."
+        ))
