@@ -21,15 +21,16 @@
   6. Restart the production service: `sudo systemctl restart gunicorn` (or equivalent systemd service)
 
 ## Suggested Events & Bucket List UI Layout Standards
-- **Responsive Multi-Column Structure**:
-  - **Col 1 (Rank / Medal slot)**: Fixed width (42px) with 🥇, 🥈, 🥉, or `#Rank`.
-  - **Col 2 (Category, Title & Description)**: Full-width on narrow/mobile (`col-12`, `col-md-5 col-lg-5`) with category badge on top, title, and description.
-  - **Col 3 (Bets & Chips)**: Chip icons with vertical gap (`mt-2`) above the count number.
-  - **Col 4 (Total Value & Votes)**: Badge with total point value and vote fraction count (e.g. `6/11 röster`).
-  - **Col 5 (Bucket & Actions)**: 🪣 Bucket symbol with modal trigger, dream users count (`mt-2`), and quick action buttons (Edit modal trigger & Mark as completed).
+- **Layout Structure (Commit 7458e79 standard)**:
+  - **Col 1 (Leading Slot)**: Fixed 36px width for 🪣 bucket dream indicator or rank medals/numbers (🥇, 🥈, 🥉, `#Rank`).
+  - **Col 2 (Category, Title & Description)**: Category badge, title with optional "Planerad" status pill, and 2-line clamped description.
+  - **Col 3 (Bets & Chips)**: Chips block (38px) with centered vote counts below each chip.
+  - **Col 4 (Total Value & Votes)**: Value badge with total points and vote fraction count (e.g. `6/11 röster`).
+  - **Corner Action Buttons**: Quick-action buttons (pencil edit modal trigger and green checkmark mark-as-completed) placed in top right corner.
 - **Badge Styling**:
   - Use `.badge-category` for category chips.
   - Use `.badge-tonal-gold` for value badges.
+
 
 
 ## Monochromatic Tonal Contrast & Legibility Guidelines
