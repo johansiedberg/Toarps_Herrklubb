@@ -88,8 +88,8 @@
                                   data-users="{% for d_user in item.dream_users %}{% if d_user.get_full_name %}{{ d_user.get_full_name }}{% elif d_user.first_name %}{{ d_user.first_name }} {{ d_user.last_name }}{% else %}{{ d_user.email }}{% endif %}{% if not forloop.last %}, {% endif %}{% endfor %}">
                                 🪣
                             </span>
-                            <!-- Count # (Row 5 with +px gap and aligned font size) -->
-                            <strong class="text-warning d-block text-center mt-1.5" style="font-size: 0.82rem; font-weight: 700; line-height: 1;">{{ item.dream_users|length }}</strong>
+                            <!-- Count # (Row 5: exact same text-white font as chips, doubled 10px gap) -->
+                            <strong class="text-white d-block text-center" style="font-size: 0.8rem; font-weight: 700; line-height: 1; margin-top: 10px;">{{ item.dream_users|length }}</strong>
                         </div>
                     {% endif %}
 
@@ -98,8 +98,8 @@
                         <div class="d-flex flex-column align-items-center justify-content-center text-center" title="Svarta marker (100)" style="min-width: 26px;">
                             <!-- Icon (Row 4) -->
                             <img src="{% static 'herrklubb/img/chip_black.svg' %}" width="26" height="26" alt="Svart 100">
-                            <!-- Count # (Row 5 with +px gap and aligned font size) -->
-                            <strong class="text-white d-block text-center mt-1.5" style="font-size: 0.82rem; font-weight: 700; line-height: 1;">{{ item.count_svart }}</strong>
+                            <!-- Count # (Row 5: exact same text-white font as chips, doubled 10px gap) -->
+                            <strong class="text-white d-block text-center" style="font-size: 0.8rem; font-weight: 700; line-height: 1; margin-top: 10px;">{{ item.count_svart }}</strong>
                         </div>
                     {% endif %}
 
@@ -108,8 +108,8 @@
                         <div class="d-flex flex-column align-items-center justify-content-center text-center" title="Gröna marker (50)" style="min-width: 26px;">
                             <!-- Icon (Row 4) -->
                             <img src="{% static 'herrklubb/img/chip_green.svg' %}" width="26" height="26" alt="Grön 50">
-                            <!-- Count # (Row 5 with +px gap and aligned font size) -->
-                            <strong class="text-white d-block text-center mt-1.5" style="font-size: 0.82rem; font-weight: 700; line-height: 1;">{{ item.count_gron }}</strong>
+                            <!-- Count # (Row 5: exact same text-white font as chips, doubled 10px gap) -->
+                            <strong class="text-white d-block text-center" style="font-size: 0.8rem; font-weight: 700; line-height: 1; margin-top: 10px;">{{ item.count_gron }}</strong>
                         </div>
                     {% endif %}
 
@@ -118,8 +118,8 @@
                         <div class="d-flex flex-column align-items-center justify-content-center text-center" title="Röda marker (25)" style="min-width: 26px;">
                             <!-- Icon (Row 4) -->
                             <img src="{% static 'herrklubb/img/chip_red.svg' %}" width="26" height="26" alt="Röd 25">
-                            <!-- Count # (Row 5 with +px gap and aligned font size) -->
-                            <strong class="text-white d-block text-center mt-1.5" style="font-size: 0.82rem; font-weight: 700; line-height: 1;">{{ item.count_rod }}</strong>
+                            <!-- Count # (Row 5: exact same text-white font as chips, doubled 10px gap) -->
+                            <strong class="text-white d-block text-center" style="font-size: 0.8rem; font-weight: 700; line-height: 1; margin-top: 10px;">{{ item.count_rod }}</strong>
                         </div>
                     {% endif %}
 
