@@ -290,7 +290,7 @@
                     <div class="col-lg-8 col-xl-9 text-start">
                         {% if next_event.category %}
                             <div class="mb-2">
-                                <span class="badge badge-tonal-gold rounded-pill px-3 py-1.5 small fw-bold shadow-sm">
+                                <span class="badge rounded-pill badge-category px-2.5 py-1">
                                     {{ next_event.category.icon }} {{ next_event.category.name }}
                                 </span>
                             </div>
@@ -347,8 +347,8 @@
                                 </span>
                                 <div class="d-flex flex-wrap gap-2">
                                     {% for b_item in next_event.bucket_items.all %}
-                                        <div class="badge bg-dark bg-opacity-75 text-white border border-warning border-opacity-40 rounded-3 p-2 d-inline-flex align-items-center gap-2 shadow-sm" style="font-size: 0.84rem;">
-                                            <span class="badge rounded-pill badge-tonal-gold px-2 py-0.5" style="font-size: 0.7rem;">
+                                        <div class="badge bg-dark bg-opacity-75 text-white border border-secondary border-opacity-30 rounded-3 p-2 d-inline-flex align-items-center gap-2 shadow-sm" style="font-size: 0.84rem;">
+                                            <span class="badge rounded-pill badge-category px-2 py-0.5">
                                                 {{ b_item.category.name }}
                                             </span>
                                             <span class="fw-bold text-light">{{ b_item.title }}</span>
@@ -462,7 +462,7 @@
                         <div class="col-md-6 col-lg-4">
                             <div class="p-3 bg-secondary bg-opacity-10 rounded-3 border border-secondary border-opacity-25 h-100">
                                 <div class="d-flex align-items-center justify-content-between mb-1">
-                                    <span class="badge bg-secondary bg-opacity-50 text-light small">{{ item.category.name }}</span>
+                                    <span class="badge rounded-pill badge-category px-2 py-0.5">{{ item.category.name }}</span>
                                     <span class="text-success small fw-semibold" style="font-size: 0.75rem;">
                                         <i class="fa-solid fa-check me-1"></i>Genomförd {{ item.completed_date|date:"Y-m-d" }}
                                     </span>
