@@ -26,15 +26,16 @@
 
 
 ## Suggested Events & Bucket List UI Layout Standards
-- **Layout Structure (Commit 7458e79 standard)**:
-  - **Col 1 (Leading Slot)**: Fixed 36px width for 🪣 bucket dream indicator or rank medals/numbers (🥇, 🥈, 🥉, `#Rank`).
-  - **Col 2 (Category, Title & Description)**: Category badge, title with optional "Planerad" status pill, and 2-line clamped description.
-  - **Col 3 (Bets & Chips)**: Chips block (38px) with centered vote counts below each chip.
-  - **Col 4 (Total Value & Votes)**: Value badge with total points and vote fraction count (e.g. `6/11 röster`).
-  - **Corner Action Buttons**: Quick-action buttons (pencil edit modal trigger and green checkmark mark-as-completed) placed in top right corner.
+- **Vertical Stack Structure**:
+  - **Top Actions & Points**: Floating top-right badge for total point value (`Värde: XX p`), vote fraction (`X/11`), and quick action buttons (Edit ✏️ & Complete ✔️).
+  - **Line 1 (Category & Rank)**: `.badge-category` pill with optional `#Rank` medal/number.
+  - **Line 2 (Name / Title)**: Bold title with optional "Planerad" status pill if linked to the upcoming event.
+  - **Line 3 (Description)**: Italicized secondary description text.
+  - **Line 4 & 5 (Bucket / Black / Green / Red)**: Horizontal row of all 4 markers (🪣 Bucket, ♠ Black 100, ♣ Green 50, ♦ Red 25) with their vote counts centered below (`# / # / # / #`) and clean spacing (`mt-2`).
 - **Badge Styling**:
   - Use `.badge-category` for category chips.
   - Use `.badge-tonal-gold` for value badges.
+
 
 
 
