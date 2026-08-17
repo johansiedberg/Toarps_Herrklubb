@@ -11,7 +11,26 @@
 
 ## Git & Deployment Rules
 - Always ask or wait for instruction before committing or updating the server!
-- Production server: `johansiedberg@192.168.86.35`
+- **Production Server**: `johansiedberg@192.168.86.35`
+- **Deployment Procedure**:
+  1. Commit and push local changes to `origin/main` on GitHub.
+  2. Connect to the production server via SSH: `ssh johansiedberg@192.168.86.35`
+  3. Navigate to the project root directory on the server.
+  4. Pull the latest commits: `git pull origin main`
+  5. Apply any database migrations: `./venv/bin/python manage.py migrate`
+  6. Restart the production service: `sudo systemctl restart gunicorn` (or equivalent systemd service)
+
+## Suggested Events & Bucket List UI Layout Standards
+- **Responsive Multi-Column Structure**:
+  - **Col 1 (Rank / Medal slot)**: Fixed width (42px) with 🥇, 🥈, 🥉, or `#Rank`.
+  - **Col 2 (Category, Title & Description)**: Full-width on narrow/mobile (`col-12`, `col-md-5 col-lg-5`) with category badge on top, title, and description.
+  - **Col 3 (Bets & Chips)**: Chip icons with vertical gap (`mt-2`) above the count number.
+  - **Col 4 (Total Value & Votes)**: Badge with total point value and vote fraction count (e.g. `6/11 röster`).
+  - **Col 5 (Bucket & Actions)**: 🪣 Bucket symbol with modal trigger, dream users count (`mt-2`), and quick action buttons (Edit modal trigger & Mark as completed).
+- **Badge Styling**:
+  - Use `.badge-category` for category chips.
+  - Use `.badge-tonal-gold` for value badges.
+
 
 ## Monochromatic Tonal Contrast & Legibility Guidelines
 When colouring banners, badges, and status notification containers, ensure readable distinct fill/background + font/icon combinations following a monochromatic tonal contrast system.

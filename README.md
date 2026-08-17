@@ -85,6 +85,10 @@ To preserve readability and code quality, all modifications must adhere to the f
   * **Prediction Engine:** Always runs on port `2028` (can be launched with `./venv/bin/python manage.py runserver 2028`).
   * Access at: `https://127.0.0.1:2028` (or `http://` in local dev)
 * **HTTPS Security:** Both projects enforce HTTPS standards in production (`SECURE_PROXY_SSL_HEADER`, `SESSION_COOKIE_SECURE`, `CSRF_COOKIE_SECURE`, `SECURE_HSTS_SECONDS`, `SECURE_REFERRER_POLICY`). SSO redirects dynamically use `https://` when behind a TLS-terminating proxy.
+* **Database Migrations:**
+  Always apply pending migrations after pulling code or modifying models:
+  `./venv/bin/python manage.py migrate`
+
 * **Database Rebuilding:**
   To reset and seed the database environment clean:
   1. Delete `db.sqlite3`.
@@ -92,3 +96,19 @@ To preserve readability and code quality, all modifications must adhere to the f
   3. Run seeders:
      * `python manage.py seed_members`
      * `python manage.py seed_herrklubb_bucketlist`
+
+---
+
+## 4. Deployment & Production Operations
+
+* **Production Host**: `johansiedberg@192.168.86.35`
+* **Updating Production Server**:
+  ```bash
+  ssh johansiedberg@192.168.86.35
+  cd /path/to/Toarps_Herrklubb
+  git pull origin main
+  ./venv/bin/python manage.py migrate
+  sudo systemctl restart gunicorn
+  ```
+* **Git Commit & Deployment Rules**:
+  * Always confirm and verify with the team before executing production commits and server updates.
