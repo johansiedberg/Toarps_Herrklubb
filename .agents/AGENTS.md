@@ -12,13 +12,18 @@
 ## Git & Deployment Rules
 - Always ask or wait for instruction before committing or updating the server!
 - **Production Server**: `johansiedberg@192.168.86.35`
+- **Server Project Path**: `/home/johansiedberg/Projects/Toarps_Herrklubb`
 - **Deployment Procedure**:
   1. Commit and push local changes to `origin/main` on GitHub.
   2. Connect to the production server via SSH: `ssh johansiedberg@192.168.86.35`
-  3. Navigate to the project root directory on the server.
+  3. Navigate to the project root directory: `cd /home/johansiedberg/Projects/Toarps_Herrklubb`
   4. Pull the latest commits: `git pull origin main`
   5. Apply any database migrations: `./venv/bin/python manage.py migrate`
-  6. Restart the production service: `sudo systemctl restart gunicorn` (or equivalent systemd service)
+  6. If needed, restart server process:
+     ```bash
+     pkill -f "8981" && nohup ./venv/bin/python manage.py runserver 127.0.0.1:8981 > runserver.log 2>&1 &
+     ```
+
 
 ## Suggested Events & Bucket List UI Layout Standards
 - **Layout Structure (Commit 7458e79 standard)**:

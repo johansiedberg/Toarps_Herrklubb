@@ -102,13 +102,15 @@ To preserve readability and code quality, all modifications must adhere to the f
 ## 4. Deployment & Production Operations
 
 * **Production Host**: `johansiedberg@192.168.86.35`
+* **Server Project Path**: `/home/johansiedberg/Projects/Toarps_Herrklubb`
 * **Updating Production Server**:
   ```bash
   ssh johansiedberg@192.168.86.35
-  cd /path/to/Toarps_Herrklubb
+  cd /home/johansiedberg/Projects/Toarps_Herrklubb
   git pull origin main
   ./venv/bin/python manage.py migrate
-  sudo systemctl restart gunicorn
+  pkill -f "8981" && nohup ./venv/bin/python manage.py runserver 127.0.0.1:8981 > runserver.log 2>&1 &
   ```
+
 * **Git Commit & Deployment Rules**:
   * Always confirm and verify with the team before executing production commits and server updates.
