@@ -53,7 +53,7 @@
                                             <span class="text-secondary small" style="font-size: 0.72rem;">Personlig favorit</span>
                                         </div>
                                     </div>
-                                    <span class="badge bg-warning bg-opacity-25 text-warning border border-warning border-opacity-50 rounded-pill px-2.5 py-1 small fw-bold">
+                                    <span class="badge badge-tonal-gold rounded-pill px-2.5 py-1 small fw-bold">
                                         Bucket
                                     </span>
                                 </div>
@@ -173,7 +173,7 @@
                                             <span class="text-secondary small" style="font-size: 0.72rem;">Startpoäng</span>
                                         </div>
                                     </div>
-                                    <span class="badge bg-danger bg-opacity-25 text-danger border border-danger border-opacity-50 rounded-pill px-2.5 py-1 small fw-bold">
+                                    <span class="badge badge-tonal-red rounded-pill px-2.5 py-1 small fw-bold">
                                         25 P
                                     </span>
                                 </div>
@@ -229,7 +229,7 @@
                         <div class="col-md-6 col-lg-4">
                             <div class="p-3 rounded-3 bg-dark bg-opacity-70 border border-danger border-opacity-30 d-flex align-items-center justify-content-between shadow-sm">
                                 <div>
-                                    <span class="badge bg-danger bg-opacity-25 text-danger border border-danger border-opacity-40 mb-1" style="font-size: 0.72rem;">
+                                    <span class="badge badge-tonal-red mb-1" style="font-size: 0.72rem;">
                                         <i class="fa-solid fa-ban me-1"></i>Förhinder
                                     </span>
                                     <h4 class="h6 fw-bold text-white mb-0 font-monospace" style="letter-spacing: 0.5px; font-size: 0.95rem;">
@@ -290,7 +290,7 @@
                     <div class="col-lg-8 col-xl-9 text-start">
                         {% if next_event.category %}
                             <div class="mb-2">
-                                <span class="badge bg-warning bg-opacity-25 text-warning border border-warning rounded-pill px-3 py-1 small fw-bold">
+                                <span class="badge badge-tonal-gold rounded-pill px-3 py-1.5 small fw-bold shadow-sm">
                                     {{ next_event.category.icon }} {{ next_event.category.name }}
                                 </span>
                             </div>
@@ -348,12 +348,12 @@
                                 <div class="d-flex flex-wrap gap-2">
                                     {% for b_item in next_event.bucket_items.all %}
                                         <div class="badge bg-dark bg-opacity-75 text-white border border-warning border-opacity-40 rounded-3 p-2 d-inline-flex align-items-center gap-2 shadow-sm" style="font-size: 0.84rem;">
-                                            <span class="badge rounded-pill bg-warning bg-opacity-25 text-warning px-2 py-0.5" style="font-size: 0.7rem;">
+                                            <span class="badge rounded-pill badge-tonal-gold px-2 py-0.5" style="font-size: 0.7rem;">
                                                 {{ b_item.category.name }}
                                             </span>
                                             <span class="fw-bold text-light">{{ b_item.title }}</span>
                                             {% if b_item.total_points %}
-                                                <span class="badge bg-warning bg-opacity-25 text-warning rounded-pill px-1.5 py-0.5" style="font-size: 0.68rem;" title="Totalt värde i bucketlist">
+                                                <span class="badge badge-tonal-gold rounded-pill px-1.5 py-0.5" style="font-size: 0.68rem;" title="Totalt värde i bucketlist">
                                                     <i class="fa-solid fa-coins me-1"></i>{{ b_item.total_points }}p
                                                 </span>
                                             {% endif %}
@@ -594,14 +594,14 @@
                     <div class="mb-3">
                         <label class="form-label text-warning fw-semibold d-flex align-items-center justify-content-between mb-2">
                             <span><i class="fa-solid fa-users-gear me-1.5"></i>Ansvariga / Samordnare</span>
-                            <span class="badge bg-info bg-opacity-25 text-info fw-normal" style="font-size: 0.72rem;">Fritt val (En eller flera)</span>
+                            <span class="badge badge-tonal-blue fw-normal" style="font-size: 0.72rem;">Fritt val (En eller flera)</span>
                         </label>
 
                         <!-- Currently Selected Coordinators Container -->
                         <div id="selectedCoordinatorsContainer" class="d-flex flex-wrap gap-1.5 mb-2">
                             {% if next_event and next_event.coordinators.all %}
                                 {% for coord in next_event.coordinators.all %}
-                                    <div class="coord-pill badge bg-info bg-opacity-25 text-info border border-info border-opacity-40 rounded-pill px-3 py-1.5 d-inline-flex align-items-center gap-2" id="coord_pill_{{ coord.id }}">
+                                    <div class="coord-pill badge badge-tonal-blue rounded-pill px-3 py-1.5 d-inline-flex align-items-center gap-2" id="coord_pill_{{ coord.id }}">
                                         <input type="checkbox" name="coordinators" value="{{ coord.id }}" checked id="coord_check_{{ coord.id }}" class="d-none">
                                         <span class="fw-bold"><i class="fa-solid fa-user me-1"></i>{% if coord.get_full_name %}{{ coord.get_full_name }}{% else %}{{ coord.username }}{% endif %}</span>
                                         <button type="button" class="btn-close btn-close-white ms-1" style="font-size: 0.55rem;" onclick="removeCoordinator({{ coord.id }})" title="Ta bort samordnare"></button>
@@ -641,14 +641,14 @@
                     <div class="mb-3 pt-2 border-top border-secondary border-opacity-25">
                         <label class="form-label text-warning fw-semibold d-flex align-items-center justify-content-between">
                             <span><i class="fa-solid fa-link me-1.5"></i>Kopplade förslag från Bucketlisten</span>
-                            <span class="badge bg-warning bg-opacity-25 text-warning fw-normal" style="font-size: 0.72rem;">Valfritt (Kan täcka flera)</span>
+                            <span class="badge badge-tonal-gold fw-normal" style="font-size: 0.72rem;">Valfritt (Kan täcka flera)</span>
                         </label>
                         
                         <!-- Currently Linked Items Container -->
                         <div id="linkedItemsBadgeContainer" class="d-flex flex-wrap gap-1.5 mb-2">
                             {% if next_event and next_event.bucket_items.all %}
                                 {% for b_item in next_event.bucket_items.all %}
-                                    <div class="linked-item-pill badge bg-warning bg-opacity-25 text-warning border border-warning border-opacity-40 rounded-pill px-3 py-1.5 d-inline-flex align-items-center gap-2" id="linked_pill_{{ b_item.id }}">
+                                    <div class="linked-item-pill badge badge-tonal-gold rounded-pill px-3 py-1.5 d-inline-flex align-items-center gap-2" id="linked_pill_{{ b_item.id }}">
                                         <input type="checkbox" name="linked_bucket_items" value="{{ b_item.id }}" checked id="linked_check_{{ b_item.id }}" class="d-none">
                                         <span class="fw-bold"><i class="fa-solid fa-lightbulb me-1"></i>{{ b_item.category.name }}: {{ b_item.title }}</span>
                                         <button type="button" class="btn-close btn-close-white ms-1" style="font-size: 0.55rem;" onclick="removeLinkedItem({{ b_item.id }})" title="Ta bort koppling"></button>
@@ -924,7 +924,7 @@ function addBucketItemFromPicker() {
     var container = document.getElementById('linkedItemsBadgeContainer');
     if (container) {
         var newPill = document.createElement('div');
-        newPill.className = 'linked-item-pill badge bg-warning bg-opacity-25 text-warning border border-warning border-opacity-40 rounded-pill px-3 py-1.5 d-inline-flex align-items-center gap-2';
+        newPill.className = 'linked-item-pill badge badge-tonal-gold rounded-pill px-3 py-1.5 d-inline-flex align-items-center gap-2';
         newPill.id = 'linked_pill_' + itemId;
         newPill.innerHTML = `
             <input type="checkbox" name="linked_bucket_items" value="${itemId}" checked id="linked_check_${itemId}" class="d-none">
@@ -967,7 +967,7 @@ function addCoordinatorFromPicker() {
     var container = document.getElementById('selectedCoordinatorsContainer');
     if (container) {
         var newPill = document.createElement('div');
-        newPill.className = 'coord-pill badge bg-info bg-opacity-25 text-info border border-info border-opacity-40 rounded-pill px-3 py-1.5 d-inline-flex align-items-center gap-2';
+        newPill.className = 'coord-pill badge badge-tonal-blue rounded-pill px-3 py-1.5 d-inline-flex align-items-center gap-2';
         newPill.id = 'coord_pill_' + memberId;
         newPill.innerHTML = `
             <input type="checkbox" name="coordinators" value="${memberId}" checked id="coord_check_${memberId}" class="d-none">

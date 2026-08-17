@@ -354,3 +354,42 @@ footer {
     line-height: 1;
 }
 
+/* ==========================================
+   MONOCHROMATIC TONAL CONTRAST BADGES (WCAG AAA)
+   ========================================== */
+.badge-tonal-gold {
+    background-color: #3b2002 !important;
+    border: 1px solid #b45309 !important;
+    color: #fef08a !important;
+    font-weight: 600;
+}
+
+.badge-tonal-green {
+    background-color: #052e16 !important;
+    border: 1px solid #15803d !important;
+    color: #dcfce7 !important;
+    font-weight: 600;
+}
+
+.badge-tonal-red {
+    background-color: #450a0a !important;
+    border: 1px solid #b91c1c !important;
+    color: #fecaca !important;
+    font-weight: 600;
+}
+
+.badge-tonal-blue {
+    background-color: #082f49 !important;
+    border: 1px solid #0284c7 !important;
+    color: #bae6fd !important;
+    font-weight: 600;
+}
+
+.badge-tonal-silver {
+    background-color: rgba(148, 163, 184, 0.12) !important;
+    border: 1px solid rgba(148, 163, 184, 0.28) !important;
+    color: #e2e8f0 !important;
+    font-weight: 600;
+}
+
+
