@@ -1,84 +1,39 @@
 {% load static %}
-<div class="list-group-item text-white border-0 border-bottom border-secondary border-opacity-25 py-2.5 px-2 px-md-3 transition-all hover-row {% if is_planerad_tab %}planerad-row-pop{% else %}idebanken-row-subtle{% endif %}" 
+<div class="list-group-item position-relative text-white border-0 border-bottom border-secondary border-opacity-25 py-3.5 px-3 px-md-4 my-1 transition-all hover-row {% if is_planerad_tab %}planerad-row-pop{% else %}idebanken-row-subtle{% endif %}" 
      style="{% if is_planerad_tab %}border-left: 4px solid #EAB308 !important; background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98)) !important;{% else %}border-left: 3px solid rgba(100, 116, 139, 0.3) !important; background: rgba(15, 23, 42, 0.35) !important; opacity: 0.75;{% endif %}">
     
-    <div class="row align-items-center g-2">
+    <!-- Action buttons in top right corner: Change [GAP 7px] Mark as Complete -->
+    {% if user.is_staff or item.created_by == user %}
+        <div class="position-absolute top-0 end-0 mt-2 me-2.5 z-3 d-flex align-items-center" style="gap: 7px;">
+            <!-- Change / Edit icon button in faded orange -->
+            <button type="button" 
+                    class="btn btn-outline-warning btn-sm p-0 rounded-circle d-flex align-items-center justify-content-center opacity-75 hover-opacity-100 transition-all" 
+                    title="Ändra förslag" 
+                    data-bs-toggle="modal"
+                    data-bs-target="#editItemModal{{ item.id }}"
+                    style="width: 20px; height: 20px; font-size: 0.6rem; border-width: 1px; color: #F97316; border-color: rgba(249, 115, 22, 0.5); background: rgba(249, 115, 22, 0.12);">
+                <i class="fa-solid fa-pen"></i>
+            </button>
 
-        <!-- Col 1: Rank / Position Slot -->
-        <div class="col-auto text-center d-flex align-items-center justify-content-center" style="width: 42px;">
-            {% if is_planerad_tab and rank %}
-                {% if rank == 1 %}
-                    <span style="font-size: 1.6rem; line-height: 1;" title="1:a Placering">🥇</span>
-                {% elif rank == 2 %}
-                    <span style="font-size: 1.6rem; line-height: 1;" title="2:a Placering">🥈</span>
-                {% elif rank == 3 %}
-                    <span style="font-size: 1.6rem; line-height: 1;" title="3:e Placering">🥉</span>
-                {% else %}
-                    <span class="fw-extrabold text-warning" style="font-size: 1.1rem;" title="#{{ rank }} Placering">#{{ rank }}</span>
-                {% endif %}
-            {% else %}
-                <div style="width: 38px;"></div>
-            {% endif %}
+            <!-- Mark as completed checkmark button -->
+            <form action="{% url 'herrklubb_complete_item' item.id %}" method="post" class="d-inline m-0" onsubmit="return confirm('Vill du markera {{ item.title }} som genomförd? Detta frigör alla placerade röster.');">
+                {% csrf_token %}
+                <button type="submit" 
+                        class="btn btn-outline-success btn-sm p-0 rounded-circle d-flex align-items-center justify-content-center opacity-75 hover-opacity-100 transition-all" 
+                        title="Markera som genomförd" 
+                        style="width: 20px; height: 20px; font-size: 0.6rem; border-width: 1px; background: rgba(34, 197, 94, 0.1);">
+                    <i class="fa-solid fa-check"></i>
+                </button>
+            </form>
         </div>
+    {% endif %}
 
-        <!-- Col 2: Activity Category, Title & Description (Unified 3-line layout across all widths) -->
-        <div class="col-lg-5 col-md-5 col-12">
-            <div class="mb-1">
-                <span class="badge rounded-pill px-2 py-0.5" style="font-size: 0.7rem; font-weight: 500; color: #94A3B8; background-color: rgba(148, 163, 184, 0.12); border: 1px solid rgba(148, 163, 184, 0.22);">
-                    {{ item.category.name }}
-                </span>
-            </div>
-            <h4 class="fw-bold mb-1" style="font-size: 0.96rem; color: {% if is_planerad_tab %}#F8FAFC{% else %}#E2E8F0{% endif %};">{{ item.title }}</h4>
-            {% if item.description %}
-                <p class="small mb-0 text-truncate" style="font-size: 0.78rem; color: #94A3B8; opacity: 0.65; font-style: italic; max-width: 540px;">{{ item.description }}</p>
-            {% endif %}
-        </div>
+    <div class="row align-items-start g-2">
 
-        <!-- Col 3: Chip Icons (41px [+5%], Gap 3, Counter centered below) -->
-        <div class="col-md-3 col-6 text-end">
-            <div class="d-flex align-items-start justify-content-end gap-3">
-                <!-- Svart Marker (100) -->
-                {% if item.count_svart > 0 %}
-                    <div class="d-flex flex-column align-items-center justify-content-center" title="Svarta marker (100)">
-                        <img src="{% static 'herrklubb/img/chip_black.svg' %}" width="41" height="41" alt="Svart 100">
-                        <strong class="text-white mt-1" style="font-size: 0.82rem; line-height: 1;">{{ item.count_svart }}</strong>
-                    </div>
-                {% endif %}
-
-                <!-- Grön Marker (50) -->
-                {% if item.count_gron > 0 %}
-                    <div class="d-flex flex-column align-items-center justify-content-center" title="Gröna marker (50)">
-                        <img src="{% static 'herrklubb/img/chip_green.svg' %}" width="41" height="41" alt="Grön 50">
-                        <strong class="text-white mt-1" style="font-size: 0.82rem; line-height: 1;">{{ item.count_gron }}</strong>
-                    </div>
-                {% endif %}
-
-                <!-- Röd Marker (25) -->
-                {% if item.count_rod > 0 %}
-                    <div class="d-flex flex-column align-items-center justify-content-center" title="Röda marker (25)">
-                        <img src="{% static 'herrklubb/img/chip_red.svg' %}" width="41" height="41" alt="Röd 25">
-                        <strong class="text-white mt-1" style="font-size: 0.82rem; line-height: 1;">{{ item.count_rod }}</strong>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- Col 4: Total Value & Vote Count -->
-        <div class="col-md-2 col-4 text-end" style="min-width: 110px;">
-            <div class="d-flex flex-column align-items-end justify-content-start">
-                <span class="badge bg-warning bg-opacity-25 border border-warning border-opacity-50 text-warning fw-bold px-2.5 py-1.5 rounded-pill mb-1" style="font-size: 0.82rem;">
-                    <i class="fa-solid fa-coins me-1"></i>Värde: {{ item.total_points }}
-                </span>
-                <span class="small {% if item.vote_count >= 6 %}text-warning fw-bold{% else %}text-secondary{% endif %}" style="font-size: 0.75rem;">
-                    <i class="fa-solid fa-users me-1"></i>{{ item.vote_count }}/11 röster
-                </span>
-            </div>
-        </div>
-
-        <!-- Col 5: Bucket Symbol (Floating Modal Trigger for mobile & desktop) & Admin Action -->
-        <div class="col-auto text-center d-flex align-items-start justify-content-center gap-2 ps-2 pe-1" style="min-width: 60px;">
+        <!-- Col 1: Fixed-Width Far Left Slot (36px) so Category, Name & Description align identically across all cards -->
+        <div class="col-auto text-center d-flex align-items-start justify-content-center pt-0.5 ps-0 pe-1" style="width: 36px; min-width: 36px; max-width: 36px; flex-shrink: 0;">
             {% if item.dream_users %}
-                <span style="font-size: 2.0rem; line-height: 1; display: inline-flex; align-items: center; justify-content: center; cursor: pointer;" 
+                <span style="font-size: 1.9rem; line-height: 1; display: inline-flex; align-items: center; justify-content: center; cursor: pointer;" 
                       class="bucket-dream-trigger transition-all hover-scale"
                       data-bs-toggle="modal" 
                       data-bs-target="#dreamUsersModal"
@@ -87,19 +42,134 @@
                       title="Klicka för att se vem som har val/hink på denna aktivitet">
                     🪣
                 </span>
-            {% else %}
-                <div style="width: 38px;"></div>
+            {% elif is_planerad_tab and rank %}
+                {% if rank == 1 %}
+                    <span style="font-size: 1.35rem; line-height: 1;" title="1:a Placering">🥇</span>
+                {% elif rank == 2 %}
+                    <span style="font-size: 1.35rem; line-height: 1;" title="2:a Placering">🥈</span>
+                {% elif rank == 3 %}
+                    <span style="font-size: 1.35rem; line-height: 1;" title="3:e Placering">🥉</span>
+                {% else %}
+                    <span class="fw-extrabold text-warning" style="font-size: 0.95rem;" title="#{{ rank }} Placering">#{{ rank }}</span>
+                {% endif %}
             {% endif %}
+        </div>
 
-            {% if user.is_staff or item.created_by == user %}
-                <form action="{% url 'herrklubb_complete_item' item.id %}" method="post" class="d-inline" onsubmit="return confirm('Vill du markera {{ item.title }} som genomförd? Detta frigör alla placerade röster.');">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-outline-success btn-sm rounded-circle p-1.5" title="Bocka av som genomförd" style="width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center;">
-                        <i class="fa-solid fa-check" style="font-size: 0.8rem;"></i>
-                    </button>
-                </form>
+        <!-- Col 2: Category, Name & Description (Separate left-aligned rows on narrow screens, side-by-side on desktop) -->
+        <div class="col col-md-5 col-lg-5 pe-5 pe-md-2 text-start">
+            <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center gap-1 gap-md-2 mb-1">
+                <span class="badge rounded-pill px-2 py-0.5 flex-shrink-0 mb-1 mb-md-0" style="font-size: 0.7rem; font-weight: 500; color: #94A3B8; background-color: rgba(148, 163, 184, 0.12); border: 1px solid rgba(148, 163, 184, 0.22);">
+                    {{ item.category.name }}
+                </span>
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                    <h4 class="fw-bold mb-0 text-break text-start" style="font-size: 0.95rem; color: {% if is_planerad_tab %}#F8FAFC{% else %}#E2E8F0{% endif %}; line-height: 1.25;">
+                        {{ item.title }}
+                    </h4>
+                    {% if item.linked_events.all %}
+                        <span class="badge rounded-pill px-2.5 py-1 flex-shrink-0 shadow-sm" style="font-size: 0.72rem; background-color: #052E16; border: 1px solid #15803D; color: #DCFCE7; font-weight: 600;" title="Ingår i nästa inplanerade event!">
+                            <i class="fa-solid fa-calendar-check me-1" style="color: #DCFCE7;"></i>Planerad
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+            {% if item.description %}
+                <p class="small mb-0 text-secondary text-start" style="font-size: 0.78rem; color: #94A3B8; opacity: 0.75; font-style: italic; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; line-height: 1.35;">
+                    {{ item.description }}
+                </p>
             {% endif %}
+        </div>
+
+        <!-- Mobile & Desktop Row: Chips (vertically centered) -->
+        <div class="col-7 col-md-3 text-center text-md-end ms-auto ms-md-0 p-0 d-flex align-items-center justify-content-center justify-content-md-end">
+            <div class="d-flex align-items-center justify-content-center justify-content-md-end gap-2 gap-md-3" style="min-height: 48px;">
+                <!-- Svart Marker (100) -->
+                {% if item.count_svart > 0 %}
+                    <div class="d-flex flex-column align-items-center justify-content-center m-0 p-0" title="Svarta marker (100)">
+                        <img src="{% static 'herrklubb/img/chip_black.svg' %}" width="38" height="38" alt="Svart 100" class="d-block m-0 p-0">
+                        <strong class="text-white mt-1" style="font-size: 0.8rem; line-height: 1;">{{ item.count_svart }}</strong>
+                    </div>
+                {% endif %}
+
+                <!-- Grön Marker (50) -->
+                {% if item.count_gron > 0 %}
+                    <div class="d-flex flex-column align-items-center justify-content-center m-0 p-0" title="Gröna marker (50)">
+                        <img src="{% static 'herrklubb/img/chip_green.svg' %}" width="38" height="38" alt="Grön 50" class="d-block m-0 p-0">
+                        <strong class="text-white mt-1" style="font-size: 0.8rem; line-height: 1;">{{ item.count_gron }}</strong>
+                    </div>
+                {% endif %}
+
+                <!-- Röd Marker (25) -->
+                {% if item.count_rod > 0 %}
+                    <div class="d-flex flex-column align-items-center justify-content-center m-0 p-0" title="Röda marker (25)">
+                        <img src="{% static 'herrklubb/img/chip_red.svg' %}" width="38" height="38" alt="Röd 25" class="d-block m-0 p-0">
+                        <strong class="text-white mt-1" style="font-size: 0.8rem; line-height: 1;">{{ item.count_rod }}</strong>
+                    </div>
+                {% endif %}
+
+                {% if item.count_svart == 0 and item.count_gron == 0 and item.count_rod == 0 %}
+                    <div style="height: 48px; min-height: 48px;"></div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Col 4: Total Value & Vote Count (vertically centered to match chips block) -->
+        <div class="col-5 col-md-3 col-lg-3 text-end pe-md-4 pe-lg-5 d-flex align-items-center justify-content-end p-0" style="min-width: 95px;">
+            <div class="d-flex flex-column align-items-end justify-content-center m-0 p-0">
+                <span class="badge bg-warning bg-opacity-25 border border-warning border-opacity-50 text-warning fw-bold px-2 py-1 rounded-pill mb-1" style="font-size: 0.8rem; line-height: 1;">
+                    <i class="fa-solid fa-coins me-1"></i>Värde: {{ item.total_points }}
+                </span>
+                <span class="small {% if item.vote_count >= 6 %}text-warning fw-bold{% else %}text-secondary{% endif %}" style="font-size: 0.74rem;">
+                    <i class="fa-solid fa-users me-1"></i>{{ item.vote_count }}/11 röster
+                </span>
+            </div>
         </div>
 
     </div>
 </div>
+
+<!-- Modal: Edit Proposal -->
+{% if user.is_staff or item.created_by == user %}
+    <div class="modal fade" id="editItemModal{{ item.id }}" tabindex="-1" aria-labelledby="editItemModalLabel{{ item.id }}" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white border-warning border-opacity-50 rounded-4 shadow-lg">
+                <div class="modal-header border-secondary border-opacity-25">
+                    <h5 class="modal-title fw-bold text-warning" id="editItemModalLabel{{ item.id }}">✏️ Redigera förslag: {{ item.title }}</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="editItemForm{{ item.id }}" action="{% url 'herrklubb_edit_item' item.id %}" method="post">
+                    {% csrf_token %}
+                    <div class="modal-body text-start">
+                        <div class="mb-3">
+                            <label class="form-label text-warning fw-semibold">Titel / Aktivitet *</label>
+                            <input type="text" name="title" class="form-control bg-secondary bg-opacity-25 text-white border-secondary" value="{{ item.title }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-warning fw-semibold">Kategori *</label>
+                            <select name="category_id" class="form-select custom-dropdown-select" required>
+                                {% for cat in categories %}
+                                    <option value="{{ cat.id }}" {% if item.category_id == cat.id %}selected{% endif %}>{{ cat.icon }} {{ cat.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-warning fw-semibold">Beskrivning / Detaljer (Valfritt)</label>
+                            <textarea name="description" class="form-control bg-secondary bg-opacity-25 text-white border-secondary" rows="3">{% if item.description %}{{ item.description }}{% endif %}</textarea>
+                        </div>
+                    </div>
+                </form>
+                <div class="modal-footer border-secondary border-opacity-25 d-flex align-items-center justify-content-between">
+                    <form action="{% url 'herrklubb_delete_item' item.id %}" method="post" class="d-inline m-0" onsubmit="return confirm('⚠️ Är du säker på att du vill TA BORT förslaget \'{{ item.title }}\'? Detta raderar alla placerade röster på detta förslag.');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-3 fw-bold">
+                            <i class="fa-solid fa-trash-can me-1.5"></i>Ta bort förslag
+                        </button>
+                    </form>
+                    <div class="d-flex align-items-center gap-2">
+                        <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill px-3" data-bs-dismiss="modal">Avbryt</button>
+                        <button type="submit" form="editItemForm{{ item.id }}" class="btn btn-warning btn-sm rounded-pill px-4 fw-bold text-dark">Spara ändringar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}

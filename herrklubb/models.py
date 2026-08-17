@@ -157,6 +157,7 @@ class HerrklubbEvent(models.Model):
     event_time = models.TimeField(null=True, blank=True, verbose_name="Tid")
     location = models.CharField(max_length=255, blank=True, null=True, verbose_name="Plats")
     coordinators = models.ManyToManyField(User, related_name='coordinated_events', blank=True, verbose_name="Samordnare")
+    bucket_items = models.ManyToManyField(BucketItem, related_name='linked_events', blank=True, verbose_name="Kopplade förslag/hinkmål")
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='created_events')
     is_active = models.BooleanField(default=True, help_text="Visas som Nästa Event")
     created_at = models.DateTimeField(auto_now_add=True)

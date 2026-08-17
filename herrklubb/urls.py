@@ -3,7 +3,7 @@ from django.contrib.auth.views import LogoutView
 from .views import (
     CustomLoginView, update_account_settings_view, upload_avatar_view,
     hub_view, herrklubb_view, vote_bucket_item, toggle_bucket_dream,
-    add_bucket_item, complete_bucket_item, save_user_bucket_votes,
+    add_bucket_item, edit_bucket_item, delete_bucket_item, complete_bucket_item, save_user_bucket_votes,
     calendar_view, add_unavailability_view, delete_unavailability_view,
     save_herrklubb_event_view, delete_herrklubb_event_view, toggle_event_coordinator_view,
     predictions_sso_login
@@ -18,6 +18,8 @@ urlpatterns = [
     path('herrklubb/vote/', vote_bucket_item, name='herrklubb_vote'),
     path('herrklubb/dream/', toggle_bucket_dream, name='herrklubb_dream'),
     path('herrklubb/add/', add_bucket_item, name='herrklubb_add_item'),
+    path('herrklubb/edit/<int:item_id>/', edit_bucket_item, name='herrklubb_edit_item'),
+    path('herrklubb/delete/<int:item_id>/', delete_bucket_item, name='herrklubb_delete_item'),
     path('herrklubb/complete/<int:item_id>/', complete_bucket_item, name='herrklubb_complete_item'),
     path('herrklubb/kalender/', calendar_view, name='calendar'),
     path('herrklubb/kalender/add/', add_unavailability_view, name='add_unavailability'),

@@ -24,6 +24,8 @@ from .models import (
 )
 from .forms import CustomLoginForm
 
+User = get_user_model()
+
 def herrklubb_member_required(view_func):
     @wraps(view_func)
     def _wrapped_view(request, *args, **kwargs):
@@ -173,7 +175,8 @@ def herrklubb_view(request):
         'user_placed_rod': user_placed_rod,
         'user_dream': user_dream,
         'total_members_count': 11,
-        'next_event': HerrklubbEvent.objects.filter(is_active=True).first(),
+        'all_members': User.objects.filter(is_active=True).order_by('first_name', 'last_name', 'username'),
+        'next_event': HerrklubbEvent.objects.filter(is_active=True).prefetch_related('coordinators', 'bucket_items__category', 'bucket_items__dreams__user', 'bucket_items__votes').first(),
     }
     context.update(build_calendar_context(request))
     return render(request, 'herrklubb/herrklubb.html', context)
@@ -303,6 +306,49 @@ def add_bucket_item(request):
         created_by=request.user
     )
     messages.success(request, f"Förslaget '{title}' har lagts till i Idébanken!")
+    return redirect('herrklubb')
+
+
+@login_required
+@herrklubb_member_required
+@require_POST
+def edit_bucket_item(request, item_id):
+    """Allows staff or creator to edit a bucket item's details."""
+    item = get_object_or_404(BucketItem, id=item_id)
+    if not (request.user.is_staff or item.created_by == request.user):
+        messages.error(request, "Du har inte behörighet att ändra detta förslag.")
+        return redirect('herrklubb')
+
+    title = request.POST.get('title', '').strip()
+    category_id = request.POST.get('category_id')
+    description = request.POST.get('description', '').strip()
+
+    if title and category_id:
+        category = get_object_or_404(BucketCategory, id=category_id)
+        item.title = title
+        item.category = category
+        item.description = description
+        item.save()
+        messages.success(request, f"Förslaget '{item.title}' har uppdaterats!")
+    else:
+        messages.error(request, "Titel och kategori måste fyllas i.")
+
+    return redirect('herrklubb')
+
+
+@login_required
+@herrklubb_member_required
+@require_POST
+def delete_bucket_item(request, item_id):
+    """Allows staff or creator to delete a bucket item."""
+    item = get_object_or_404(BucketItem, id=item_id)
+    if not (request.user.is_staff or item.created_by == request.user):
+        messages.error(request, "Du har inte behörighet att ta bort detta förslag.")
+        return redirect('herrklubb')
+
+    title = item.title
+    item.delete()
+    messages.success(request, f"Förslaget '{title}' har tagits bort från Bucketlisten.")
     return redirect('herrklubb')
 
 
@@ -599,6 +645,9 @@ def save_herrklubb_event_view(request):
         except ValueError:
             pass
 
+    linked_bucket_items = request.POST.getlist('linked_bucket_items')
+    coordinator_ids = request.POST.getlist('coordinators')
+
     event = HerrklubbEvent.objects.filter(is_active=True).first()
     if not event:
         event = HerrklubbEvent.objects.create(
@@ -619,6 +668,18 @@ def save_herrklubb_event_view(request):
         event.end_date = end_date
         event.location = location
         event.save()
+
+    if coordinator_ids:
+        valid_coordinators = User.objects.filter(id__in=coordinator_ids, is_active=True)
+        event.coordinators.set(valid_coordinators)
+    else:
+        event.coordinators.clear()
+
+    if linked_bucket_items:
+        valid_items = BucketItem.objects.filter(id__in=linked_bucket_items, is_completed=False)
+        event.bucket_items.set(valid_items)
+    else:
+        event.bucket_items.clear()
 
     messages.success(request, f"Nästa Event '{event.title}' har uppdaterats!")
     return redirect('herrklubb')

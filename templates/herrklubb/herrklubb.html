@@ -214,15 +214,6 @@
             <div class="d-flex align-items-center gap-2">
                 <i class="fa-solid fa-calendar-days text-secondary fs-6"></i>
                 <h3 class="h6 fw-semibold text-white mb-0">Min Hinderkalender</h3>
-                {% if user_unavailabilities %}
-                    <span class="badge text-dark px-3 py-1 rounded-pill shadow-sm fw-bold ms-2" style="background-color: #facc15; border: 1px solid #eab308; font-size: 0.8rem;">
-                        <i class="fa-solid fa-calendar-xmark me-1"></i>Du har {{ user_unavailabilities|length }} registrerat hinder
-                    </span>
-                {% else %}
-                    <span class="badge text-white px-3 py-1 rounded-pill shadow-sm ms-2" style="background-color: #166534; border: 1px solid #22c55e; font-size: 0.8rem; font-weight: 600;">
-                        <i class="fa-solid fa-circle-check me-1 text-white"></i>Du har inga registrerade hinder
-                    </span>
-                {% endif %}
             </div>
             <div>
                 <button type="button" class="btn btn-sm btn-outline-warning rounded-pill px-3 py-1 small fw-semibold" data-bs-toggle="modal" data-bs-target="#addUnavailabilityModal">
@@ -293,10 +284,10 @@
 
         <div class="card-body p-4 p-md-5">
             {% if next_event %}
-                <div class="row g-4 align-items-center">
+                <div class="row g-4 align-items-start">
                     
-                    <!-- Left Column: Title & Description -->
-                    <div class="col-lg-7">
+                    <!-- Main Content (Left): Category, Title, Location & Date, Description, Linked Items -->
+                    <div class="col-lg-8 col-xl-9 text-start">
                         {% if next_event.category %}
                             <div class="mb-2">
                                 <span class="badge bg-warning bg-opacity-25 text-warning border border-warning rounded-pill px-3 py-1 small fw-bold">
@@ -306,72 +297,92 @@
                         {% endif %}
 
                         <!-- Prominent Event Title -->
-                        <h2 class="display-5 fw-extrabold text-white mb-3">{{ next_event.title }}</h2>
+                        <h2 class="display-5 fw-extrabold text-white mb-2">{{ next_event.title }}</h2>
 
-                        {% if next_event.description %}
-                            <p class="lead text-secondary fs-6 mb-4" style="line-height: 1.6;">{{ next_event.description }}</p>
-                        {% endif %}
+                        <!-- Location & Date Bar -->
+                        <div class="d-flex flex-wrap align-items-center gap-3 gap-md-4 my-3 py-2 border-top border-bottom border-secondary border-opacity-25">
+                            <div>
+                                <span class="text-secondary d-block text-uppercase fw-semibold font-monospace" style="font-size: 0.95rem; letter-spacing: 0.5px;">
+                                    <i class="fa-solid fa-location-dot" style="font-size: 1.42rem; color: #EF4444; margin-right: 7px; vertical-align: middle;"></i>Plats
+                                </span>
+                                <span class="fs-4 fw-bold {% if next_event.location %}text-white{% else %}text-secondary opacity-75 fs-5{% endif %}">
+                                    {% if next_event.location %}{{ next_event.location }}{% else %}Inte satt än{% endif %}
+                                </span>
+                            </div>
 
-                        <!-- Prominent Date & Location Placement -->
-                        <div class="d-flex flex-wrap align-items-center gap-4 pt-2">
-                            {% if next_event.event_date %}
-                                <div>
-                                    <span class="text-secondary small d-block text-uppercase fw-semibold font-monospace" style="font-size: 0.75rem;">Datum</span>
-                                    <span class="fs-4 fw-bold text-warning">
-                                        <i class="fa-solid fa-calendar-days me-1.5"></i>
+                            <div class="ps-md-4 border-start border-secondary border-opacity-50">
+                                <span class="text-secondary d-block text-uppercase fw-semibold font-monospace" style="font-size: 0.95rem; letter-spacing: 0.5px;">
+                                    <i class="fa-solid fa-calendar-days" style="font-size: 1.42rem; color: #EAB308; margin-right: 7px; vertical-align: middle;"></i>Datum
+                                </span>
+                                <span class="fs-4 fw-bold {% if next_event.event_date %}text-warning{% else %}text-secondary opacity-75 fs-5{% endif %}">
+                                    {% if next_event.event_date %}
                                         {{ next_event.event_date|date:"d M Y" }}
                                         {% if next_event.end_date %}
                                             <span class="text-white mx-1">➔</span> {{ next_event.end_date|date:"d M Y" }}
                                         {% endif %}
-                                    </span>
-                                </div>
-                            {% endif %}
+                                    {% else %}
+                                        Inte satt än
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
 
-                            {% if next_event.location %}
-                                <div class="ps-md-3 border-start border-secondary border-opacity-50">
-                                    <span class="text-secondary small d-block text-uppercase fw-semibold font-monospace" style="font-size: 0.75rem;">Plats</span>
-                                    <span class="fs-4 fw-bold text-white">
-                                        <i class="fa-solid fa-location-dot text-danger me-1.5"></i>
-                                        {{ next_event.location }}
-                                    </span>
-                                </div>
+                        <!-- Description in focus (Expanded width across main content) -->
+                        <div class="mb-4 text-start">
+                            <span class="text-secondary d-block text-uppercase fw-semibold font-monospace mb-1.5" style="font-size: 0.95rem; letter-spacing: 0.5px;">
+                                <i class="fa-solid fa-circle-info" style="font-size: 1.42rem; color: #3B82F6; margin-right: 7px; vertical-align: middle;"></i>Beskrivning / Detaljer
+                            </span>
+                            {% if next_event.description %}
+                                <p class="lead text-light fs-6 mb-0 text-break" style="line-height: 1.6;">{{ next_event.description }}</p>
+                            {% else %}
+                                <p class="lead text-secondary opacity-75 fs-6 mb-0" style="line-height: 1.6; font-style: italic;">Info kommer</p>
                             {% endif %}
                         </div>
-                    </div>
 
-                    <!-- Right Column: Coordinators -->
-                    <div class="col-lg-5 text-lg-end border-start border-secondary border-opacity-25 ps-lg-4 pt-3 pt-lg-0">
-                        <div class="mb-3">
-                            <span class="text-secondary small d-block mb-2 font-monospace text-uppercase fw-semibold" style="font-size: 0.8rem; letter-spacing: 0.5px;">Samordnare:</span>
-                            {% if next_event.coordinators.all %}
-                                <div class="d-flex flex-wrap justify-content-lg-end align-items-center gap-2">
-                                    {% for coord in next_event.coordinators.all %}
-                                        <span class="badge bg-primary bg-opacity-25 text-info border border-info border-opacity-50 rounded-pill px-3 py-2 fs-6 d-inline-flex align-items-center gap-1.5">
-                                            <i class="fa-solid fa-user-gear me-1"></i>
-                                            {% if coord.get_full_name %}{{ coord.get_full_name }}{% elif coord.first_name %}{{ coord.first_name }} {{ coord.last_name }}{% else %}{{ coord.email }}{% endif %}
-                                            {% if coord == request.user %}
-                                                <form action="{% url 'toggle_event_coordinator' next_event.id %}" method="post" class="d-inline ms-1">
-                                                    {% csrf_token %}
-                                                    <button type="submit" class="btn btn-link text-danger p-0 border-0 align-middle" style="font-size: 1rem; line-height: 1; text-decoration: none;" title="Gå ur som samordnare">
-                                                        <i class="fa-solid fa-circle-xmark"></i>
-                                                    </button>
-                                                </form>
+                        <!-- Linked Bucket Items Covered by This Event -->
+                        {% if next_event.bucket_items.all %}
+                            <div class="mt-4 pt-3 border-top border-secondary border-opacity-25">
+                                <span class="text-warning small d-block mb-2 font-monospace text-uppercase fw-semibold" style="font-size: 0.92rem; letter-spacing: 0.5px;">
+                                    <i class="fa-solid fa-layer-group me-1.5"></i>Kopplade hinkmål & aktiviteter ({{ next_event.bucket_items.count }} st):
+                                </span>
+                                <div class="d-flex flex-wrap gap-2">
+                                    {% for b_item in next_event.bucket_items.all %}
+                                        <div class="badge bg-dark bg-opacity-75 text-white border border-warning border-opacity-40 rounded-3 p-2 d-inline-flex align-items-center gap-2 shadow-sm" style="font-size: 0.84rem;">
+                                            <span class="badge rounded-pill bg-warning bg-opacity-25 text-warning px-2 py-0.5" style="font-size: 0.7rem;">
+                                                {{ b_item.category.name }}
+                                            </span>
+                                            <span class="fw-bold text-light">{{ b_item.title }}</span>
+                                            {% if b_item.total_points %}
+                                                <span class="badge bg-warning bg-opacity-25 text-warning rounded-pill px-1.5 py-0.5" style="font-size: 0.68rem;" title="Totalt värde i bucketlist">
+                                                    <i class="fa-solid fa-coins me-1"></i>{{ b_item.total_points }}p
+                                                </span>
                                             {% endif %}
-                                        </span>
+                                            {% if b_item.dream_users %}
+                                                <span title="Hinkmål för {% for d_user in b_item.dream_users %}{% if d_user.get_full_name %}{{ d_user.get_full_name }}{% elif d_user.first_name %}{{ d_user.first_name }} {{ d_user.last_name }}{% else %}{{ d_user.email }}{% endif %}{% if not forloop.last %}, {% endif %}{% endfor %}" style="font-size: 0.9rem;">🪣</span>
+                                            {% endif %}
+                                        </div>
                                     {% endfor %}
                                 </div>
-                            {% else %}
-                                <span class="text-muted small italic">Ingen samordnare tillagd ännu</span>
-                            {% endif %}
-                        </div>
+                            </div>
+                        {% endif %}
+                    </div>
 
-                        {% if request.user not in next_event.coordinators.all %}
-                            <form action="{% url 'toggle_event_coordinator' next_event.id %}" method="post" class="mt-3">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-sm btn-info rounded-pill px-4 py-2 fw-bold text-dark shadow-sm">
-                                    <i class="fa-solid fa-user-plus me-1.5"></i>Bli Samordnare
-                                </button>
-                            </form>
+                    <!-- Right Column: Ansvariga (Positioned towards far right, list left-aligned) -->
+                    <div class="col-lg-4 col-xl-3 text-start pt-3 pt-lg-0 ms-auto ps-lg-4 ps-xl-5">
+                        <span class="text-warning d-block mb-2 font-monospace text-uppercase fw-bold text-start" style="font-size: 0.98rem; letter-spacing: 0.5px;">
+                            <i class="fa-solid fa-users-gear me-1"></i>Ansvariga
+                        </span>
+                        {% if next_event.coordinators.all %}
+                            <div class="d-flex flex-column align-items-start gap-2">
+                                {% for coord in next_event.coordinators.all %}
+                                    <span class="badge rounded-pill px-3 py-2 fs-6 d-inline-flex align-items-center gap-1.5 shadow-sm" style="background-color: rgba(34, 197, 94, 0.18); border: 1px solid rgba(74, 222, 128, 0.45); color: #F8FAFC; font-weight: 600;">
+                                        <i class="fa-solid fa-user me-1" style="color: #4ADE80; font-size: 0.85rem;"></i>
+                                        {% if coord.get_full_name %}{{ coord.get_full_name }}{% else %}{{ coord.username }}{% endif %}
+                                    </span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <span class="text-secondary small italic d-block text-start" style="font-style: italic;">Inte satt än</span>
                         {% endif %}
                     </div>
                 </div>
@@ -449,12 +460,17 @@
                 <div class="row g-2">
                     {% for item in completed_items %}
                         <div class="col-md-6 col-lg-4">
-                            <div class="p-2.5 rounded-3 bg-secondary bg-opacity-10 border border-secondary border-opacity-25 d-flex align-items-center justify-content-between">
-                                <div class="text-truncate me-2">
-                                    <strong class="text-white small d-block text-truncate">{{ item.category.icon }} {{ item.title }}</strong>
-                                    <span class="text-secondary opacity-75" style="font-size: 0.75rem;">Genomförd {{ item.completed_date|date:"Y-m-d" }}</span>
+                            <div class="p-3 bg-secondary bg-opacity-10 rounded-3 border border-secondary border-opacity-25 h-100">
+                                <div class="d-flex align-items-center justify-content-between mb-1">
+                                    <span class="badge bg-secondary bg-opacity-50 text-light small">{{ item.category.name }}</span>
+                                    <span class="text-success small fw-semibold" style="font-size: 0.75rem;">
+                                        <i class="fa-solid fa-check me-1"></i>Genomförd {{ item.completed_date|date:"Y-m-d" }}
+                                    </span>
                                 </div>
-                                <span class="badge bg-success text-white"><i class="fa-solid fa-check"></i></span>
+                                <h5 class="h6 text-white text-decoration-line-through mb-1">{{ item.title }}</h5>
+                                {% if item.description %}
+                                    <p class="small text-muted mb-0 italic" style="font-size: 0.78rem;">{{ item.description }}</p>
+                                {% endif %}
                             </div>
                         </div>
                     {% endfor %}
@@ -572,6 +588,103 @@
                         <label class="form-label text-warning fw-semibold">Beskrivning / Detaljer</label>
                         <textarea name="description" class="form-control bg-secondary bg-opacity-25 text-white border-secondary" rows="3" 
                                   placeholder="Samling på flygplatsen, boende bokat...">{% if next_event %}{{ next_event.description }}{% endif %}</textarea>
+                    </div>
+
+                    <!-- Coordinators / Ansvariga (+ Add Button UX) -->
+                    <div class="mb-3">
+                        <label class="form-label text-warning fw-semibold d-flex align-items-center justify-content-between mb-2">
+                            <span><i class="fa-solid fa-users-gear me-1.5"></i>Ansvariga / Samordnare</span>
+                            <span class="badge bg-info bg-opacity-25 text-info fw-normal" style="font-size: 0.72rem;">Fritt val (En eller flera)</span>
+                        </label>
+
+                        <!-- Currently Selected Coordinators Container -->
+                        <div id="selectedCoordinatorsContainer" class="d-flex flex-wrap gap-1.5 mb-2">
+                            {% if next_event and next_event.coordinators.all %}
+                                {% for coord in next_event.coordinators.all %}
+                                    <div class="coord-pill badge bg-info bg-opacity-25 text-info border border-info border-opacity-40 rounded-pill px-3 py-1.5 d-inline-flex align-items-center gap-2" id="coord_pill_{{ coord.id }}">
+                                        <input type="checkbox" name="coordinators" value="{{ coord.id }}" checked id="coord_check_{{ coord.id }}" class="d-none">
+                                        <span class="fw-bold"><i class="fa-solid fa-user me-1"></i>{% if coord.get_full_name %}{{ coord.get_full_name }}{% else %}{{ coord.username }}{% endif %}</span>
+                                        <button type="button" class="btn-close btn-close-white ms-1" style="font-size: 0.55rem;" onclick="removeCoordinator({{ coord.id }})" title="Ta bort samordnare"></button>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+
+                        <!-- + Add Coordinator Button -->
+                        <div class="mt-2">
+                            <button type="button" class="btn btn-outline-info btn-sm rounded-pill px-3 py-1.5 fw-bold" onclick="toggleCoordPicker()">
+                                <i class="fa-solid fa-user-plus me-1.5"></i>Välj &amp; Lägg till samordnare
+                            </button>
+                        </div>
+
+                        <!-- Expandable Coordinator Picker Box -->
+                        <div id="coordPickerBox" class="mt-2.5 p-3 bg-dark bg-opacity-90 border border-info border-opacity-40 rounded-3 shadow-lg" style="display: none;">
+                            <label class="form-label text-info small fw-bold mb-1">Välj medlem att lägga till som samordnare:</label>
+                            <select id="coordSelectPicker" class="form-select custom-dropdown-select mb-2.5" style="font-size: 0.85rem;">
+                                <option value="">-- Välj medlem från listan --</option>
+                                {% for member in all_members %}
+                                    <option value="{{ member.id }}" data-name="{% if member.get_full_name %}{{ member.get_full_name }}{% else %}{{ member.username }}{% endif %}">
+                                        👤 {% if member.get_full_name %}{{ member.get_full_name }}{% else %}{{ member.username }}{% endif %}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <div class="d-flex align-items-center justify-content-end gap-2">
+                                <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill px-3" onclick="toggleCoordPicker()">Avbryt</button>
+                                <button type="button" class="btn btn-info btn-sm rounded-pill px-3 text-dark fw-bold" onclick="addCoordinatorFromPicker()">
+                                    <i class="fa-solid fa-check me-1"></i>Lägg till samordnare
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Linked Suggested Events (+ Add Button UX) -->
+                    <div class="mb-3 pt-2 border-top border-secondary border-opacity-25">
+                        <label class="form-label text-warning fw-semibold d-flex align-items-center justify-content-between">
+                            <span><i class="fa-solid fa-link me-1.5"></i>Kopplade förslag från Bucketlisten</span>
+                            <span class="badge bg-warning bg-opacity-25 text-warning fw-normal" style="font-size: 0.72rem;">Valfritt (Kan täcka flera)</span>
+                        </label>
+                        
+                        <!-- Currently Linked Items Container -->
+                        <div id="linkedItemsBadgeContainer" class="d-flex flex-wrap gap-1.5 mb-2">
+                            {% if next_event and next_event.bucket_items.all %}
+                                {% for b_item in next_event.bucket_items.all %}
+                                    <div class="linked-item-pill badge bg-warning bg-opacity-25 text-warning border border-warning border-opacity-40 rounded-pill px-3 py-1.5 d-inline-flex align-items-center gap-2" id="linked_pill_{{ b_item.id }}">
+                                        <input type="checkbox" name="linked_bucket_items" value="{{ b_item.id }}" checked id="linked_check_{{ b_item.id }}" class="d-none">
+                                        <span class="fw-bold"><i class="fa-solid fa-lightbulb me-1"></i>{{ b_item.category.name }}: {{ b_item.title }}</span>
+                                        <button type="button" class="btn-close btn-close-white ms-1" style="font-size: 0.55rem;" onclick="removeLinkedItem({{ b_item.id }})" title="Ta bort koppling"></button>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+
+                        <!-- Container for dynamically added checkboxes -->
+                        <div id="dynamicHiddenInputs"></div>
+
+                        <!-- + Add Button -->
+                        <div class="mt-2">
+                            <button type="button" class="btn btn-outline-warning btn-sm rounded-pill px-3 py-1.5 fw-bold" onclick="toggleBucketSelectPicker()">
+                                <i class="fa-solid fa-plus me-1.5"></i>Koppla ett förslag från Idébanken
+                            </button>
+                        </div>
+
+                        <!-- Expandable Picker Dropdown -->
+                        <div id="bucketSelectPickerBox" class="mt-2.5 p-3 bg-dark bg-opacity-90 border border-warning border-opacity-40 rounded-3 shadow-lg" style="display: none;">
+                            <label class="form-label text-warning small fw-bold mb-1">Välj förslag att koppla:</label>
+                            <select id="bucketSelectPicker" class="form-select custom-dropdown-select mb-2.5" style="font-size: 0.85rem;">
+                                <option value="">-- Välj ett förslag från listan --</option>
+                                {% for b_item in all_open_items %}
+                                    <option value="{{ b_item.id }}" data-title="{{ b_item.title }}" data-category="{{ b_item.category.name }}" data-points="{{ b_item.total_points }}">
+                                        {{ b_item.category.name }}: {{ b_item.title }} ({{ b_item.total_points }}p)
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <div class="d-flex align-items-center justify-content-end gap-2">
+                                <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill px-3" onclick="toggleBucketSelectPicker()">Avbryt</button>
+                                <button type="button" class="btn btn-warning btn-sm rounded-pill px-3 text-dark fw-bold" onclick="addBucketItemFromPicker()">
+                                    <i class="fa-solid fa-check me-1"></i>Koppla valt förslag
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer border-secondary border-opacity-25">
@@ -779,5 +892,92 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+function toggleBucketSelectPicker() {
+    var box = document.getElementById('bucketSelectPickerBox');
+    if (box) {
+        box.style.display = box.style.display === 'none' ? 'block' : 'none';
+    }
+}
+
+function removeLinkedItem(id) {
+    var pill = document.getElementById('linked_pill_' + id);
+    if (pill) pill.remove();
+    var check = document.getElementById('linked_check_' + id);
+    if (check) check.remove();
+}
+
+function addBucketItemFromPicker() {
+    var select = document.getElementById('bucketSelectPicker');
+    if (!select || !select.value) return;
+    var itemId = select.value;
+    var selectedOpt = select.options[select.selectedIndex];
+    var title = selectedOpt.getAttribute('data-title') || selectedOpt.text;
+    var category = selectedOpt.getAttribute('data-category') || '';
+
+    // Prevent duplicates
+    if (document.getElementById('linked_pill_' + itemId)) {
+        alert('Detta förslag är redan kopplat.');
+        return;
+    }
+
+    var container = document.getElementById('linkedItemsBadgeContainer');
+    if (container) {
+        var newPill = document.createElement('div');
+        newPill.className = 'linked-item-pill badge bg-warning bg-opacity-25 text-warning border border-warning border-opacity-40 rounded-pill px-3 py-1.5 d-inline-flex align-items-center gap-2';
+        newPill.id = 'linked_pill_' + itemId;
+        newPill.innerHTML = `
+            <input type="checkbox" name="linked_bucket_items" value="${itemId}" checked id="linked_check_${itemId}" class="d-none">
+            <span class="fw-bold"><i class="fa-solid fa-lightbulb me-1"></i>${category ? category + ': ' : ''}${title}</span>
+            <button type="button" class="btn-close btn-close-white ms-1" style="font-size: 0.55rem;" onclick="removeLinkedItem(${itemId})" title="Ta bort koppling"></button>
+        `;
+        container.appendChild(newPill);
+    }
+    select.value = '';
+    toggleBucketSelectPicker();
+}
+
+function toggleCoordPicker() {
+    var box = document.getElementById('coordPickerBox');
+    if (box) {
+        box.style.display = box.style.display === 'none' ? 'block' : 'none';
+    }
+}
+
+function removeCoordinator(id) {
+    var pill = document.getElementById('coord_pill_' + id);
+    if (pill) pill.remove();
+    var check = document.getElementById('coord_check_' + id);
+    if (check) check.remove();
+}
+
+function addCoordinatorFromPicker() {
+    var select = document.getElementById('coordSelectPicker');
+    if (!select || !select.value) return;
+    var memberId = select.value;
+    var selectedOpt = select.options[select.selectedIndex];
+    var memberName = selectedOpt.getAttribute('data-name') || selectedOpt.text;
+
+    // Prevent duplicates
+    if (document.getElementById('coord_pill_' + memberId)) {
+        alert('Denna medlem är redan tillagd som samordnare.');
+        return;
+    }
+
+    var container = document.getElementById('selectedCoordinatorsContainer');
+    if (container) {
+        var newPill = document.createElement('div');
+        newPill.className = 'coord-pill badge bg-info bg-opacity-25 text-info border border-info border-opacity-40 rounded-pill px-3 py-1.5 d-inline-flex align-items-center gap-2';
+        newPill.id = 'coord_pill_' + memberId;
+        newPill.innerHTML = `
+            <input type="checkbox" name="coordinators" value="${memberId}" checked id="coord_check_${memberId}" class="d-none">
+            <span class="fw-bold"><i class="fa-solid fa-user me-1"></i>${memberName}</span>
+            <button type="button" class="btn-close btn-close-white ms-1" style="font-size: 0.55rem;" onclick="removeCoordinator(${memberId})" title="Ta bort samordnare"></button>
+        `;
+        container.appendChild(newPill);
+    }
+    select.value = '';
+    toggleCoordPicker();
+}
 </script>
 {% endblock %}
