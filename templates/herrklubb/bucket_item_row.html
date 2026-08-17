@@ -2,125 +2,140 @@
 <div class="list-group-item position-relative text-white border-0 py-3.5 px-3 px-md-4 my-2 transition-all hover-row {% if is_planerad_tab %}planerad-row-pop{% else %}idebanken-row-subtle{% endif %}" 
      style="{% if is_planerad_tab %}border-left: 4px solid #EAB308 !important; border-bottom: 3.5px solid rgba(234, 179, 8, 0.5) !important; background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98)) !important;{% else %}border-left: 3px solid rgba(100, 116, 139, 0.4) !important; border-bottom: 3.5px solid rgba(148, 163, 184, 0.3) !important; background: rgba(15, 23, 42, 0.35) !important; opacity: 0.85;{% endif %}">
     
-    <!-- Action buttons in top right corner: Change [GAP 7px] Mark as Complete -->
-    {% if user.is_staff or item.created_by == user %}
-        <div class="position-absolute top-0 end-0 mt-2 me-2.5 z-3 d-flex align-items-center" style="gap: 7px;">
-            <!-- Change / Edit icon button in faded orange -->
-            <button type="button" 
-                    class="btn btn-outline-warning btn-sm p-0 rounded-circle d-flex align-items-center justify-content-center opacity-75 hover-opacity-100 transition-all" 
-                    title="Ändra förslag" 
-                    data-bs-toggle="modal"
-                    data-bs-target="#editItemModal{{ item.id }}"
-                    style="width: 20px; height: 20px; font-size: 0.6rem; border-width: 1px; color: #F97316; border-color: rgba(249, 115, 22, 0.5); background: rgba(249, 115, 22, 0.12);">
-                <i class="fa-solid fa-pen"></i>
-            </button>
+    <div class="d-flex flex-column justify-content-between h-100">
 
-            <!-- Mark as completed checkmark button -->
-            <form action="{% url 'herrklubb_complete_item' item.id %}" method="post" class="d-inline m-0" onsubmit="return confirm('Vill du markera {{ item.title }} som genomförd? Detta frigör alla placerade röster.');">
-                {% csrf_token %}
-                <button type="submit" 
-                        class="btn btn-outline-success btn-sm p-0 rounded-circle d-flex align-items-center justify-content-center opacity-75 hover-opacity-100 transition-all" 
-                        title="Markera som genomförd" 
-                        style="width: 20px; height: 20px; font-size: 0.6rem; border-width: 1px; background: rgba(34, 197, 94, 0.1);">
-                    <i class="fa-solid fa-check"></i>
-                </button>
-            </form>
-        </div>
-    {% endif %}
-
-    <div class="row align-items-start g-2">
-
-        <!-- Col 1: Fixed-Width Far Left Slot (36px) so Category, Name & Description align identically across all cards -->
-        <div class="col-auto text-center d-flex align-items-start justify-content-center pt-0.5 ps-0 pe-1" style="width: 36px; min-width: 36px; max-width: 36px; flex-shrink: 0;">
-            {% if item.dream_users %}
-                <span style="font-size: 1.9rem; line-height: 1; display: inline-flex; align-items: center; justify-content: center; cursor: pointer;" 
-                      class="bucket-dream-trigger transition-all hover-scale"
-                      data-bs-toggle="modal" 
-                      data-bs-target="#dreamUsersModal"
-                      data-item-title="{{ item.title }}"
-                      data-users="{% for d_user in item.dream_users %}{% if d_user.get_full_name %}{{ d_user.get_full_name }}{% elif d_user.first_name %}{{ d_user.first_name }} {{ d_user.last_name }}{% else %}{{ d_user.email }}{% endif %}{% if not forloop.last %}, {% endif %}{% endfor %}"
-                      title="Klicka för att se vem som har val/hink på denna aktivitet">
-                    🪣
-                </span>
-            {% elif is_planerad_tab and rank %}
-                {% if rank == 1 %}
-                    <span style="font-size: 1.35rem; line-height: 1;" title="1:a Placering">🥇</span>
-                {% elif rank == 2 %}
-                    <span style="font-size: 1.35rem; line-height: 1;" title="2:a Placering">🥈</span>
-                {% elif rank == 3 %}
-                    <span style="font-size: 1.35rem; line-height: 1;" title="3:e Placering">🥉</span>
-                {% else %}
-                    <span class="fw-extrabold text-warning" style="font-size: 0.95rem;" title="#{{ rank }} Placering">#{{ rank }}</span>
+        <!-- TOP SECTION: Category & Rank on Left | Change & Mark as completed on Right -->
+        <div class="d-flex align-items-start justify-content-between gap-2 mb-1">
+            
+            <!-- Aligned top left: Category (plus Rank / Planerad badge) -->
+            <div class="d-flex align-items-center gap-2 flex-wrap text-start">
+                {% if is_planerad_tab and rank %}
+                    {% if rank == 1 %}
+                        <span style="font-size: 1.1rem; line-height: 1;" title="1:a Placering">🥇</span>
+                    {% elif rank == 2 %}
+                        <span style="font-size: 1.1rem; line-height: 1;" title="2:a Placering">🥈</span>
+                    {% elif rank == 3 %}
+                        <span style="font-size: 1.1rem; line-height: 1;" title="3:e Placering">🥉</span>
+                    {% else %}
+                        <span class="fw-extrabold text-warning small" title="#{{ rank }} Placering">#{{ rank }}</span>
+                    {% endif %}
                 {% endif %}
-            {% endif %}
-        </div>
-
-        <!-- Col 2: Category, Name, Description & Placed Chips (Separate left-aligned rows) -->
-        <div class="col text-start pe-2">
-            <!-- Row 1: Category Badge & Planerad Status -->
-            <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
-                <span class="badge rounded-pill px-2.5 py-0.5 flex-shrink-0" style="font-size: 0.7rem; font-weight: 500; color: #94A3B8; background-color: rgba(148, 163, 184, 0.12); border: 1px solid rgba(148, 163, 184, 0.22);">
+                <span class="badge rounded-pill px-2.5 py-1" style="font-size: 0.72rem; font-weight: 600; color: #94A3B8; background-color: rgba(148, 163, 184, 0.14); border: 1px solid rgba(148, 163, 184, 0.25);">
                     {{ item.category.name }}
                 </span>
                 {% if item.linked_events.all %}
-                    <span class="badge rounded-pill px-2.5 py-1 flex-shrink-0 shadow-sm" style="font-size: 0.72rem; background-color: #052E16; border: 1px solid #15803D; color: #DCFCE7; font-weight: 600;" title="Ingår i nästa inplanerade event!">
+                    <span class="badge rounded-pill px-2.5 py-1 shadow-sm" style="font-size: 0.72rem; background-color: #052E16; border: 1px solid #15803D; color: #DCFCE7; font-weight: 600;" title="Ingår i nästa inplanerade event!">
                         <i class="fa-solid fa-calendar-check me-1" style="color: #DCFCE7;"></i>Planerad
                     </span>
                 {% endif %}
             </div>
 
-            <!-- Row 2: Name / Title -->
-            <h4 class="fw-bold mb-1 text-break text-start" style="font-size: 0.98rem; color: {% if is_planerad_tab %}#F8FAFC{% else %}#E2E8F0{% endif %}; line-height: 1.3;">
-                {{ item.title }}
-            </h4>
+            <!-- Aligned on top right of row: Change | Mark as completed -->
+            {% if user.is_staff or item.created_by == user %}
+                <div class="d-flex align-items-center gap-2 ms-auto">
+                    <!-- Change button -->
+                    <button type="button" 
+                            class="btn btn-outline-warning btn-sm p-0 rounded-circle d-flex align-items-center justify-content-center opacity-75 hover-opacity-100 transition-all" 
+                            title="Ändra förslag" 
+                            data-bs-toggle="modal"
+                            data-bs-target="#editItemModal{{ item.id }}"
+                            style="width: 22px; height: 22px; font-size: 0.65rem; border-width: 1px; color: #F97316; border-color: rgba(249, 115, 22, 0.5); background: rgba(249, 115, 22, 0.12);">
+                        <i class="fa-solid fa-pen"></i>
+                    </button>
 
-            <!-- Description (if present) -->
-            {% if item.description %}
-                <p class="small mb-1 text-secondary text-start" style="font-size: 0.78rem; color: #94A3B8; opacity: 0.75; font-style: italic; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; line-height: 1.35;">
-                    {{ item.description }}
-                </p>
+                    <!-- Mark as completed checkmark button -->
+                    <form action="{% url 'herrklubb_complete_item' item.id %}" method="post" class="d-inline m-0" onsubmit="return confirm('Vill du markera {{ item.title }} som genomförd? Detta frigör alla placerade röster.');">
+                        {% csrf_token %}
+                        <button type="submit" 
+                                class="btn btn-outline-success btn-sm p-0 rounded-circle d-flex align-items-center justify-content-center opacity-75 hover-opacity-100 transition-all" 
+                                title="Markera som genomförd" 
+                                style="width: 22px; height: 22px; font-size: 0.65rem; border-width: 1px; background: rgba(34, 197, 94, 0.1);">
+                            <i class="fa-solid fa-check"></i>
+                        </button>
+                    </form>
+                </div>
             {% endif %}
+        </div>
 
-            <!-- Row 3: Placed Chips (Black | Green | Red) aligned left to right horizontally, left-aligned starting under Description -->
-            {% if item.count_svart > 0 or item.count_gron > 0 or item.count_rod > 0 %}
-                <div class="d-flex align-items-center justify-content-start gap-2.5 mt-1.5">
+        <!-- ROW 2: Name / Title -->
+        <h4 class="fw-bold mb-1 text-break text-start" style="font-size: 0.98rem; color: {% if is_planerad_tab %}#F8FAFC{% else %}#E2E8F0{% endif %}; line-height: 1.3;">
+            {{ item.title }}
+        </h4>
+
+        <!-- ROW 3: Description -->
+        {% if item.description %}
+            <p class="small mb-2 text-secondary text-start" style="font-size: 0.78rem; color: #94A3B8; opacity: 0.8; font-style: italic; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; line-height: 1.35;">
+                {{ item.description }}
+            </p>
+        {% endif %}
+
+        <!-- BOTTOM SECTION: Chips (Bucket | Black | Green | Red + 2px padding + counts) on Left | Total Value & Members betted on Right -->
+        <div class="d-flex align-items-end justify-content-between gap-3 mt-2">
+            
+            <!-- Left: Bucket | Black | Green | Red (icons row top, 2px padding, counts row bottom) -->
+            <div class="d-flex align-items-center gap-3">
+                {% if item.dream_users or item.count_svart or item.count_gron or item.count_rod %}
+                    
+                    <!-- Bucket marker (🪣) -->
+                    {% if item.dream_users %}
+                        <div class="d-flex flex-column align-items-center justify-content-center" title="Bucket för {{ item.dream_users|length }} medlem(mar)">
+                            <!-- Icon (Row 4) -->
+                            <span style="font-size: 1.35rem; line-height: 1; cursor: pointer;" 
+                                  class="bucket-dream-trigger transition-all hover-scale"
+                                  data-bs-toggle="modal" 
+                                  data-bs-target="#dreamUsersModal"
+                                  data-item-title="{{ item.title }}"
+                                  data-users="{% for d_user in item.dream_users %}{% if d_user.get_full_name %}{{ d_user.get_full_name }}{% elif d_user.first_name %}{{ d_user.first_name }} {{ d_user.last_name }}{% else %}{{ d_user.email }}{% endif %}{% if not forloop.last %}, {% endif %}{% endfor %}">
+                                🪣
+                            </span>
+                            <!-- Count # (Row 5 with 2px top padding) -->
+                            <strong class="text-warning" style="font-size: 0.75rem; line-height: 1; margin-top: 2px;">{{ item.dream_users|length }}</strong>
+                        </div>
+                    {% endif %}
+
                     <!-- Svart Marker (100) -->
                     {% if item.count_svart > 0 %}
-                        <div class="d-flex align-items-center gap-1" title="Svarta marker (100)">
-                            <img src="{% static 'herrklubb/img/chip_black.svg' %}" width="24" height="24" alt="Svart 100">
-                            <strong class="text-white" style="font-size: 0.8rem; line-height: 1;">{{ item.count_svart }}</strong>
+                        <div class="d-flex flex-column align-items-center justify-content-center" title="Svarta marker (100)">
+                            <!-- Icon (Row 4) -->
+                            <img src="{% static 'herrklubb/img/chip_black.svg' %}" width="26" height="26" alt="Svart 100">
+                            <!-- Count # (Row 5 with 2px top padding) -->
+                            <strong class="text-white" style="font-size: 0.75rem; line-height: 1; margin-top: 2px;">{{ item.count_svart }}</strong>
                         </div>
                     {% endif %}
 
                     <!-- Grön Marker (50) -->
                     {% if item.count_gron > 0 %}
-                        <div class="d-flex align-items-center gap-1" title="Gröna marker (50)">
-                            <img src="{% static 'herrklubb/img/chip_green.svg' %}" width="24" height="24" alt="Grön 50">
-                            <strong class="text-white" style="font-size: 0.8rem; line-height: 1;">{{ item.count_gron }}</strong>
+                        <div class="d-flex flex-column align-items-center justify-content-center" title="Gröna marker (50)">
+                            <!-- Icon (Row 4) -->
+                            <img src="{% static 'herrklubb/img/chip_green.svg' %}" width="26" height="26" alt="Grön 50">
+                            <!-- Count # (Row 5 with 2px top padding) -->
+                            <strong class="text-white" style="font-size: 0.75rem; line-height: 1; margin-top: 2px;">{{ item.count_gron }}</strong>
                         </div>
                     {% endif %}
 
                     <!-- Röd Marker (25) -->
                     {% if item.count_rod > 0 %}
-                        <div class="d-flex align-items-center gap-1" title="Röda marker (25)">
-                            <img src="{% static 'herrklubb/img/chip_red.svg' %}" width="24" height="24" alt="Röd 25">
-                            <strong class="text-white" style="font-size: 0.8rem; line-height: 1;">{{ item.count_rod }}</strong>
+                        <div class="d-flex flex-column align-items-center justify-content-center" title="Röda marker (25)">
+                            <!-- Icon (Row 4) -->
+                            <img src="{% static 'herrklubb/img/chip_red.svg' %}" width="26" height="26" alt="Röd 25">
+                            <!-- Count # (Row 5 with 2px top padding) -->
+                            <strong class="text-white" style="font-size: 0.75rem; line-height: 1; margin-top: 2px;">{{ item.count_rod }}</strong>
                         </div>
                     {% endif %}
-                </div>
-            {% endif %}
-        </div>
 
-        <!-- Col 3: Total Value & Vote Count (Far right slot) -->
-        <div class="col-auto text-end pe-md-3 d-flex align-items-center justify-content-end p-0 ms-auto" style="min-width: 95px;">
-            <div class="d-flex flex-column align-items-end justify-content-center m-0 p-0">
-                <span class="badge bg-warning bg-opacity-25 border border-warning border-opacity-50 text-warning fw-bold px-2 py-1 rounded-pill mb-1" style="font-size: 0.8rem; line-height: 1;">
-                    <i class="fa-solid fa-coins me-1"></i>Värde: {{ item.total_points }}
+                {% endif %}
+            </div>
+
+            <!-- Right: Total Value & Members betted (aligned with Bucket/chips on top) -->
+            <div class="d-flex flex-column align-items-end justify-content-center ms-auto">
+                <span class="badge bg-warning bg-opacity-25 border border-warning border-opacity-50 text-warning fw-bold px-2.5 py-1 rounded-pill mb-1" style="font-size: 0.8rem; line-height: 1;">
+                    <i class="fa-solid fa-coins me-1"></i>Värde: {{ item.total_points }}p
                 </span>
                 <span class="small {% if item.vote_count >= 6 %}text-warning fw-bold{% else %}text-secondary{% endif %}" style="font-size: 0.74rem;">
                     <i class="fa-solid fa-users me-1"></i>{{ item.vote_count }}/11 röster
                 </span>
             </div>
+
         </div>
 
     </div>
