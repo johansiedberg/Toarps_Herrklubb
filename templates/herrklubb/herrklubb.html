@@ -27,7 +27,7 @@
                 <i class="fa-solid fa-dice-d20 text-warning fs-5"></i>
                 <div>
                     <h3 class="h5 fw-bold text-white mb-0">Dina Markörer & Val</h3>
-                    <span class="text-secondary small" style="font-size: 0.78rem;">Placera din Högsta Dröm och dina 3 markörer (100, 50, 25) på valfria aktiviteter</span>
+                    <span class="text-secondary small" style="font-size: 0.78rem;">Placera din Bucket och dina 3 markörer (100, 50, 25) på valfria aktiviteter</span>
                 </div>
             </div>
             <button type="submit" form="votingForm" class="btn btn-sm btn-warning rounded-pill fw-bold text-dark px-4 py-1.5 shadow-sm">
@@ -40,7 +40,7 @@
                 {% csrf_token %}
                 <div class="row g-3">
 
-                    <!-- Tile 1: Högsta Dröm (Bucket-list) -->
+                    <!-- Tile 1: Bucket (Bucket-list) -->
                     <div class="col-12 col-md-6 col-xl-3">
                         <div class="p-3 rounded-4 h-100 d-flex flex-column justify-content-between transition-all voting-tile" 
                              style="background: rgba(15, 23, 42, 0.75); border: 1.5px solid rgba(234, 179, 8, 0.45); box-shadow: 0 4px 15px rgba(234, 179, 8, 0.08);">
@@ -49,7 +49,7 @@
                                     <div class="d-flex align-items-center gap-2.5">
                                         <span style="font-size: 2.2rem; line-height: 1;">🪣</span>
                                         <div>
-                                            <strong class="d-block text-warning fw-bold" style="font-size: 0.95rem;">Högsta Dröm</strong>
+                                            <strong class="d-block text-warning fw-bold" style="font-size: 0.95rem;">Bucket</strong>
                                             <span class="text-secondary small" style="font-size: 0.72rem;">Personlig favorit</span>
                                         </div>
                                     </div>
@@ -58,7 +58,7 @@
                                     </span>
                                 </div>
                                 <select name="dream_item_id" class="form-select custom-dropdown-select select-gold rounded-3 mt-1">
-                                    <option value="">-- Välj din Högsta Dröm --</option>
+                                    <option value="">-- Välj din Bucket --</option>
                                     {% for cat in categories %}
                                         {% if cat.open_items %}
                                             <optgroup label="{{ cat.icon }} {{ cat.name }}">
@@ -271,13 +271,13 @@
                 {% if next_event %}
                     <form action="{% url 'delete_herrklubb_event' next_event.id %}" method="post" class="d-inline" onsubmit="return confirm('Är du säker på att du vill ta bort Nästa Event?');">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3 fw-semibold" title="Ta bort event">
-                            <i class="fa-solid fa-trash-can me-1"></i>Ta bort
+                        <button type="submit" class="btn btn-sm btn-outline-danger rounded-circle p-0 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;" title="Ta bort event">
+                            <i class="fa-solid fa-trash-can"></i>
                         </button>
                     </form>
                 {% endif %}
-                <button type="button" class="btn btn-sm btn-outline-warning rounded-pill px-3 fw-semibold" data-bs-toggle="modal" data-bs-target="#editEventModal">
-                    <i class="fa-solid fa-pen-to-square me-1.5"></i>{% if next_event %}Ändra Event{% else %}Planera Nästa Event{% endif %}
+                <button type="button" class="btn btn-sm btn-outline-warning rounded-circle p-0 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;" data-bs-toggle="modal" data-bs-target="#editEventModal" title="{% if next_event %}Ändra Event{% else %}Planera Nästa Event{% endif %}">
+                    <i class="fa-solid fa-pen-to-square"></i>
                 </button>
             </div>
         </div>
@@ -305,7 +305,7 @@
                                 <span class="text-secondary d-block text-uppercase fw-semibold font-monospace" style="font-size: 0.95rem; letter-spacing: 0.5px;">
                                     <i class="fa-solid fa-location-dot" style="font-size: 1.42rem; color: #EF4444; margin-right: 7px; vertical-align: middle;"></i>Plats
                                 </span>
-                                <span class="fs-4 fw-bold {% if next_event.location %}text-white{% else %}text-secondary opacity-75 fs-5{% endif %}">
+                                <span class="fs-4 fw-bold {% if next_event.location %}text-white{% else %}text-secondary opacity-75 fst-italic fs-5{% endif %}">
                                     {% if next_event.location %}{{ next_event.location }}{% else %}Inte satt än{% endif %}
                                 </span>
                             </div>
@@ -314,7 +314,7 @@
                                 <span class="text-secondary d-block text-uppercase fw-semibold font-monospace" style="font-size: 0.95rem; letter-spacing: 0.5px;">
                                     <i class="fa-solid fa-calendar-days" style="font-size: 1.42rem; color: #EAB308; margin-right: 7px; vertical-align: middle;"></i>Datum
                                 </span>
-                                <span class="fs-4 fw-bold {% if next_event.event_date %}text-warning{% else %}text-secondary opacity-75 fs-5{% endif %}">
+                                <span class="fs-4 fw-bold {% if next_event.event_date %}text-white{% else %}text-secondary opacity-75 fst-italic fs-5{% endif %}">
                                     {% if next_event.event_date %}
                                         {{ next_event.event_date|date:"d M Y" }}
                                         {% if next_event.end_date %}
@@ -327,39 +327,31 @@
                             </div>
                         </div>
 
-                        <!-- Description in focus (Expanded width across main content) -->
+                        <!-- Description in focus -->
                         <div class="mb-4 text-start">
                             <span class="text-secondary d-block text-uppercase fw-semibold font-monospace mb-1.5" style="font-size: 0.95rem; letter-spacing: 0.5px;">
                                 <i class="fa-solid fa-circle-info" style="font-size: 1.42rem; color: #3B82F6; margin-right: 7px; vertical-align: middle;"></i>Beskrivning / Detaljer
                             </span>
                             {% if next_event.description %}
-                                <p class="lead text-light fs-6 mb-0 text-break" style="line-height: 1.6;">{{ next_event.description }}</p>
+                                <p class="lead text-white fs-6 mb-0 text-break" style="line-height: 1.6;">{{ next_event.description }}</p>
                             {% else %}
-                                <p class="lead text-secondary opacity-75 fs-6 mb-0" style="line-height: 1.6; font-style: italic;">Info kommer</p>
+                                <p class="lead text-secondary opacity-75 fs-6 mb-0 fst-italic" style="line-height: 1.6;">Inte satt än</p>
                             {% endif %}
                         </div>
 
                         <!-- Linked Bucket Items Covered by This Event -->
                         {% if next_event.bucket_items.all %}
                             <div class="mt-4 pt-3 border-top border-secondary border-opacity-25">
-                                <span class="text-warning small d-block mb-2 font-monospace text-uppercase fw-semibold" style="font-size: 0.92rem; letter-spacing: 0.5px;">
+                                <span class="text-warning small d-block mb-3 font-monospace text-uppercase fw-semibold" style="font-size: 0.92rem; letter-spacing: 0.5px;">
                                     <i class="fa-solid fa-layer-group me-1.5"></i>Kopplade hinkmål & aktiviteter ({{ next_event.bucket_items.count }} st):
                                 </span>
-                                <div class="d-flex flex-wrap gap-2">
+                                <div class="d-flex flex-column gap-2">
                                     {% for b_item in next_event.bucket_items.all %}
-                                        <div class="badge bg-dark bg-opacity-75 text-white border border-secondary border-opacity-30 rounded-3 p-2 d-inline-flex align-items-center gap-2 shadow-sm" style="font-size: 0.84rem;">
-                                            <span class="badge rounded-pill badge-category px-2 py-0.5">
+                                        <div class="badge bg-dark bg-opacity-75 text-white border border-secondary border-opacity-30 rounded-3 p-2.5 d-flex flex-column align-items-start gap-1 shadow-sm text-start" style="font-size: 0.84rem;">
+                                            <span class="badge rounded-pill badge-category px-2 py-0.5" style="font-size: 0.7rem;">
                                                 {{ b_item.category.name }}
                                             </span>
-                                            <span class="fw-bold text-light">{{ b_item.title }}</span>
-                                            {% if b_item.total_points %}
-                                                <span class="badge badge-tonal-gold rounded-pill px-1.5 py-0.5" style="font-size: 0.68rem;" title="Totalt värde i bucketlist">
-                                                    <i class="fa-solid fa-coins me-1"></i>{{ b_item.total_points }}p
-                                                </span>
-                                            {% endif %}
-                                            {% if b_item.dream_users %}
-                                                <span title="Hinkmål för {% for d_user in b_item.dream_users %}{% if d_user.get_full_name %}{{ d_user.get_full_name }}{% elif d_user.first_name %}{{ d_user.first_name }} {{ d_user.last_name }}{% else %}{{ d_user.email }}{% endif %}{% if not forloop.last %}, {% endif %}{% endfor %}" style="font-size: 0.9rem;">🪣</span>
-                                            {% endif %}
+                                            <span class="fw-bold text-white fs-6 ms-0.5">{{ b_item.title }}</span>
                                         </div>
                                     {% endfor %}
                                 </div>
@@ -840,13 +832,13 @@
             <div class="modal-header border-secondary border-opacity-25 py-2.5 px-3">
                 <div class="d-flex align-items-center gap-2">
                     <span style="font-size: 1.6rem; line-height: 1;">🪣</span>
-                    <h5 class="modal-title fw-bold text-warning small mb-0" id="dreamModalItemTitle">Högsta Dröm</h5>
+                    <h5 class="modal-title fw-bold text-warning small mb-0" id="dreamModalItemTitle">Bucket</h5>
                 </div>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Stäng"></button>
             </div>
             <div class="modal-body p-3 text-center">
                 <p class="text-secondary small mb-2 text-uppercase tracking-wider fw-semibold" style="font-size: 0.75rem;">
-                    Medlemmar som har valt denna som sin Högsta Dröm:
+                    Medlemmar som har valt denna som sin Bucket:
                 </p>
                 <div id="dreamModalUsersList" class="d-flex flex-wrap align-items-center justify-content-center gap-2 pt-1">
                     <!-- Dynamically inserted user badges -->
