@@ -18,6 +18,9 @@ media/
 .antigravity/
 .gemini/
 
+# Logs
+*.log
+
 # OS metadata
 .DS_Store
 *.DS_Store
