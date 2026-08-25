@@ -9,19 +9,24 @@
 - Project enforces HTTPS standards (`SECURE_PROXY_SSL_HEADER`, `SESSION_COOKIE_SECURE`, `CSRF_COOKIE_SECURE`, `SECURE_HSTS_SECONDS`, `SECURE_REFERRER_POLICY`) for encrypted transport.
 
 ## Git & Deployment Rules
+- **Milestone-Only Commits (Anti-Noise Policy)**:
+  - NEVER make micro-commits for intermediate styling/CSS/line tweaks.
+  - Test and iterate freely in local DEV mode (`http://127.0.0.1:1981`).
+  - Only commit when a full feature or milestone is completed and verified, using Conventional Commits (`feat:`, `fix:`, `style:`, `refactor:`).
 - Always ask or wait for instruction before committing or updating the server!
 - **Production Server**: `johansiedberg@192.168.86.35`
 - **Server Project Path**: `/home/johansiedberg/Projects/Toarps_Herrklubb`
 - **Deployment Procedure**:
   1. Commit and push local changes to `origin/main` on GitHub.
   2. Connect to the production server via SSH: `ssh johansiedberg@192.168.86.35`
-  3. Navigate to the project root directory: `cd /home/johansiedberg/Projects/Toarps_Herrklubb`
-  4. Pull the latest commits: `git pull origin main`
-  5. Apply any database migrations: `./venv/bin/python manage.py migrate`
-  6. If needed, restart server process:
+  3. Run the automated deploy script:
      ```bash
-     pkill -f "8981" && nohup ./venv/bin/python manage.py runserver 127.0.0.1:8981 > runserver.log 2>&1 &
+     cd /home/johansiedberg/Projects/Toarps_Herrklubb && ./deploy.sh
      ```
+
+## Distraction-Free Login Standard
+- All login screens and entry points must remain 100% distraction-free authentication portals.
+- NEVER display news banners, changelogs, version numbers, or update popups at login.
 
 ## Antigravity Agent Permission & Workflow Control Rules
 

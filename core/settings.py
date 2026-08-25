@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -42,6 +43,9 @@ INSTALLED_APPS = [
 
 # Shared Single Sign-On Secret Key for redirect to Prediction Engine
 HERRKLUBB_SSO_SECRET = 'toarps-herrklubb-sso-secret-key-1981-2028'
+
+# Base URL for Prediction Engine SSO redirection (defaults to dynamic host resolution if empty)
+PREDICTION_ENGINE_URL = os.getenv('PREDICTION_ENGINE_URL', '')
 
 # CSRF & Session Isolation for local multi-app setup (port 1981)
 CSRF_COOKIE_NAME = 'toarps_herrklubb_csrftoken'

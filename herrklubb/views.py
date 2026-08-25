@@ -113,9 +113,16 @@ def predictions_sso_login(request):
     }
     signer = TimestampSigner(key=settings.HERRKLUBB_SSO_SECRET, salt='sso-salt')
     token = signer.sign_object(payload)
-    # Redirect to Prediction Engine running on port 2028 (HTTPS-aware)
-    scheme = 'https' if request.is_secure() else 'http'
-    return redirect(f"{scheme}://127.0.0.1:2028/sso/login/?token={token}")
+
+    # Determine Prediction Engine destination (env override or dynamic host resolution on port 2028)
+    if getattr(settings, 'PREDICTION_ENGINE_URL', ''):
+        target_base = settings.PREDICTION_ENGINE_URL.rstrip('/')
+    else:
+        scheme = 'https' if request.is_secure() else 'http'
+        host_name = request.get_host().split(':')[0]
+        target_base = f"{scheme}://{host_name}:2028"
+
+    return redirect(f"{target_base}/sso/login/?token={token}")
 
 
 # --- HERRKLUBBEN VIEWS ---
