@@ -1,0 +1,30 @@
+{
+  "project": "Toarps Herrklubb",
+  "version": "1.0.0",
+  "tag": "v1.0.0",
+  "release_date": "2026-08-27",
+  "commit_hash": "cb038e6",
+  "environment": "production",
+  "target_server": "Ubuntu PRD Server (192.168.86.35)",
+  "port_mapping": {
+    "app_portal": {
+      "internal_port": 8981,
+      "external_https_port": 1981,
+      "systemd_service": "toarps-herrklubb.service"
+    }
+  },
+  "database": {
+    "engine": "sqlite3",
+    "path": "db.sqlite3",
+    "migrations_pending": false
+  },
+  "key_features": [
+    "Toarps Herrklubb predictions portal",
+    "Integration with Caddy proxy on HTTPS port 1981",
+    "Systemd + Gunicorn production service management"
+  ],
+  "agentic_context": {
+    "deployment_mode": "DEV_TO_PRD_RELEASE",
+    "rule": "Do not commit directly to PRD main. Develop on DEV device, merge to main, cut semantic tag vX.Y.Z, and run deploy.sh on PRD."
+  }
+}

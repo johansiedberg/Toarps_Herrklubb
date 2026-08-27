@@ -726,3 +726,16 @@ def upload_avatar_view(request):
         profile.save()
         messages.success(request, 'Din profilbild har uppdaterats!')
     return redirect(request.META.get('HTTP_REFERER', 'hub'))
+@login_required
+@herrklubb_member_required
+@require_POST
+def toggle_event_participation_view(request, event_id):
+    """Toggles participation for the logged-in user in the event."""
+    event = get_object_or_404(HerrklubbEvent, id=event_id)
+    if request.user in event.participants.all():
+        event.participants.remove(request.user)
+        messages.info(request, "Du deltar inte längre i eventet.")
+    else:
+        event.participants.add(request.user)
+        messages.success(request, "✅ Du deltar i eventet!")
+    return redirect('herrklubb')

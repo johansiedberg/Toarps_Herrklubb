@@ -1,24 +1,99 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# Toarps Herrklubb - Production Deployment Script
-# Target Server: johansiedberg@192.168.86.35
+# Toarps Herrklubb - Production Deployment & Release Fetch Script
+# Target: Ubuntu PRD Server (johansiedberg@192.168.86.35)
 # Path: /home/johansiedberg/Projects/Toarps_Herrklubb
 # ==============================================================================
 
 set -e
 
-echo "🚀 [1/4] Pulling latest changes from origin/main..."
-git pull origin main
+PROJECT_DIR="/home/johansiedberg/Projects/Toarps_Herrklubb"
+HISTORY_FILE="${PROJECT_DIR}/deployment_history.json"
 
-echo "📦 [2/4] Applying database migrations..."
-./venv/bin/python manage.py migrate
+cd "$PROJECT_DIR"
 
-echo "📁 [3/4] Collecting static assets..."
+echo "================================================================="
+echo "⚽ Production Deployment: Toarps Herrklubb"
+echo "================================================================="
+
+# 1. Fetch tags from remote origin
+echo "🔍 [1/6] Fetching latest commits and release tags from GitHub..."
+git fetch --tags origin
+
+CURRENT_COMMIT=$(git rev-parse --short HEAD)
+PREV_VERSION=$(git describe --tags --abbrev=0 2>/dev/null || echo "v1.0.0")
+
+# Target tag selection
+INPUT_TAG="$1"
+if [[ -n "$INPUT_TAG" ]]; then
+    TARGET_TAG="$INPUT_TAG"
+else
+    # Find latest tag on origin
+    TARGET_TAG=$(git describe --tags $(git rev-list --tags --max-count=1) 2>/dev/null || echo "v1.0.0")
+fi
+
+echo "📌 Deploying target release tag: $TARGET_TAG"
+git checkout --quiet "$TARGET_TAG"
+
+NEW_COMMIT=$(git rev-parse --short HEAD)
+NEW_VERSION="$TARGET_TAG"
+
+echo "-----------------------------------------------------------------"
+echo "📜 Change Summary & Commits ($PREV_VERSION -> $NEW_VERSION):"
+git log --oneline -n 5 "$CURRENT_COMMIT..$NEW_COMMIT" 2>/dev/null || echo "Locked to release tag: $NEW_VERSION"
+echo "-----------------------------------------------------------------"
+
+# 2. Database Migrations
+echo "📦 [2/6] Applying Django database migrations..."
+./venv/bin/python manage.py migrate --noinput
+
+# 3. Collect Static Assets
+echo "📁 [3/6] Collecting static assets..."
 ./venv/bin/python manage.py collectstatic --noinput
 
-echo "🔄 [4/4] Restarting Toarps Herrklubb background service (Port 8981)..."
-pkill -f "8981" || true
-sleep 1
-nohup ./venv/bin/python manage.py runserver 127.0.0.1:8981 > runserver.log 2>&1 &
+# 4. Reload Production Systemd Service
+echo "🔄 [4/6] Restarting Systemd Service (Port: 8981)..."
+systemctl --user restart toarps-herrklubb.service
 
-echo "✅ Deployment complete! Toarps Herrklubb is running on port 8981."
+# 5. Service Health Check
+echo "🩺 [5/6] Verifying service health..."
+sleep 2
+
+APP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8981/ || echo "ERR")
+
+if [[ "$APP_STATUS" =~ ^(200|301|302)$ ]]; then
+    echo "  ✅ App Service (Port 8981 / Proxy 1981): Healthy (HTTP $APP_STATUS)"
+else
+    echo "  ⚠️ App Service (Port 8981): Status $APP_STATUS. Check journalctl --user -u toarps-herrklubb.service"
+fi
+
+# 6. Structured Deployment Logging
+echo "📝 [6/6] Logging deployment metadata..."
+DEPLOY_TIME=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+./venv/bin/python -c "
+import json, os
+history_file = '$HISTORY_FILE'
+entry = {
+    'timestamp': '$DEPLOY_TIME',
+    'deployed_version': '$NEW_VERSION',
+    'previous_version': '$PREV_VERSION',
+    'commit_hash': '$NEW_COMMIT',
+    'app_health': '$APP_STATUS',
+    'deployer': 'deploy.sh'
+}
+history = []
+if os.path.exists(history_file):
+    try:
+        with open(history_file, 'r') as f:
+            history = json.load(f)
+    except Exception:
+        history = []
+history.append(entry)
+with open(history_file, 'w') as f:
+    json.dump(history, f, indent=2)
+"
+
+echo "================================================================="
+echo "✅ PRD Deployment Complete! Active Release Tag: $NEW_VERSION ($NEW_COMMIT)"
+echo "================================================================="
