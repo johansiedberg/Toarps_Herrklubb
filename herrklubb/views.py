@@ -182,7 +182,7 @@ def herrklubb_view(request):
         'user_placed_rod': user_placed_rod,
         'user_dream': user_dream,
         'total_members_count': 11,
-        'all_members': User.objects.filter(is_active=True, profile__is_herrklubb_member=True).exclude(username__in=['john', 'admin', 'adminuser']).order_by('first_name', 'last_name', 'username'),
+        'all_members': User.objects.filter(is_active=True, profile__is_herrklubb_member=True).exclude(username__iexact='john').exclude(username__iexact='admin').order_by('first_name', 'last_name', 'username'),
         'next_event': HerrklubbEvent.objects.filter(is_active=True).prefetch_related('coordinators', 'bucket_items__category', 'bucket_items__dreams__user', 'bucket_items__votes').first(),
     }
     context.update(build_calendar_context(request))
