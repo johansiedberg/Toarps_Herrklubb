@@ -27,13 +27,14 @@ PREV_VERSION=$(git describe --tags --abbrev=0 2>/dev/null || echo "v1.0.0")
 INPUT_TAG="$1"
 if [[ -n "$INPUT_TAG" ]]; then
     TARGET_TAG="$INPUT_TAG"
+    echo "📌 Deploying target release tag: $TARGET_TAG"
+    git checkout --quiet "$TARGET_TAG"
 else
-    # Find latest tag on origin
-    TARGET_TAG=$(git describe --tags $(git rev-list --tags --max-count=1) 2>/dev/null || echo "v1.0.0")
+    echo "📌 Deploying latest main branch (origin/main)..."
+    git checkout --quiet main
+    git reset --hard origin/main
+    TARGET_TAG="main"
 fi
-
-echo "📌 Deploying target release tag: $TARGET_TAG"
-git checkout --quiet "$TARGET_TAG"
 
 NEW_COMMIT=$(git rev-parse --short HEAD)
 NEW_VERSION="$TARGET_TAG"
