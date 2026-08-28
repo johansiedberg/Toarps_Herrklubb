@@ -182,7 +182,7 @@ def herrklubb_view(request):
         'user_placed_rod': user_placed_rod,
         'user_dream': user_dream,
         'total_members_count': 11,
-        'all_members': User.objects.filter(is_active=True).order_by('first_name', 'last_name', 'username'),
+        'all_members': User.objects.filter(is_active=True, profile__is_herrklubb_member=True).exclude(username__in=['john', 'admin', 'adminuser']).order_by('first_name', 'last_name', 'username'),
         'next_event': HerrklubbEvent.objects.filter(is_active=True).prefetch_related('coordinators', 'bucket_items__category', 'bucket_items__dreams__user', 'bucket_items__votes').first(),
     }
     context.update(build_calendar_context(request))
@@ -729,13 +729,25 @@ def upload_avatar_view(request):
 @login_required
 @herrklubb_member_required
 @require_POST
-def toggle_event_participation_view(request, event_id):
+def toggle_event_participation_view(request, event_id, status):
     """Toggles participation for the logged-in user in the event."""
     event = get_object_or_404(HerrklubbEvent, id=event_id)
-    if request.user in event.participants.all():
-        event.participants.remove(request.user)
-        messages.info(request, "Du deltar inte längre i eventet.")
-    else:
-        event.participants.add(request.user)
-        messages.success(request, "✅ Du deltar i eventet!")
+    
+    if status == 'yes':
+        if request.user in event.participants.all():
+            event.participants.remove(request.user)
+            messages.info(request, "Deltagande nollställt.")
+        else:
+            event.participants.add(request.user)
+            event.participants_no.remove(request.user)
+            messages.success(request, "✅ Du deltar i eventet!")
+    elif status == 'no':
+        if request.user in event.participants_no.all():
+            event.participants_no.remove(request.user)
+            messages.info(request, "Deltagande nollställt.")
+        else:
+            event.participants_no.add(request.user)
+            event.participants.remove(request.user)
+            messages.info(request, "❌ Du deltar ej i eventet.")
+            
     return redirect('herrklubb')
