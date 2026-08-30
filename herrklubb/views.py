@@ -8,7 +8,7 @@ from django.utils import timezone
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import update_session_auth_hash, get_user_model
@@ -751,3 +751,82 @@ def toggle_event_participation_view(request, event_id, status):
             messages.info(request, "❌ Du deltar ej i eventet.")
             
     return redirect('herrklubb')
+
+
+def generate_event_ics(event):
+    """
+    Generates standard RFC 5545 iCalendar (.ics) string for a HerrklubbEvent.
+    """
+    now_utc = timezone.now().strftime("%Y%m%dT%H%M%SZ")
+    uid = f"herrklubb-event-{event.id}@toarpsherrklubb.se"
+    
+    def escape_ics_text(text):
+        if not text:
+            return ""
+        return str(text).replace('\\', '\\\\').replace(';', '\\;').replace(',', '\\,').replace('\r\n', '\\n').replace('\n', '\\n')
+    
+    lines = [
+        "BEGIN:VCALENDAR",
+        "VERSION:2.0",
+        "PRODID:-//Toarps Herrklubb//Herrklubb Event//SV",
+        "CALSCALE:GREGORIAN",
+        "METHOD:PUBLISH",
+        "BEGIN:VEVENT",
+        f"UID:{uid}",
+        f"DTSTAMP:{now_utc}",
+    ]
+    
+    if event.event_date:
+        if event.event_time:
+            # Timed event
+            start_dt = datetime.datetime.combine(event.event_date, event.event_time)
+            lines.append(f"DTSTART:{start_dt.strftime('%Y%m%dT%H%M%S')}")
+            if event.end_date:
+                end_dt = datetime.datetime.combine(event.end_date, event.event_time)
+                lines.append(f"DTEND:{end_dt.strftime('%Y%m%dT%H%M%S')}")
+            else:
+                end_dt = start_dt + datetime.timedelta(hours=3)
+                lines.append(f"DTEND:{end_dt.strftime('%Y%m%dT%H%M%S')}")
+        else:
+            # All-day / Multi-day event (dates formatted as YYYYMMDD, DTEND is exclusive per RFC 5545)
+            start_str = event.event_date.strftime("%Y%m%d")
+            end_date = (event.end_date or event.event_date) + datetime.timedelta(days=1)
+            end_str = end_date.strftime("%Y%m%d")
+            lines.append(f"DTSTART;VALUE=DATE:{start_str}")
+            lines.append(f"DTEND;VALUE=DATE:{end_str}")
+            
+    lines.append(f"SUMMARY:{escape_ics_text(event.title)}")
+    
+    desc_parts = []
+    if event.category:
+        desc_parts.append(f"Kategori: {event.category.name}")
+    if event.description:
+        desc_parts.append(event.description)
+    if event.coordinators.exists():
+        coords = ", ".join([c.get_full_name() or c.username for c in event.coordinators.all()])
+        desc_parts.append(f"Ansvariga: {coords}")
+        
+    full_desc = "\n\n".join(desc_parts)
+    if full_desc:
+        lines.append(f"DESCRIPTION:{escape_ics_text(full_desc)}")
+        
+    if event.location:
+        lines.append(f"LOCATION:{escape_ics_text(event.location)}")
+        
+    lines.append("STATUS:CONFIRMED")
+    lines.append("END:VEVENT")
+    lines.append("END:VCALENDAR")
+    
+    return "\r\n".join(lines) + "\r\n"
+
+
+@login_required
+@herrklubb_member_required
+def event_ics_export_view(request, event_id):
+    """Exports an event as an RFC 5545 .ics file for download / calendar import."""
+    event = get_object_or_404(HerrklubbEvent, id=event_id)
+    ics_data = generate_event_ics(event)
+    filename = f"toarps_herrklubb_event_{event.id}.ics"
+    response = HttpResponse(ics_data, content_type='text/calendar; charset=utf-8')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    return response

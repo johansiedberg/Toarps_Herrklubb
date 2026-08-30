@@ -1,8 +1,9 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
 from herrklubb.models import (
-    BucketCategory, BucketItem, BucketVote, BucketDream, UserProfile
+    BucketCategory, BucketItem, BucketVote, BucketDream, UserProfile, HerrklubbEvent
 )
+import datetime
 
 class HerrklubbTestCase(TestCase):
     def setUp(self):
@@ -61,4 +62,49 @@ class HerrklubbTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Toarps HK Herrklubb')
+
+    def test_calendar_export_ics_and_urls(self):
+        event = HerrklubbEvent.objects.create(
+            title='Prag Resa 2026',
+            category=self.cat,
+            description='Herrklubben intar Prag!',
+            event_date=datetime.date(2026, 10, 15),
+            end_date=datetime.date(2026, 10, 18),
+            location='Prag, Tjeckien',
+            is_active=True
+        )
+        event.coordinators.add(self.member)
+
+        # Test Google Calendar URL
+        gcal_url = event.google_calendar_url
+        self.assertIn('calendar.google.com', gcal_url)
+        self.assertIn('Prag+Resa+2026', gcal_url)
+        self.assertIn('20261015%2F20261019', gcal_url)
+
+        # Test Outlook Calendar URL
+        outlook_url = event.outlook_calendar_url
+        self.assertIn('outlook.live.com', outlook_url)
+        self.assertIn('Prag+Resa+2026', outlook_url)
+
+        # Test .ics endpoint
+        self.client.login(username='john', password='password')
+        response = self.client.get(f'/herrklubb/event/{event.id}/ics/')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response['Content-Type'], 'text/calendar; charset=utf-8')
+        content = response.content.decode('utf-8')
+        self.assertIn('BEGIN:VCALENDAR', content)
+        self.assertIn('SUMMARY:Prag Resa 2026', content)
+        self.assertIn('LOCATION:Prag\\, Tjeckien', content)
+        self.assertIn('DTSTART;VALUE=DATE:20261015', content)
+        self.assertIn('DTEND;VALUE=DATE:20261019', content)
+        self.assertIn('END:VCALENDAR', content)
+
+        # Test template renders the circular emoji button
+        resp_page = self.client.get('/herrklubb/')
+        self.assertEqual(resp_page.status_code, 200)
+        self.assertContains(resp_page, 'calendarDropdownBtn')
+        self.assertContains(resp_page, '📅')
+        self.assertContains(resp_page, 'Apple Kalender')
+        self.assertContains(resp_page, 'Google Kalender')
+
 

@@ -171,3 +171,74 @@ class HerrklubbEvent(models.Model):
 
     def __str__(self):
         return f"Event: {self.title} ({self.event_date or 'Inget datum'})"
+
+    @property
+    def google_calendar_url(self):
+        if not self.event_date:
+            return "#"
+        from urllib.parse import urlencode
+        from datetime import timedelta
+        
+        if self.event_time:
+            start_str = f"{self.event_date.strftime('%Y%m%d')}T{self.event_time.strftime('%H%M%S')}"
+            if self.end_date:
+                end_str = f"{self.end_date.strftime('%Y%m%d')}T{self.event_time.strftime('%H%M%S')}"
+            else:
+                end_str = f"{self.event_date.strftime('%Y%m%d')}T235959"
+        else:
+            start_str = self.event_date.strftime('%Y%m%d')
+            end_date = (self.end_date or self.event_date) + timedelta(days=1)
+            end_str = end_date.strftime('%Y%m%d')
+            
+        desc_parts = []
+        if self.category:
+            desc_parts.append(f"Kategori: {self.category.name}")
+        if self.description:
+            desc_parts.append(self.description)
+            
+        params = {
+            'action': 'TEMPLATE',
+            'text': self.title,
+            'dates': f"{start_str}/{end_str}",
+            'details': "\n\n".join(desc_parts),
+            'location': self.location or "",
+        }
+        return f"https://calendar.google.com/calendar/render?{urlencode(params)}"
+
+    @property
+    def outlook_calendar_url(self):
+        if not self.event_date:
+            return "#"
+        from urllib.parse import urlencode
+        from datetime import timedelta
+        
+        if self.event_time:
+            start_str = f"{self.event_date.strftime('%Y-%m-%d')}T{self.event_time.strftime('%H:%M:%S')}"
+            if self.end_date:
+                end_str = f"{self.end_date.strftime('%Y-%m-%d')}T{self.event_time.strftime('%H:%M:%S')}"
+            else:
+                end_str = f"{self.event_date.strftime('%Y-%m-%d')}T23:59:59"
+            is_allday = "false"
+        else:
+            start_str = self.event_date.strftime('%Y-%m-%d')
+            end_date = (self.end_date or self.event_date) + timedelta(days=1)
+            end_str = end_date.strftime('%Y-%m-%d')
+            is_allday = "true"
+            
+        desc_parts = []
+        if self.category:
+            desc_parts.append(f"Kategori: {self.category.name}")
+        if self.description:
+            desc_parts.append(self.description)
+            
+        params = {
+            'path': '/calendar/action/compose',
+            'rru': 'addevent',
+            'subject': self.title,
+            'startdt': start_str,
+            'enddt': end_str,
+            'allday': is_allday,
+            'body': "\n\n".join(desc_parts),
+            'location': self.location or "",
+        }
+        return f"https://outlook.live.com/calendar/0/deeplink/compose?{urlencode(params)}"

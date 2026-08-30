@@ -6,7 +6,7 @@ from .views import (
     add_bucket_item, edit_bucket_item, delete_bucket_item, complete_bucket_item, save_user_bucket_votes,
     calendar_view, add_unavailability_view, delete_unavailability_view,
     save_herrklubb_event_view, delete_herrklubb_event_view, toggle_event_coordinator_view,
-    toggle_event_participation_view,
+    toggle_event_participation_view, event_ics_export_view,
     predictions_sso_login
 )
 
@@ -29,6 +29,7 @@ urlpatterns = [
     path('herrklubb/event/delete/<int:event_id>/', delete_herrklubb_event_view, name='delete_herrklubb_event'),
     path('herrklubb/event/coordinator/<int:event_id>/', toggle_event_coordinator_view, name='toggle_event_coordinator'),
     path('herrklubb/event/participant/<int:event_id>/<str:status>/', toggle_event_participation_view, name='toggle_event_participation'),
+    path('herrklubb/event/<int:event_id>/ics/', event_ics_export_view, name='event_ics_export'),
     path('predictions/login/', predictions_sso_login, name='predictions_sso_login'),
     path('profile/avatar/', upload_avatar_view, name='upload_avatar'),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
