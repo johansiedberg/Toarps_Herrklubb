@@ -298,18 +298,18 @@
 
                         <!-- Prominent Event Title Row with Add to Calendar on Far Right -->
                         <div class="d-flex align-items-center justify-content-between gap-3 mb-2">
-                            <h2 class="display-5 fw-extrabold text-white mb-0">{{ next_event.title }}</h2>
+                            <h2 class="display-5 fw-extrabold text-white mb-0 lh-1 align-self-center">{{ next_event.title }}</h2>
 
                             {% if next_event.event_date %}
                                 <!-- Add to Calendar Circular Emoji Button & Dropdown (Active) -->
-                                <div class="dropdown d-inline-block flex-shrink-0">
-                                    <button class="btn btn-sm btn-outline-warning rounded-circle p-0 d-flex align-items-center justify-content-center shadow-sm" 
+                                <div class="dropdown d-inline-block flex-shrink-0 align-self-center">
+                                    <button class="btn btn-sm btn-outline-warning rounded-circle p-0 d-flex align-items-center justify-content-center shadow-sm m-0" 
                                             type="button" 
                                             id="calendarDropdownBtn" 
                                             data-bs-toggle="dropdown" 
                                             data-bs-auto-close="true"
                                             aria-expanded="false" 
-                                            style="width: 38px; height: 38px; font-size: 1.15rem; line-height: 1;" 
+                                            style="width: 42px; height: 42px; font-size: 1.28rem; line-height: 1;" 
                                             title="Lägg till i kalender">
                                         📅
                                     </button>
@@ -354,10 +354,10 @@
                                 </div>
                             {% else %}
                                 <!-- Add to Calendar Inactive / Disabled -->
-                                <button class="btn btn-sm btn-outline-secondary rounded-circle p-0 d-flex align-items-center justify-content-center flex-shrink-0 opacity-50" 
+                                <button class="btn btn-sm btn-outline-secondary rounded-circle p-0 d-flex align-items-center justify-content-center flex-shrink-0 opacity-50 align-self-center m-0" 
                                         type="button" 
                                         disabled
-                                        style="width: 38px; height: 38px; font-size: 1.15rem; line-height: 1; cursor: not-allowed;" 
+                                        style="width: 42px; height: 42px; font-size: 1.28rem; line-height: 1; cursor: not-allowed;" 
                                         title="Inget datum satt ännu">
                                     📅
                                 </button>
