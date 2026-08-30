@@ -86,3 +86,7 @@ When colouring banners, badges, callouts, and status notification containers, en
     - **Surface**: Deep tone (~10% lightness)
     - **Border**: Mid-dark tone (~35% lightness)
     - **Text & Icon**: Pale tint (~85–90% lightness)
+
+## Greeting & Communication Standard
+- **First Greeting**: Always greet the user using their nickname on initial messages/conversations.
+
