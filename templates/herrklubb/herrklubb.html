@@ -268,59 +268,6 @@
                 <h3 class="h5 fw-bold text-white mb-0">Nästa Event / Resa</h3>
             </div>
             <div class="d-flex align-items-center gap-2">
-                {% if next_event and next_event.event_date %}
-                    <!-- Add to Calendar Circular Emoji Button & Dropdown -->
-                    <div class="dropdown d-inline-block">
-                        <button class="btn btn-sm btn-outline-warning rounded-circle p-0 d-flex align-items-center justify-content-center shadow-sm" 
-                                type="button" 
-                                id="calendarDropdownBtn" 
-                                data-bs-toggle="dropdown" 
-                                data-bs-auto-close="true"
-                                aria-expanded="false" 
-                                style="width: 32px; height: 32px; font-size: 0.95rem; line-height: 1;" 
-                                title="Lägg till i kalender">
-                            📅
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end shadow-lg py-2 mt-1 border-0" 
-                            aria-labelledby="calendarDropdownBtn" 
-                            style="background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%); border: 1px solid rgba(234, 179, 8, 0.4) !important; border-radius: 12px; min-width: 220px; font-size: 0.88rem; z-index: 1050;">
-                            <li class="px-3 py-1.5 text-secondary small fw-bold text-uppercase font-monospace d-flex align-items-center gap-2" style="font-size: 0.72rem; letter-spacing: 0.5px;">
-                                <i class="fa-regular fa-calendar-plus text-warning"></i>
-                                <span>Lägg till i kalender</span>
-                            </li>
-                            <li><hr class="dropdown-divider my-1 border-secondary border-opacity-30"></li>
-                            <li>
-                                <a class="dropdown-item d-flex align-items-center gap-2.5 py-2 px-3 text-white rounded-2 mx-1" 
-                                   href="{% url 'event_ics_export' next_event.id %}" download>
-                                    <span class="fs-6">🍏</span>
-                                    <span class="fw-semibold">Apple Kalender</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item d-flex align-items-center gap-2.5 py-2 px-3 text-white rounded-2 mx-1" 
-                                   href="{{ next_event.google_calendar_url }}" target="_blank" rel="noopener noreferrer">
-                                    <span class="fs-6">🌐</span>
-                                    <span class="fw-semibold">Google Kalender</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item d-flex align-items-center gap-2.5 py-2 px-3 text-white rounded-2 mx-1" 
-                                   href="{{ next_event.outlook_calendar_url }}" target="_blank" rel="noopener noreferrer">
-                                    <span class="fs-6">📧</span>
-                                    <span class="fw-semibold">Outlook (Web)</span>
-                                </a>
-                            </li>
-                            <li><hr class="dropdown-divider my-1 border-secondary border-opacity-30"></li>
-                            <li>
-                                <a class="dropdown-item d-flex align-items-center gap-2.5 py-2 px-3 text-warning rounded-2 mx-1" 
-                                   href="{% url 'event_ics_export' next_event.id %}" download>
-                                    <i class="fa-solid fa-file-arrow-down fs-6"></i>
-                                    <span class="fw-semibold">Ladda ner .ics-fil</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                {% endif %}
                 {% if next_event %}
                     <form action="{% url 'delete_herrklubb_event' next_event.id %}" method="post" class="d-inline" onsubmit="return confirm('Är du säker på att du vill ta bort Nästa Event?');">
                         {% csrf_token %}
@@ -349,8 +296,73 @@
                             </div>
                         {% endif %}
 
-                        <!-- Prominent Event Title -->
-                        <h2 class="display-5 fw-extrabold text-white mb-2">{{ next_event.title }}</h2>
+                        <!-- Prominent Event Title Row with Add to Calendar on Far Right -->
+                        <div class="d-flex align-items-center justify-content-between gap-3 mb-2">
+                            <h2 class="display-5 fw-extrabold text-white mb-0">{{ next_event.title }}</h2>
+
+                            {% if next_event.event_date %}
+                                <!-- Add to Calendar Circular Emoji Button & Dropdown (Active) -->
+                                <div class="dropdown d-inline-block flex-shrink-0">
+                                    <button class="btn btn-sm btn-outline-warning rounded-circle p-0 d-flex align-items-center justify-content-center shadow-sm" 
+                                            type="button" 
+                                            id="calendarDropdownBtn" 
+                                            data-bs-toggle="dropdown" 
+                                            data-bs-auto-close="true"
+                                            aria-expanded="false" 
+                                            style="width: 38px; height: 38px; font-size: 1.15rem; line-height: 1;" 
+                                            title="Lägg till i kalender">
+                                        📅
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end shadow-lg py-2 mt-1 border-0" 
+                                        aria-labelledby="calendarDropdownBtn" 
+                                        style="background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%); border: 1px solid rgba(234, 179, 8, 0.4) !important; border-radius: 12px; min-width: 220px; font-size: 0.88rem; z-index: 1050;">
+                                        <li class="px-3 py-1.5 text-secondary small fw-bold text-uppercase font-monospace d-flex align-items-center gap-2" style="font-size: 0.72rem; letter-spacing: 0.5px;">
+                                            <i class="fa-regular fa-calendar-plus text-warning"></i>
+                                            <span>Lägg till i kalender</span>
+                                        </li>
+                                        <li><hr class="dropdown-divider my-1 border-secondary border-opacity-30"></li>
+                                        <li>
+                                            <a class="dropdown-item d-flex align-items-center gap-2.5 py-2 px-3 text-white rounded-2 mx-1" 
+                                               href="{% url 'event_ics_export' next_event.id %}" download>
+                                                <span class="fs-6">🍏</span>
+                                                <span class="fw-semibold">Apple Kalender</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item d-flex align-items-center gap-2.5 py-2 px-3 text-white rounded-2 mx-1" 
+                                               href="{{ next_event.google_calendar_url }}" target="_blank" rel="noopener noreferrer">
+                                                <span class="fs-6">🌐</span>
+                                                <span class="fw-semibold">Google Kalender</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item d-flex align-items-center gap-2.5 py-2 px-3 text-white rounded-2 mx-1" 
+                                               href="{{ next_event.outlook_calendar_url }}" target="_blank" rel="noopener noreferrer">
+                                                <span class="fs-6">📧</span>
+                                                <span class="fw-semibold">Outlook (Web)</span>
+                                            </a>
+                                        </li>
+                                        <li><hr class="dropdown-divider my-1 border-secondary border-opacity-30"></li>
+                                        <li>
+                                            <a class="dropdown-item d-flex align-items-center gap-2.5 py-2 px-3 text-warning rounded-2 mx-1" 
+                                               href="{% url 'event_ics_export' next_event.id %}" download>
+                                                <i class="fa-solid fa-file-arrow-down fs-6"></i>
+                                                <span class="fw-semibold">Ladda ner .ics-fil</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            {% else %}
+                                <!-- Add to Calendar Inactive / Disabled -->
+                                <button class="btn btn-sm btn-outline-secondary rounded-circle p-0 d-flex align-items-center justify-content-center flex-shrink-0 opacity-50" 
+                                        type="button" 
+                                        disabled
+                                        style="width: 38px; height: 38px; font-size: 1.15rem; line-height: 1; cursor: not-allowed;" 
+                                        title="Inget datum satt ännu">
+                                    📅
+                                </button>
+                            {% endif %}
+                        </div>
 
                         <!-- Location & Date Bar -->
                         <div class="d-flex flex-wrap align-items-center gap-3 gap-md-4 my-3 py-2 border-top border-bottom border-secondary border-opacity-25">
