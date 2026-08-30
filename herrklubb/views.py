@@ -802,7 +802,7 @@ def generate_event_ics(event):
             lines.append(f"DTSTART;VALUE=DATE:{start_str}")
             lines.append(f"DTEND;VALUE=DATE:{end_str}")
             
-    lines.append(f"SUMMARY:{escape_ics_text(event.title)}")
+    lines.append(f"SUMMARY:{escape_ics_text(f'Toarps Herrklubb: {event.title}')}")
     
     desc_parts = []
     if event.category:
@@ -821,6 +821,9 @@ def generate_event_ics(event):
         lines.append(f"LOCATION:{escape_ics_text(event.location)}")
         
     lines.append("STATUS:CONFIRMED")
+    lines.append("TRANSP:OPAQUE")
+    lines.append("X-MICROSOFT-CDO-BUSYSTATUS:BUSY")
+    lines.append("X-MICROSOFT-CDO-INTENDEDSTATUS:BUSY")
     lines.append("END:VEVENT")
     lines.append("END:VCALENDAR")
     

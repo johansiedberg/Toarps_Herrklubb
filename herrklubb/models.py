@@ -204,7 +204,7 @@ class HerrklubbEvent(models.Model):
             
         params = {
             'action': 'TEMPLATE',
-            'text': self.title,
+            'text': f"Toarps Herrklubb: {self.title}",
             'dates': f"{start_str}/{end_str}",
             'details': "\n\n".join(desc_parts),
             'location': self.location or "",
@@ -240,7 +240,7 @@ class HerrklubbEvent(models.Model):
         params = {
             'path': '/calendar/action/compose',
             'rru': 'addevent',
-            'subject': self.title,
+            'subject': f"Toarps Herrklubb: {self.title}",
             'startdt': start_str,
             'enddt': end_str,
             'allday': is_allday,

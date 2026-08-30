@@ -78,13 +78,13 @@ class HerrklubbTestCase(TestCase):
         # Test Google Calendar URL
         gcal_url = event.google_calendar_url
         self.assertIn('calendar.google.com', gcal_url)
-        self.assertIn('Prag+Resa+2026', gcal_url)
+        self.assertIn('Toarps+Herrklubb%3A+Prag+Resa+2026', gcal_url)
         self.assertIn('20261015%2F20261019', gcal_url)
 
         # Test Outlook Calendar URL
         outlook_url = event.outlook_calendar_url
         self.assertIn('outlook.live.com', outlook_url)
-        self.assertIn('Prag+Resa+2026', outlook_url)
+        self.assertIn('Toarps+Herrklubb%3A+Prag+Resa+2026', outlook_url)
 
         # Test .ics endpoint
         self.client.login(username='john', password='password')
@@ -93,10 +93,12 @@ class HerrklubbTestCase(TestCase):
         self.assertEqual(response['Content-Type'], 'text/calendar; charset=utf-8')
         content = response.content.decode('utf-8')
         self.assertIn('BEGIN:VCALENDAR', content)
-        self.assertIn('SUMMARY:Prag Resa 2026', content)
+        self.assertIn('SUMMARY:Toarps Herrklubb: Prag Resa 2026', content)
         self.assertIn('LOCATION:Prag\\, Tjeckien', content)
         self.assertIn('DTSTART;VALUE=DATE:20261015', content)
         self.assertIn('DTEND;VALUE=DATE:20261019', content)
+        self.assertIn('TRANSP:OPAQUE', content)
+        self.assertIn('X-MICROSOFT-CDO-BUSYSTATUS:BUSY', content)
         self.assertIn('END:VCALENDAR', content)
 
         # Test template renders the circular emoji button
