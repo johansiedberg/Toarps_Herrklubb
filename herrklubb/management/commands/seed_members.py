@@ -13,48 +13,56 @@ class Command(BaseCommand):
             {
                 "first_name": "Johan",
                 "last_name": "Siedberg",
+                "nickname": "Szabo",
                 "email": "johan.siedberg@gmail.com",
                 "old_emails": ["johan.siedberg@siedberg.se", "johan@siedberg.se"]
             },
             {
                 "first_name": "Mikael",
                 "last_name": "Dahl",
+                "nickname": "Dahl",
                 "email": "mikaeld81@gmail.com",
                 "old_emails": ["mikael@dahl.se"]
             },
             {
                 "first_name": "Andreas",
                 "last_name": "Larsson",
+                "nickname": "Lage",
                 "email": "senasa9@gmail.com",
                 "old_emails": ["andreas@larsson.se"]
             },
             {
                 "first_name": "Johan",
                 "last_name": "Svensson",
+                "nickname": "Svensson",
                 "email": "svenjohansvensson@gmail.com",
                 "old_emails": ["johan@svensson.se"]
             },
             {
                 "first_name": "Johan",
                 "last_name": "Meldo",
+                "nickname": "Meldo",
                 "email": "jmeldo@gmail.com",
                 "old_emails": ["johan@meldo.se"]
             },
             {
                 "first_name": "Erik",
                 "last_name": "Svensson",
+                "nickname": "Erik",
                 "email": "erik.sve@hotmail.com",
                 "old_emails": ["erik@svensson.se"]
             },
             {
                 "first_name": "Christoffer",
                 "last_name": "Ericsson",
+                "nickname": "Coffe",
                 "email": "coff_erics@yahoo.se",
                 "old_emails": ["christoffer@ericsson.se"]
             },
             {
                 "first_name": "Martin",
                 "last_name": "Gustafson",
+                "nickname": "Göransson",
                 "email": "martin.gustafson1@gmail.com",
                 "old_emails": ["martin@gustafsson.se", "martin.gustafsson@gmail.com", "martin@gustafson.se", "martin.gustafsson@gustafsson.se"],
                 "old_last_names": ["Gustafsson"]
@@ -62,18 +70,21 @@ class Command(BaseCommand):
             {
                 "first_name": "Tommy",
                 "last_name": "Lycen",
+                "nickname": "Lycet",
                 "email": "t.lycen@gmail.com",
                 "old_emails": ["tommy@lycen.se", "tommy.lycen@lycen.se"]
             },
             {
                 "first_name": "Tommy",
                 "last_name": "Källberg",
+                "nickname": "Käbbe",
                 "email": "anymaztic@hotmail.com",
                 "old_emails": ["tommy@kallberg.se", "tommy@kaellberg.se"]
             },
             {
                 "first_name": "Martin",
                 "last_name": "Krantz",
+                "nickname": "Krantz",
                 "email": "martin@meritel.se",
                 "old_emails": ["martin@krantz.se"]
             }
@@ -86,6 +97,7 @@ class Command(BaseCommand):
         for p in personas:
             first_name = p['first_name']
             last_name = p['last_name']
+            nickname = p.get('nickname')
             email = p['email'].strip().lower()
             surname_clean = last_name.lower().replace('ä', 'a').replace('å', 'a').replace('ö', 'o').replace(' ', '')
             username = email
@@ -120,6 +132,8 @@ class Command(BaseCommand):
 
             profile, _ = UserProfile.objects.get_or_create(user=user)
             profile.is_herrklubb_member = True
+            if nickname:
+                profile.nickname = nickname
             profile.save()
 
             active_member_user_ids.append(user.id)

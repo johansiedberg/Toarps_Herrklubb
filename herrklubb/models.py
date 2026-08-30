@@ -5,6 +5,7 @@ from django.dispatch import receiver
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    nickname = models.CharField(max_length=50, blank=True, null=True, verbose_name="Smeknamn")
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True, verbose_name="Profilbild / Avatar")
     is_herrklubb_member = models.BooleanField(default=False, help_text="True if user is one of the 11 original Herrklubben members")
 
@@ -13,8 +14,13 @@ class UserProfile(models.Model):
             return self.avatar.url
         return None
 
+    def get_nickname(self):
+        if self.nickname and self.nickname.strip():
+            return self.nickname.strip()
+        return self.user.first_name or self.user.username
+
     def __str__(self):
-        display_name = self.user.get_full_name() or self.user.email
+        display_name = self.get_nickname() or self.user.get_full_name() or self.user.email
         return f"Profil för {display_name} (Herrklubb: {self.is_herrklubb_member})"
 
 

@@ -86,6 +86,14 @@
                         </div>
 
                         <div class="mb-3">
+                            <label for="modalUserNickname" class="form-label text-secondary small fw-semibold">Smeknamn (Klubbnamn)</label>
+                            <div class="input-group">
+                                <span class="input-group-text border-secondary border-opacity-30" style="background-color: rgba(31, 41, 55, 0.6); color: #9CA3AF;"><i class="fa-solid fa-tag"></i></span>
+                                <input type="text" class="form-control border-secondary border-opacity-30 text-light" id="modalUserNickname" name="nickname" value="{{ request.user.profile.get_nickname }}" placeholder="T.ex. Szabo" style="background-color: rgba(31, 41, 55, 0.6); color: #F3F4F6;">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
                             <label for="modalUserEmail" class="form-label text-secondary small fw-semibold">E-postadress</label>
                             <div class="input-group">
                                 <span class="input-group-text border-secondary border-opacity-30" style="background-color: rgba(31, 41, 55, 0.6); color: #9CA3AF;"><i class="fa-solid fa-envelope"></i></span>
@@ -144,6 +152,7 @@
             const submitBtn = document.getElementById('saveAccountSettingsBtn');
             const emailInput = document.getElementById('modalUserEmail').value.trim();
             const passwordInput = document.getElementById('modalUserPassword').value.trim();
+            const nicknameInput = document.getElementById('modalUserNickname') ? document.getElementById('modalUserNickname').value.trim() : '';
 
             if (passwordInput && (passwordInput.length < 5 || !/\d/.test(passwordInput))) {
                 alertBox.className = 'alert alert-danger py-2 px-3 small mb-3 text-center';
@@ -163,7 +172,8 @@
                 },
                 body: JSON.stringify({
                     email: emailInput,
-                    password: passwordInput
+                    password: passwordInput,
+                    nickname: nicknameInput
                 })
             })
             .then(response => response.json())

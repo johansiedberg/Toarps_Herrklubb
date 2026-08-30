@@ -89,6 +89,12 @@ def update_account_settings_view(request):
         user.set_password(password)
     user.save()
 
+    nickname = data.get('nickname')
+    profile, _ = UserProfile.objects.get_or_create(user=user)
+    if nickname is not None:
+        profile.nickname = nickname.strip()
+        profile.save()
+
     if password:
         update_session_auth_hash(request, user)
 
@@ -96,7 +102,8 @@ def update_account_settings_view(request):
         'success': True,
         'message': 'Dina kontoinställningar har sparats!',
         'email': user.email,
-        'username': user.username
+        'username': user.username,
+        'nickname': profile.get_nickname() if nickname is not None else None
     })
 
 
@@ -132,7 +139,7 @@ def predictions_sso_login(request):
 def hub_view(request):
     """Startsida for Herrklubben members after login."""
     profile, _ = UserProfile.objects.get_or_create(user=request.user)
-    user_nickname = request.user.first_name or request.user.email
+    user_nickname = profile.get_nickname()
 
     context = {
         'profile': profile,
