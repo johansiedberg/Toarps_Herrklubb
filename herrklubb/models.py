@@ -208,6 +208,8 @@ class HerrklubbEvent(models.Model):
             'dates': f"{start_str}/{end_str}",
             'details': "\n\n".join(desc_parts),
             'location': self.location or "",
+            'trp': 'true',
+            'crm': 'BUSY',
         }
         return f"https://calendar.google.com/calendar/render?{urlencode(params)}"
 
@@ -246,5 +248,6 @@ class HerrklubbEvent(models.Model):
             'allday': is_allday,
             'body': "\n\n".join(desc_parts),
             'location': self.location or "",
+            'freebusy': 'busy',
         }
         return f"https://outlook.live.com/calendar/0/deeplink/compose?{urlencode(params)}"

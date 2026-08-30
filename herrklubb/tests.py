@@ -80,11 +80,13 @@ class HerrklubbTestCase(TestCase):
         self.assertIn('calendar.google.com', gcal_url)
         self.assertIn('Toarps+Herrklubb%3A+Prag+Resa+2026', gcal_url)
         self.assertIn('20261015%2F20261019', gcal_url)
+        self.assertIn('trp=true', gcal_url)
 
         # Test Outlook Calendar URL
         outlook_url = event.outlook_calendar_url
         self.assertIn('outlook.live.com', outlook_url)
         self.assertIn('Toarps+Herrklubb%3A+Prag+Resa+2026', outlook_url)
+        self.assertIn('freebusy=busy', outlook_url)
 
         # Test .ics endpoint
         self.client.login(username='john', password='password')
