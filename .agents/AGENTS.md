@@ -9,6 +9,9 @@
 - Project enforces HTTPS standards (`SECURE_PROXY_SSL_HEADER`, `SESSION_COOKIE_SECURE`, `CSRF_COOKIE_SECURE`, `SECURE_HSTS_SECONDS`, `SECURE_REFERRER_POLICY`) for encrypted transport.
 
 ## Git & Deployment Rules
+- **STRICT PRD DEPLOYMENT POLICY (NO DEPLOY WITHOUT EXPLICIT COMMAND)**:
+  - **NEVER DEPLOY TO PRD AUTOMATICALLY**: All code, template, and database changes MUST ONLY be developed, tested, and evaluated in local DEV mode (`http://127.0.0.1:1981`).
+  - The agent MUST NEVER commit, push, or execute `./deploy.sh` on the PRD server unless the user explicitly gives a direct command to deploy (e.g. "deploy", "deploy on PRD").
 - **Milestone-Only Commits (Anti-Noise Policy)**:
   - NEVER make micro-commits for intermediate styling/CSS/line tweaks.
   - Test and iterate freely in local DEV mode (`http://127.0.0.1:1981`).
@@ -16,7 +19,7 @@
 - Always ask or wait for instruction before committing or updating the server!
 - **Production Server**: `johansiedberg@192.168.86.35`
 - **Server Project Path**: `/home/johansiedberg/Projects/Toarps_Herrklubb`
-- **Deployment Procedure**:
+- **Deployment Procedure (ONLY ON EXPLICIT USER COMMAND)**:
   1. Commit and push local changes to `origin/main` on GitHub.
   2. Connect to the production server via SSH: `ssh johansiedberg@192.168.86.35`
   3. Run the automated deploy script:

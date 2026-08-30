@@ -296,18 +296,46 @@
                             </div>
                         {% endif %}
 
-                        <!-- Prominent Event Title Row with Add to Calendar on Far Right -->
-                        <div class="d-flex align-items-center justify-content-between gap-3 mb-2">
-                            <h2 class="display-5 fw-extrabold text-white mb-0 lh-1 align-self-center">{{ next_event.title }}</h2>
+                        <!-- Prominent Event Title -->
+                        <h2 class="display-5 fw-extrabold text-white mb-2">{{ next_event.title }}</h2>
 
+                        <!-- Location & Date Bar with Add to Calendar on Far Right -->
+                        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 gap-md-4 my-3 py-2 border-top border-bottom border-secondary border-opacity-25">
+                            <div class="d-flex flex-wrap align-items-center gap-3 gap-md-4">
+                                <div>
+                                    <span class="text-secondary d-block text-uppercase fw-semibold font-monospace" style="font-size: 0.95rem; letter-spacing: 0.5px;">
+                                        <i class="fa-solid fa-location-dot" style="font-size: 1.42rem; color: #EF4444; margin-right: 7px; vertical-align: middle;"></i>Plats
+                                    </span>
+                                    <span class="fs-4 fw-bold {% if next_event.location %}text-white{% else %}text-secondary opacity-75 fst-italic fs-5{% endif %}">
+                                        {% if next_event.location %}{{ next_event.location }}{% else %}Inte satt än{% endif %}
+                                    </span>
+                                </div>
+
+                                <div class="ps-md-4 border-start border-secondary border-opacity-50">
+                                    <span class="text-secondary d-block text-uppercase fw-semibold font-monospace" style="font-size: 0.95rem; letter-spacing: 0.5px;">
+                                        <i class="fa-solid fa-calendar-days" style="font-size: 1.42rem; color: #EAB308; margin-right: 7px; vertical-align: middle;"></i>Datum
+                                    </span>
+                                    <span class="fs-4 fw-bold {% if next_event.event_date %}text-white{% else %}text-secondary opacity-75 fst-italic fs-5{% endif %}">
+                                        {% if next_event.event_date %}
+                                            {{ next_event.event_date|date:"d M Y" }}
+                                            {% if next_event.end_date %}
+                                                <span class="text-white mx-1">➔</span> {{ next_event.end_date|date:"d M Y" }}
+                                            {% endif %}
+                                        {% else %}
+                                            Inte satt än
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Add to Calendar on the Far Right Side of Date Row -->
                             {% if next_event.event_date %}
-                                <!-- Add to Calendar Circular Emoji Button & Dropdown (Active) -->
-                                <div class="dropdown d-inline-block flex-shrink-0 align-self-center">
+                                <div class="dropdown d-inline-block flex-shrink-0 align-self-center ms-auto">
                                     <button class="btn btn-sm btn-outline-warning rounded-circle p-0 d-flex align-items-center justify-content-center shadow-sm m-0" 
                                             type="button" 
                                             id="calendarDropdownBtn" 
                                             data-bs-toggle="dropdown" 
-                                            data-bs-auto-close="true"
+                                            data-bs-auto-close="true" 
                                             aria-expanded="false" 
                                             style="width: 42px; height: 42px; font-size: 1.28rem; line-height: 1;" 
                                             title="Lägg till i kalender">
@@ -353,8 +381,7 @@
                                     </ul>
                                 </div>
                             {% else %}
-                                <!-- Add to Calendar Inactive / Disabled -->
-                                <button class="btn btn-sm btn-outline-secondary rounded-circle p-0 d-flex align-items-center justify-content-center flex-shrink-0 opacity-50 align-self-center m-0" 
+                                <button class="btn btn-sm btn-outline-secondary rounded-circle p-0 d-flex align-items-center justify-content-center flex-shrink-0 opacity-50 align-self-center ms-auto m-0" 
                                         type="button" 
                                         disabled
                                         style="width: 42px; height: 42px; font-size: 1.28rem; line-height: 1; cursor: not-allowed;" 
@@ -362,34 +389,6 @@
                                     📅
                                 </button>
                             {% endif %}
-                        </div>
-
-                        <!-- Location & Date Bar -->
-                        <div class="d-flex flex-wrap align-items-center gap-3 gap-md-4 my-3 py-2 border-top border-bottom border-secondary border-opacity-25">
-                            <div>
-                                <span class="text-secondary d-block text-uppercase fw-semibold font-monospace" style="font-size: 0.95rem; letter-spacing: 0.5px;">
-                                    <i class="fa-solid fa-location-dot" style="font-size: 1.42rem; color: #EF4444; margin-right: 7px; vertical-align: middle;"></i>Plats
-                                </span>
-                                <span class="fs-4 fw-bold {% if next_event.location %}text-white{% else %}text-secondary opacity-75 fst-italic fs-5{% endif %}">
-                                    {% if next_event.location %}{{ next_event.location }}{% else %}Inte satt än{% endif %}
-                                </span>
-                            </div>
-
-                            <div class="ps-md-4 border-start border-secondary border-opacity-50">
-                                <span class="text-secondary d-block text-uppercase fw-semibold font-monospace" style="font-size: 0.95rem; letter-spacing: 0.5px;">
-                                    <i class="fa-solid fa-calendar-days" style="font-size: 1.42rem; color: #EAB308; margin-right: 7px; vertical-align: middle;"></i>Datum
-                                </span>
-                                <span class="fs-4 fw-bold {% if next_event.event_date %}text-white{% else %}text-secondary opacity-75 fst-italic fs-5{% endif %}">
-                                    {% if next_event.event_date %}
-                                        {{ next_event.event_date|date:"d M Y" }}
-                                        {% if next_event.end_date %}
-                                            <span class="text-white mx-1">➔</span> {{ next_event.end_date|date:"d M Y" }}
-                                        {% endif %}
-                                    {% else %}
-                                        Inte satt än
-                                    {% endif %}
-                                </span>
-                            </div>
                         </div>
 
                         <!-- Description in focus -->
