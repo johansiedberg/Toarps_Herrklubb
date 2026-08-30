@@ -88,5 +88,10 @@ When colouring banners, badges, callouts, and status notification containers, en
     - **Text & Icon**: Pale tint (~85–90% lightness)
 
 ## Greeting & Communication Standard
-- **First Greeting**: Always greet the user using their nickname on initial messages/conversations.
+- **Agent / Code Conversations**: There is **NO** need for greetings or conversational pleasantries in Antigravity chat. Responses should be direct, efficient, and focused on code / task deliverables.
+- **Hub Welcome Greeting (Web UI `/hub/`)**: When logged in, members must be greeted with their nickname on `/hub/`:
+  - `Välkommen, {{ user_nickname }}!`
+  - Subtitle: `Toarps HK Herrklubb`
+  - Body: `Välj vart du vill gå idag. Delta i pågående mästerskapstips eller var med och forma klubbens framtida resor och aktiviteter på Herrklubbssidan.`
+
 
