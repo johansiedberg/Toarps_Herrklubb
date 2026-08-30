@@ -434,17 +434,22 @@
                                     Ansvariga
                                 </span>
                             </div>
-                            {% if next_event.coordinators.all %}
+                            {% if all_members %}
                                 <div class="d-flex flex-column align-items-start gap-2">
-                                    {% for coord in next_event.coordinators.all %}
-                                        <span class="badge rounded-pill px-3 py-2 d-inline-flex align-items-center gap-1.5 shadow-sm" style="background-color: rgba(34, 197, 94, 0.18); border: 1px solid rgba(74, 222, 128, 0.45); color: #F8FAFC; font-weight: 600; font-size: 0.78rem;">
-                                            <i class="fa-solid fa-user me-1" style="color: #4ADE80; font-size: 0.78rem;"></i>
-                                            {% if coord.get_full_name %}{{ coord.get_full_name }}{% else %}{{ coord.username }}{% endif %}
-                                        </span>
+                                    {% for member in all_members %}
+                                        {% if member in next_event.coordinators.all %}
+                                            <span class="badge rounded-pill px-2.5 py-1.5 d-inline-flex align-items-center gap-1.5 shadow-sm" style="background-color: rgba(34, 197, 94, 0.18); border: 1px solid rgba(74, 222, 128, 0.45); color: #F8FAFC; font-weight: 600; font-size: 0.78rem; min-height: 28px;">
+                                                <i class="fa-solid fa-user me-1" style="color: #4ADE80; font-size: 0.78rem;"></i>
+                                                {% if member.get_full_name %}{{ member.get_full_name }}{% else %}{{ member.username }}{% endif %}
+                                            </span>
+                                        {% else %}
+                                            <span class="badge rounded-pill px-2.5 py-1.5 d-inline-flex align-items-center gap-1.5" style="background-color: transparent; border: 1px solid transparent; color: #64748B; font-weight: 500; font-size: 0.78rem; min-height: 28px;">
+                                                <i class="fa-solid fa-user me-1" style="color: #475569; font-size: 0.78rem;"></i>
+                                                {% if member.get_full_name %}{{ member.get_full_name }}{% else %}{{ member.username }}{% endif %}
+                                            </span>
+                                        {% endif %}
                                     {% endfor %}
                                 </div>
-                            {% else %}
-                                <span class="text-secondary small italic d-block text-start" style="font-style: italic;">Inte satt än</span>
                             {% endif %}
                         </div>
 
@@ -478,18 +483,18 @@
                                 <div class="d-flex flex-column align-items-start gap-2">
                                     {% for member in all_members %}
                                         {% if member in next_event.participants.all %}
-                                            <span class="badge rounded-pill px-2.5 py-1.5 d-inline-flex align-items-center gap-1.5 shadow-sm" style="background-color: rgba(56, 189, 248, 0.18); border: 1px solid rgba(125, 211, 252, 0.45); color: #F8FAFC; font-weight: 600; font-size: 0.78rem;">
+                                            <span class="badge rounded-pill px-2.5 py-1.5 d-inline-flex align-items-center gap-1.5 shadow-sm" style="background-color: rgba(56, 189, 248, 0.18); border: 1px solid rgba(125, 211, 252, 0.45); color: #F8FAFC; font-weight: 600; font-size: 0.78rem; min-height: 28px;">
                                                 <i class="fa-solid fa-user me-1" style="color: #38BDF8; font-size: 0.78rem;"></i>
                                                 {% if member.get_full_name %}{{ member.get_full_name }}{% else %}{{ member.username }}{% endif %}
                                             </span>
                                         {% elif member in next_event.participants_no.all %}
-                                            <span class="badge rounded-pill px-2.5 py-1.5 d-inline-flex align-items-center gap-1.5 shadow-sm" style="background-color: rgba(239, 68, 68, 0.1); border: 1px solid rgba(248, 113, 113, 0.4); color: #F8FAFC; font-weight: 600; font-size: 0.78rem;">
+                                            <span class="badge rounded-pill px-2.5 py-1.5 d-inline-flex align-items-center gap-1.5 shadow-sm" style="background-color: rgba(239, 68, 68, 0.1); border: 1px solid rgba(248, 113, 113, 0.4); color: #F8FAFC; font-weight: 600; font-size: 0.78rem; min-height: 28px;">
                                                 <i class="fa-solid fa-user me-1" style="color: #F87171; font-size: 0.78rem;"></i>
                                                 {% if member.get_full_name %}{{ member.get_full_name }}{% else %}{{ member.username }}{% endif %}
                                             </span>
                                         {% else %}
-                                            <span class="badge rounded-pill px-2.5 py-1.5 d-inline-flex align-items-center gap-1.5" style="background-color: transparent; border: 1px solid transparent; color: #94A3B8; font-weight: 500; font-size: 0.78rem;">
-                                                <i class="fa-solid fa-user me-1" style="color: #64748B; font-size: 0.78rem;"></i>
+                                            <span class="badge rounded-pill px-2.5 py-1.5 d-inline-flex align-items-center gap-1.5" style="background-color: transparent; border: 1px solid transparent; color: #64748B; font-weight: 500; font-size: 0.78rem; min-height: 28px;">
+                                                <i class="fa-solid fa-user me-1" style="color: #475569; font-size: 0.78rem;"></i>
                                                 {% if member.get_full_name %}{{ member.get_full_name }}{% else %}{{ member.username }}{% endif %}
                                             </span>
                                         {% endif %}
