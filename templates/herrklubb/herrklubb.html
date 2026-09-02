@@ -306,7 +306,7 @@
                                     <span class="text-secondary d-block text-uppercase fw-semibold font-monospace" style="font-size: 0.95rem; letter-spacing: 0.5px;">
                                         <i class="fa-solid fa-location-dot" style="font-size: 1.42rem; color: #EF4444; margin-right: 7px; vertical-align: middle;"></i>Plats
                                     </span>
-                                    <span class="fs-4 fw-bold {% if next_event.location %}text-white{% else %}text-secondary opacity-75 fst-italic fs-5{% endif %}">
+                                    <span class="event-meta-val fw-bold {% if next_event.location %}text-white{% else %}text-secondary opacity-75 fst-italic{% endif %}">
                                         {% if next_event.location %}{{ next_event.location }}{% else %}Inte satt än{% endif %}
                                     </span>
                                 </div>
@@ -315,7 +315,7 @@
                                     <span class="text-secondary d-block text-uppercase fw-semibold font-monospace" style="font-size: 0.95rem; letter-spacing: 0.5px;">
                                         <i class="fa-solid fa-calendar-days" style="font-size: 1.42rem; color: #EAB308; margin-right: 7px; vertical-align: middle;"></i>Datum
                                     </span>
-                                    <span class="fs-4 fw-bold {% if next_event.event_date %}text-white{% else %}text-secondary opacity-75 fst-italic fs-5{% endif %}">
+                                    <span class="event-meta-val fw-bold {% if next_event.event_date %}text-white{% else %}text-secondary opacity-75 fst-italic{% endif %}">
                                         {% if next_event.event_date %}
                                             {{ next_event.event_date|date:"d M Y" }}
                                             {% if next_event.end_date %}
@@ -844,6 +844,14 @@
 </div>
 
 <style>
+.event-meta-val {
+    font-size: 1.25rem;
+}
+@media (max-width: 575.98px) {
+    .event-meta-val {
+        font-size: 1.0625rem;
+    }
+}
 .hover-row {
     transition: background-color 0.2s ease;
 }
