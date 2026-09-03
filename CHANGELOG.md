@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [v1.1.1] - 2026-09-03
+
+### 📸 Photo Archive Improvements & Fixes
+- **Clickable Album Signature Photo**: Made album cover and signature photo cards clickable in the photo archive overview, navigating directly into the album.
+- **Tagged Member Filtering Fix**: Fixed "Foton med mig" and member selection filters to strictly isolate photos where members are tagged, removing unwanted inclusion of non-tagged uploads.
+- **Overview-to-Album Filter Forwarding**: Added member filtering to the photo archive overview with real-time tag counts, automatically forwarding and preserving the active filter when opening any album.
+- **Interactive Tag Badges**: Lightbox tag toggling dynamically updates photo card badges in the background grid without requiring a page reload.
+
+---
+
 ## [v1.1.0] - 2026-09-03
 
 ### 🚀 Features & Enhancements

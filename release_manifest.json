@@ -1,9 +1,8 @@
 {
   "project": "Toarps Herrklubb",
-  "version": "1.1.0",
-  "tag": "v1.1.0",
+  "version": "1.1.1",
+  "tag": "v1.1.1",
   "release_date": "2026-09-03",
-  "commit_hash": "454df05",
   "environment": "production",
   "target_server": "Ubuntu PRD Server (192.168.86.35)",
   "port_mapping": {
