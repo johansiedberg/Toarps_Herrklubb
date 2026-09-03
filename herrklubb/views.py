@@ -861,9 +861,18 @@ def photo_gallery_view(request):
     
     # Query filters
     category_id = request.GET.get('category')
-    filter_type = request.GET.get('filter', 'all')
     search_query = request.GET.get('q', '').strip()
     
+    # Harmonize member_filter and legacy filter parameter
+    raw_filter = (request.GET.get('member') or request.GET.get('filter', '')).strip()
+    member_filter = ''
+    if raw_filter in ('tagged_me', 'me'):
+        member_filter = 'me'
+        albums_qs = albums_qs.filter(photos__tagged_members=request.user).distinct()
+    elif raw_filter.isdigit():
+        member_filter = raw_filter
+        albums_qs = albums_qs.filter(photos__tagged_members__id=member_filter).distinct()
+        
     if category_id:
         albums_qs = albums_qs.filter(category_id=category_id)
         
@@ -873,11 +882,6 @@ def photo_gallery_view(request):
             Q(description__icontains=search_query) |
             Q(event__title__icontains=search_query)
         )
-        
-    if filter_type == 'my_uploads':
-        albums_qs = albums_qs.filter(photos__uploader=request.user).distinct()
-    elif filter_type == 'tagged_me':
-        albums_qs = albums_qs.filter(photos__tagged_members=request.user).distinct()
         
     albums = list(albums_qs)
     
@@ -889,14 +893,21 @@ def photo_gallery_view(request):
     
     categories = BucketCategory.objects.all().order_by('order', 'name')
     events = HerrklubbEvent.objects.all().order_by('-event_date')
-    members = User.objects.filter(profile__is_herrklubb_member=True).select_related('profile').order_by('first_name', 'username')
+    all_members = User.objects.filter(profile__is_herrklubb_member=True).select_related('profile').order_by('first_name', 'username')
+    
+    selected_member = None
+    if member_filter and member_filter.isdigit():
+        selected_member = all_members.filter(id=int(member_filter)).first()
     
     context = {
         'albums': albums,
         'categories': categories,
         'events': events,
-        'members': members,
-        'filter_type': filter_type,
+        'all_members': all_members,
+        'members': all_members,
+        'member_filter': member_filter,
+        'filter_type': member_filter,
+        'selected_member': selected_member,
         'search_query': search_query,
         'selected_category': int(category_id) if category_id and category_id.isdigit() else None,
         'total_albums': total_albums,
@@ -971,9 +982,9 @@ def album_detail_view(request, album_id):
     member_filter = request.GET.get('member')
     if member_filter:
         if member_filter == 'me':
-            photos_qs = photos_qs.filter(Q(uploader=request.user) | Q(tagged_members=request.user)).distinct()
+            photos_qs = photos_qs.filter(tagged_members=request.user).distinct()
         elif member_filter.isdigit():
-            photos_qs = photos_qs.filter(Q(uploader_id=member_filter) | Q(tagged_members__id=member_filter)).distinct()
+            photos_qs = photos_qs.filter(tagged_members__id=member_filter).distinct()
             
     photos = list(photos_qs)
     
@@ -987,6 +998,8 @@ def album_detail_view(request, album_id):
     all_members = User.objects.filter(profile__is_herrklubb_member=True).select_related('profile').order_by('first_name', 'username')
     categories = BucketCategory.objects.all().order_by('order', 'name')
     events = HerrklubbEvent.objects.all().order_by('-event_date')
+
+    my_tagged_count = album.photos.filter(tagged_members=request.user).count()
     
     context = {
         'album': album,
@@ -996,6 +1009,7 @@ def album_detail_view(request, album_id):
         'events': events,
         'member_filter': member_filter,
         'total_in_album': album.photos.count(),
+        'my_tagged_count': my_tagged_count,
     }
     return render(request, 'herrklubb/album_detail.html', context)
 

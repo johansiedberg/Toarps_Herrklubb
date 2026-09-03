@@ -55,6 +55,35 @@
 
 
 
+    <!-- Filter Bar -->
+    <div class="card bg-dark text-white border-0 shadow-sm rounded-4 overflow-hidden mb-4"
+         style="background: linear-gradient(145deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%); border: 1px solid rgba(255, 255, 255, 0.1) !important;">
+        <div class="card-body p-3 d-flex flex-wrap align-items-center gap-2">
+            <span class="text-secondary small fw-semibold me-1 d-inline-flex align-items-center gap-1.5">
+                <i class="fa-solid fa-filter text-info"></i>
+                <span>Filter:</span>
+            </span>
+            <a href="{% url 'photo_gallery' %}" class="btn btn-sm {% if not member_filter %}btn-info text-dark fw-bold shadow-sm{% else %}btn-outline-secondary text-light{% endif %} rounded-pill px-3 py-1" style="font-size: 0.8rem;">
+                Alla album ({{ total_albums }})
+            </a>
+            <a href="{% url 'photo_gallery' %}?member=me" class="btn btn-sm {% if member_filter == 'me' %}btn-info text-dark fw-bold shadow-sm{% else %}btn-outline-secondary text-light{% endif %} rounded-pill px-3 py-1 d-inline-flex align-items-center gap-2" style="font-size: 0.8rem;">
+                <i class="fa-solid fa-user-tag"></i>
+                <span>Foton med mig ({{ user_tagged_count }})</span>
+            </a>
+
+            <!-- Member Dropdown with real names -->
+            <select class="form-select form-select-sm bg-dark text-light {% if member_filter and member_filter != 'me' %}border-info text-info fw-semibold{% else %}border-secondary border-opacity-30{% endif %} rounded-pill" style="width: auto; min-width: 175px; font-size: 0.8rem;" onchange="if(this.value){ window.location.href='{% url 'photo_gallery' %}?member=' + this.value; } else { window.location.href='{% url 'photo_gallery' %}'; }">
+                <option value="" disabled {% if not member_filter or member_filter == 'me' %}selected{% endif %}>Taggar per medlem...</option>
+                <option value="">-- Rensa personfilter --</option>
+                {% for m in all_members %}
+                    <option value="{{ m.id }}" {% if member_filter == m.id|stringformat:"i" %}selected{% endif %}>
+                        {% if m.get_full_name %}{{ m.get_full_name }}{% else %}{{ m.profile.get_nickname }}{% endif %}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
     <!-- Album Cards Grid -->
     {% if albums %}
         <div class="row g-4">
@@ -63,8 +92,8 @@
                     <div class="card h-100 border-0 rounded-4 shadow-lg text-white overflow-hidden transition-all hover-lift"
                          style="background: linear-gradient(145deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%); border: 1px solid rgba(148, 163, 184, 0.2) !important;">
                         
-                        <!-- Album Cover Image / Backdrop -->
-                        <div class="position-relative" style="height: 200px; background-color: #0f172a; overflow: hidden;">
+                        <!-- Album Cover Image / Backdrop (Clickable) -->
+                        <a href="{% url 'album_detail' album.id %}{% if member_filter %}?member={{ member_filter }}{% endif %}" class="d-block position-relative text-decoration-none" style="height: 200px; background-color: #0f172a; overflow: hidden; cursor: pointer;" title="Öppna album {{ album.title }}">
                             {% if album.get_cover_url %}
                                 <img src="{{ album.get_cover_url }}" alt="{{ album.title }}" class="w-100 h-100" style="object-fit: cover; transition: transform 0.4s ease;">
                             {% else %}
@@ -75,7 +104,7 @@
                             {% endif %}
                             
                             <!-- Overlay Top Badges -->
-                            <div class="position-absolute top-0 start-0 w-100 p-3 d-flex justify-content-between align-items-start" style="background: linear-gradient(180deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);">
+                            <div class="position-absolute top-0 start-0 w-100 p-3 d-flex justify-content-between align-items-start" style="background: linear-gradient(180deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%); pointer-events: none;">
                                 {% if album.category %}
                                     <span class="badge badge-category rounded-pill px-2.5 py-1 small fw-bold">
                                         {{ album.category.icon }}&nbsp;&nbsp;{{ album.category.name }}
@@ -99,20 +128,20 @@
 
                             <!-- Overlay Bottom Date -->
                             {% if album.folder_date %}
-                                <div class="position-absolute bottom-0 start-0 w-100 px-3 py-2 d-flex justify-content-between align-items-center" style="background: linear-gradient(0deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%);">
+                                <div class="position-absolute bottom-0 start-0 w-100 px-3 py-2 d-flex justify-content-between align-items-center" style="background: linear-gradient(0deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%); pointer-events: none;">
                                     <span class="small text-light fw-medium d-inline-flex align-items-center gap-2">
                                         <i class="fa-regular fa-calendar text-warning"></i>
                                         <span>{{ album.folder_date|date:"F Y" }}</span>
                                     </span>
                                 </div>
                             {% endif %}
-                        </div>
+                        </a>
 
                         <!-- Card Content -->
                         <div class="card-body p-3.5 d-flex flex-column justify-content-between">
                             <div>
                                 <h2 class="h5 fw-bold text-white mb-2">
-                                    <a href="{% url 'album_detail' album.id %}" class="text-white text-decoration-none hover-warning">
+                                    <a href="{% url 'album_detail' album.id %}{% if member_filter %}?member={{ member_filter }}{% endif %}" class="text-white text-decoration-none hover-warning">
                                         {{ album.title }}
                                     </a>
                                 </h2>
@@ -166,7 +195,7 @@
                                                 <span>ZIP</span>
                                             </a>
                                         {% endif %}
-                                        <a href="{% url 'album_detail' album.id %}" class="btn btn-sm btn-warning text-dark fw-bold rounded-pill px-3.5 py-1.5 d-inline-flex align-items-center gap-2" style="font-size: 0.8rem;">
+                                        <a href="{% url 'album_detail' album.id %}{% if member_filter %}?member={{ member_filter }}{% endif %}" class="btn btn-sm btn-warning text-dark fw-bold rounded-pill px-3.5 py-1.5 d-inline-flex align-items-center gap-2" style="font-size: 0.8rem;">
                                             <span>Öppna</span>
                                             <i class="fa-solid fa-arrow-right"></i>
                                         </a>
@@ -186,16 +215,27 @@
             </div>
             <h3 class="h5 fw-bold text-white mb-2">Inga fotoalbum hittades</h3>
             <p class="text-secondary small mb-4 mx-auto" style="max-width: 480px;">
-                {% if search_query or selected_category or filter_type != 'all' %}
+                {% if member_filter == 'me' %}
+                    Det finns inga album med foton där du är taggad ännu.
+                {% elif selected_member %}
+                    Det finns inga album med foton där {{ selected_member.profile.get_nickname }} är taggad ännu.
+                {% elif search_query or selected_category or member_filter %}
                     Det fanns inga album som matchade din filtrering. Testa att rensa sökningen eller välj en annan kategori.
                 {% else %}
                     Det finns inga skapade fotoalbum ännu. Skapa klubbens första album och ladda upp bilder från en resa eller aktivitet!
                 {% endif %}
             </p>
-            <button type="button" class="btn btn-warning rounded-pill px-4 py-2 fw-bold text-dark shadow-sm d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#createAlbumModal">
-                <i class="fa-solid fa-folder-plus me-2"></i>
-                <span>Skapa Första Albumet</span>
-            </button>
+            {% if search_query or selected_category or member_filter %}
+                <a href="{% url 'photo_gallery' %}" class="btn btn-outline-warning rounded-pill px-4 py-2 fw-semibold text-warning shadow-sm d-inline-flex align-items-center">
+                    <i class="fa-solid fa-folder me-2"></i>
+                    <span>Visa alla album</span>
+                </a>
+            {% else %}
+                <button type="button" class="btn btn-warning rounded-pill px-4 py-2 fw-bold text-dark shadow-sm d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#createAlbumModal">
+                    <i class="fa-solid fa-folder-plus me-2"></i>
+                    <span>Skapa Första Albumet</span>
+                </button>
+            {% endif %}
         </div>
     {% endif %}
 
