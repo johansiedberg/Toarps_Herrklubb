@@ -1,6 +1,5 @@
 import os
 import datetime
-print('VIEWS IMPORTED DATETIME:', datetime)
 import calendar
 import json
 import re

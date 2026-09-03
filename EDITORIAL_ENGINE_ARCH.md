@@ -1,5 +1,8 @@
 # TOURNAMENT EDITORIAL ENGINE - MASTER ARCHITECTURE & IMPLEMENTATION GUIDE
 
+> [!NOTE]
+> **Decoupling Notice**: The Tournament Editorial Engine and all prediction features have been migrated and consolidated into the standalone [Prediction Engine](file:///Users/johansiedberg/Documents/GitHub/Prediction_Engine/EDITORIAL_ENGINE_ARCH.md). The active v2.1+ implementation, 6-role multi-agent pipeline, and database models reside in `Prediction_Engine/tournament/editorial_engine/`. This document is retained here for historical context.
+
 ## 1. Executive Summary & Vision
 We are building the **Tournament Editorial Engine** within an existing Django football prediction application. 
 

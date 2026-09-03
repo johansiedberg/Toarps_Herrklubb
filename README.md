@@ -6,12 +6,12 @@ Toarps Herrklubb is a centralized social planning and coordination platform cust
 
 ## 1. Core Objectives & Features
 
-The platform focuses on three main pillars of interaction:
+The platform focuses on four main pillars of interaction:
 
 ### 📅 Hinderkalender & Golden Weekends
 * **Availability Heatmap:** Members log periods of unavailability (dates and optional descriptions) directly on a centralized calendar.
 * **Golden Weekend Scanner:** The platform automatically scans upcoming weekend dates to identify "Golden Weekends" — three-day weekend blocks (Friday through Sunday) where all 11 members are fully available.
-* **Event Coordinators:** Members can schedule next events, assign locations, set details, and volunteer as event coordinators.
+* **Event Coordinators:** Members can schedule next events, assign locations, set details, track participant RSVPs, and volunteer as event coordinators.
 
 ### 🪣 Herrklubbens Bucket List
 * **Marker Voting System:** Members organize shared bucket list items by category and cast votes using distinct Pokermarkers:
@@ -21,6 +21,11 @@ The platform focuses on three main pillars of interaction:
 * **Högsta Dröm (Highest Dream):** Each member can select exactly one active bucket item as their ultimate dream.
 * **Planning Promotion:** Any bucket list proposal that receives at least 6 out of 11 votes is automatically promoted from the "Idébanken" queue to "Planerade Aktiviteter."
 * **Archiving & Completion:** Completing a bucket item archives the record and automatically frees up members' markers to be spent on other active proposals.
+
+### 📸 Fotoarkiv & Delade Minnen
+* **Chronological Photo Albums:** Dedicated event photo albums (`PhotoAlbum`) with cover photos, date tagging, and descriptions.
+* **Mobile-First Photo Upload:** Direct upload from iOS and Android devices supporting high-res photography and automatic client-side / backend format handling.
+* **Member Tagging & Social Reactions:** Tag club members in specific photos with quick nickname chips, toggle photo likes (heart reactions), and download entire albums as high-res ZIP archives.
 
 ### 🔑 Cryptographic Single Sign-On (SSO)
 * **Credentials-Free Prediction Entry:** The tournament prediction features have been fully decoupled into the standalone **Prediction Engine** (running on port `2028`).
@@ -47,6 +52,8 @@ Toarps_Herrklubb/
 │       ├── hub.html          # Entry hub directing to Social Hub or Predictions
 │       ├── herrklubb.html    # The Bucket list, voting panel, and events coordinator
 │       ├── calendar.html     # Hinderkalender visual heat map and Golden Weekends
+│       ├── photo_gallery.html # Photo albums archive overview & album creation
+│       ├── album_detail.html # Photo album gallery, mobile upload, and face tagging
 │       └── login.html        # Secure entry page
 │
 ├── herrklubb/
@@ -60,11 +67,12 @@ Toarps_Herrklubb/
 │   ├── admin.py              # Social models registration (UserProfile, Bucket items, etc.)
 │   ├── apps.py               # App configuration (HerrklubbConfig)
 │   ├── forms.py              # Extended user authentication form (email lookup support)
-│   ├── models.py             # Relational schema for social hub data
+│   ├── models.py             # Relational schema for social hub data (UserProfile, Events, Bucket, PhotoAlbum, Photo, PhotoLike)
 │   ├── tests.py              # Test suite for events and marker votes logic
 │   ├── urls.py               # View endpoints routing
-│   └── views.py              # Event calendars logic, bucket voting logic, and SSO signer
+│   └── views.py              # Event calendars logic, bucket voting, photo archives, and SSO signer
 │
+├── media/                    # User-uploaded photo albums and high-res event photography
 ├── db.sqlite3                # Local SQLite database
 ├── manage.py                 # Django command-line utility
 └── requirements.txt          # Python packages listing

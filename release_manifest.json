@@ -1,9 +1,9 @@
 {
   "project": "Toarps Herrklubb",
-  "version": "1.0.0",
-  "tag": "v1.0.0",
-  "release_date": "2026-08-27",
-  "commit_hash": "cb038e6",
+  "version": "1.1.0",
+  "tag": "v1.1.0",
+  "release_date": "2026-09-03",
+  "commit_hash": "454df05",
   "environment": "production",
   "target_server": "Ubuntu PRD Server (192.168.86.35)",
   "port_mapping": {
@@ -19,8 +19,11 @@
     "migrations_pending": false
   },
   "key_features": [
-    "Toarps Herrklubb predictions portal",
-    "Integration with Caddy proxy on HTTPS port 1981",
+    "Centralized social hub, Hinderkalender & Golden Weekend scanner",
+    "Herrklubbens Poker-marker bucket list voting & Högsta Dröm",
+    "Dedicated Photo Archive (Fotoarkiv) with mobile uploads, member tagging & ZIP download",
+    "Cryptographic HMAC Single Sign-On (SSO) integration with Prediction Engine",
+    "Integration with Caddy proxy on HTTPS port 1981 (internal port 8981)",
     "Systemd + Gunicorn production service management"
   ],
   "agentic_context": {
