@@ -1,0 +1,282 @@
+{% extends 'herrklubb/base.html' %}
+{% load static %}
+
+{% block backdrop_style %}background: linear-gradient(180deg, rgba(11, 15, 25, 0.85) 0%, rgba(11, 15, 25, 0.95) 100%), url('{% static "herrklubb/img/ToarpsHK_backdrop.svg" %}'); background-size: cover; background-position: center; background-repeat: no-repeat;{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+    <!-- Header Section -->
+    <div class="p-4 rounded-4 shadow-lg mb-4 text-white position-relative overflow-hidden" 
+         style="background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.90) 100%); border: 1px solid rgba(234, 179, 8, 0.3);">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <div class="d-flex align-items-center gap-3">
+                <span class="fs-1">📸</span>
+                <div>
+                    <h1 class="display-6 fw-extrabold mb-0 text-white">Klubbens Fotoarkiv</h1>
+                    <p class="text-warning fw-semibold mb-0">Dela, tagga och ladda ner minnen från alla våra resor & aktiviteter</p>
+                </div>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <button type="button" class="btn btn-outline-warning btn-circle-action rounded-circle p-0 d-flex align-items-center justify-content-center shadow-sm" style="width: 42px; height: 42px;" data-bs-toggle="modal" data-bs-target="#createAlbumModal" title="Skapa Nytt Album">
+                    <i class="fa-solid fa-folder-plus fs-5"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Quick Stats Bar -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-6">
+            <div class="p-3 rounded-4 bg-dark bg-opacity-70 border border-secondary border-opacity-20 d-flex align-items-center gap-3">
+                <div class="rounded-3 p-2.5 text-warning bg-warning bg-opacity-10 fs-4">
+                    <i class="fa-solid fa-folder"></i>
+                </div>
+                <div>
+                    <span class="text-secondary small d-block">Album / Mappar</span>
+                    <strong class="fs-5 text-white fw-bold">{{ total_albums }} st</strong>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-6">
+            <div class="p-3 rounded-4 bg-dark bg-opacity-70 border border-secondary border-opacity-20 d-flex align-items-center gap-3">
+                <div class="rounded-3 p-2.5 text-info bg-info bg-opacity-10 fs-4">
+                    <i class="fa-solid fa-camera"></i>
+                </div>
+                <div>
+                    <span class="text-secondary small d-block">Totalt antal foton</span>
+                    <strong class="fs-5 text-white fw-bold">{{ total_photos }} st</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Album Cards Grid -->
+    {% if albums %}
+        <div class="row g-4">
+            {% for album in albums %}
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card h-100 border-0 rounded-4 shadow-lg text-white overflow-hidden transition-all hover-lift"
+                         style="background: linear-gradient(145deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%); border: 1px solid rgba(148, 163, 184, 0.2) !important;">
+                        
+                        <!-- Album Cover Image / Backdrop -->
+                        <div class="position-relative" style="height: 200px; background-color: #0f172a; overflow: hidden;">
+                            {% if album.get_cover_url %}
+                                <img src="{{ album.get_cover_url }}" alt="{{ album.title }}" class="w-100 h-100" style="object-fit: cover; transition: transform 0.4s ease;">
+                            {% else %}
+                                <div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center text-secondary" style="background: radial-gradient(circle, rgba(51, 65, 85, 0.6) 0%, rgba(15, 23, 42, 0.9) 100%);">
+                                    <i class="fa-solid fa-images fa-3x mb-2 text-secondary opacity-50"></i>
+                                    <span class="small">Inga foton uppladdade än</span>
+                                </div>
+                            {% endif %}
+                            
+                            <!-- Overlay Top Badges -->
+                            <div class="position-absolute top-0 start-0 w-100 p-3 d-flex justify-content-between align-items-start" style="background: linear-gradient(180deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);">
+                                {% if album.category %}
+                                    <span class="badge badge-category rounded-pill px-2.5 py-1 small fw-bold">
+                                        {{ album.category.icon }}&nbsp;&nbsp;{{ album.category.name }}
+                                    </span>
+                                {% else %}
+                                    <span></span>
+                                {% endif %}
+
+                                {% if album.photo_count > 0 %}
+                                    <span class="badge bg-dark bg-opacity-80 text-warning border border-warning border-opacity-30 rounded-pill px-3 py-1.5 small fw-bold shadow-sm d-inline-flex align-items-center gap-2">
+                                        <i class="fa-solid fa-camera"></i>
+                                        <span>{{ album.photo_count }} foton</span>
+                                    </span>
+                                {% else %}
+                                    <span class="badge badge-tonal-silver rounded-pill px-3 py-1.5 small fw-semibold shadow-sm d-inline-flex align-items-center gap-2" style="color: #94a3b8 !important; border-color: rgba(148, 163, 184, 0.25) !important;">
+                                        <i class="fa-solid fa-camera opacity-60"></i>
+                                        <span>0 foton</span>
+                                    </span>
+                                {% endif %}
+                            </div>
+
+                            <!-- Overlay Bottom Date -->
+                            {% if album.folder_date %}
+                                <div class="position-absolute bottom-0 start-0 w-100 px-3 py-2 d-flex justify-content-between align-items-center" style="background: linear-gradient(0deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%);">
+                                    <span class="small text-light fw-medium d-inline-flex align-items-center gap-2">
+                                        <i class="fa-regular fa-calendar text-warning"></i>
+                                        <span>{{ album.folder_date|date:"F Y" }}</span>
+                                    </span>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Card Content -->
+                        <div class="card-body p-3.5 d-flex flex-column justify-content-between">
+                            <div>
+                                <h2 class="h5 fw-bold text-white mb-2">
+                                    <a href="{% url 'album_detail' album.id %}" class="text-white text-decoration-none hover-warning">
+                                        {{ album.title }}
+                                    </a>
+                                </h2>
+                                
+                                {% if album.event %}
+                                    <div class="mb-2.5">
+                                        <span class="badge badge-tonal-blue rounded-pill px-3 py-1.5 small d-inline-flex align-items-center gap-2" style="font-size: 0.8rem;">
+                                            <i class="fa-solid fa-link text-info"></i>
+                                            <strong class="text-white">{{ album.event.title }}</strong>
+                                        </span>
+                                    </div>
+                                {% endif %}
+
+                                {% if album.description %}
+                                    <p class="text-secondary small mb-3 line-clamp-2" style="font-size: 0.82rem; line-height: 1.5;">
+                                        {{ album.description }}
+                                    </p>
+                                {% else %}
+                                    <p class="text-secondary small mb-3 italic opacity-60" style="font-size: 0.8rem;">
+                                        Ingen beskrivning tillagd.
+                                    </p>
+                                {% endif %}
+                            </div>
+
+                            <!-- Footer with Contributors & Action Buttons -->
+                            <div>
+                                <div class="d-flex align-items-center justify-content-between pt-2.5 border-top border-secondary border-opacity-20 mt-2">
+                                    <div class="d-flex align-items-center gap-2" title="Bidragande fotografer">
+                                        <div class="d-flex -space-x-2 overflow-hidden">
+                                            {% for c in album.contributors|slice:":4" %}
+                                                {% if c.profile.get_avatar_url %}
+                                                    <img src="{{ c.profile.get_avatar_url }}" alt="{{ c.profile.get_nickname }}" class="rounded-circle border border-dark" style="width: 24px; height: 24px; object-fit: cover;" title="{{ c.profile.get_nickname }}">
+                                                {% else %}
+                                                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white border border-dark" style="width: 24px; height: 24px; font-size: 0.65rem;" title="{{ c.profile.get_nickname }}">
+                                                        {{ c.profile.get_nickname|slice:":1"|upper }}
+                                                    </div>
+                                                {% endif %}
+                                            {% empty %}
+                                                <span class="text-secondary small" style="font-size: 0.75rem;">Inga bidrag än</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex align-items-center gap-2">
+                                        {% if album.photo_count > 0 %}
+                                            <a href="{% url 'download_album_zip' album.id %}" class="btn btn-sm btn-outline-light rounded-pill px-3 py-1.5 d-inline-flex align-items-center gap-2" style="font-size: 0.8rem;" title="Ladda ner hela albumet som ZIP">
+                                                <span class="position-relative d-inline-flex align-items-center justify-content-center" style="width: 16px; height: 16px;">
+                                                    <i class="fa-solid fa-folder text-warning"></i>
+                                                    <i class="fa-solid fa-arrow-down text-dark position-absolute fw-bold" style="font-size: 0.45rem; margin-top: 1px;"></i>
+                                                </span>
+                                                <span>ZIP</span>
+                                            </a>
+                                        {% endif %}
+                                        <a href="{% url 'album_detail' album.id %}" class="btn btn-sm btn-warning text-dark fw-bold rounded-pill px-3.5 py-1.5 d-inline-flex align-items-center gap-2" style="font-size: 0.8rem;">
+                                            <span>Öppna</span>
+                                            <i class="fa-solid fa-arrow-right"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="p-5 text-center rounded-4 bg-dark bg-opacity-50 border border-secondary border-opacity-20 my-4">
+            <div class="text-secondary mb-3">
+                <i class="fa-solid fa-images fa-4x opacity-40"></i>
+            </div>
+            <h3 class="h5 fw-bold text-white mb-2">Inga fotoalbum hittades</h3>
+            <p class="text-secondary small mb-4 mx-auto" style="max-width: 480px;">
+                {% if search_query or selected_category or filter_type != 'all' %}
+                    Det fanns inga album som matchade din filtrering. Testa att rensa sökningen eller välj en annan kategori.
+                {% else %}
+                    Det finns inga skapade fotoalbum ännu. Skapa klubbens första album och ladda upp bilder från en resa eller aktivitet!
+                {% endif %}
+            </p>
+            <button type="button" class="btn btn-warning rounded-pill px-4 py-2 fw-bold text-dark shadow-sm d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#createAlbumModal">
+                <i class="fa-solid fa-folder-plus me-2"></i>
+                <span>Skapa Första Albumet</span>
+            </button>
+        </div>
+    {% endif %}
+
+</div>
+
+<!-- Create Album Modal -->
+<div class="modal fade" id="createAlbumModal" tabindex="-1" aria-labelledby="createAlbumModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content text-start" style="background: #111827; border: 1px solid rgba(255, 255, 255, 0.15); color: #F3F4F6; border-radius: 1.25rem; backdrop-filter: blur(16px);">
+            <div class="modal-header border-bottom border-secondary border-opacity-25 pb-3">
+                <h5 class="modal-title fw-bold text-white d-flex align-items-center" id="createAlbumModalLabel">
+                    <i class="fa-solid fa-folder-plus text-warning me-2"></i>
+                    <span>Skapa Nytt Fotoalbum / Mapp</span>
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Stäng"></button>
+            </div>
+            <form action="{% url 'create_photo_album' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body py-4">
+                    
+                    <div class="mb-3">
+                        <label class="form-label text-secondary small fw-semibold">Albumnamn / Titel <span class="text-danger">*</span></label>
+                        <input type="text" name="title" required class="form-control bg-dark border-secondary border-opacity-30 text-light" placeholder="T.ex. Berlinresa 2025, Padelturnering, Årsmöte...">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label text-secondary small fw-semibold">Koppla till Herrklubbsevent (valfritt)</label>
+                        <select name="event_id" class="form-select bg-dark border-secondary border-opacity-30 text-light">
+                            <option value="">-- Inget specifikt event --</option>
+                            {% for ev in events %}
+                                <option value="{{ ev.id }}">{{ ev.title }} ({{ ev.event_date|date:"Y-m-d"|default:"Inget datum" }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label text-secondary small fw-semibold">Beskrivning / Anteckningar</label>
+                        <textarea name="description" rows="2" class="form-control bg-dark border-secondary border-opacity-30 text-light" placeholder="Kort sammanfattning av resan, minnesvärda citat eller händelser..."></textarea>
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label text-secondary small fw-semibold">Ladda upp bilder direkt (valfritt)</label>
+                        <div class="p-3 border border-secondary border-dashed rounded-3 text-center bg-dark bg-opacity-50">
+                            <i class="fa-solid fa-images text-warning fs-2 mb-2"></i>
+                            <p class="small text-secondary mb-2">Välj bilder från din mobil eller dator (stöd för iPhone HEIC, Android & JPEG/PNG)</p>
+                            <input type="file" name="photos" multiple accept="image/*,.heic,.heif,.webp" class="form-control form-control-sm bg-dark border-secondary border-opacity-30 text-light">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer border-top border-secondary border-opacity-25 pt-3">
+                    <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill px-3" data-bs-dismiss="modal">Avbryt</button>
+                    <button type="submit" class="btn btn-warning btn-sm rounded-pill px-4 fw-bold text-dark d-inline-flex align-items-center">
+                        <i class="fa-solid fa-check me-2"></i>
+                        <span>Skapa Album</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .hover-lift {
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .hover-lift:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 16px 35px rgba(0, 0, 0, 0.5) !important;
+    }
+    .hover-lift:hover img {
+        transform: scale(1.04);
+    }
+    .hover-warning:hover {
+        color: #facc15 !important;
+    }
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+</style>
+{% endblock %}

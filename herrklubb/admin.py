@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 from .models import (
     UserProfile, BucketCategory, BucketItem, BucketVote, BucketDream,
-    UserUnavailability, HerrklubbEvent
+    UserUnavailability, HerrklubbEvent, PhotoAlbum, Photo, PhotoLike
 )
 
 @admin.register(UserProfile)
@@ -61,3 +61,36 @@ class HerrklubbEventAdmin(admin.ModelAdmin):
     list_filter = ('is_active', 'event_date')
     search_fields = ('title', 'description', 'location')
     list_editable = ('is_active',)
+
+
+class PhotoInline(admin.TabularInline):
+    model = Photo
+    extra = 0
+    fields = ('image', 'caption', 'uploader', 'taken_at')
+    readonly_fields = ('taken_at',)
+
+
+@admin.register(PhotoAlbum)
+class PhotoAlbumAdmin(admin.ModelAdmin):
+    list_display = ('title', 'category', 'folder_date', 'get_photo_count', 'created_by', 'created_at')
+    list_filter = ('category', 'folder_date')
+    search_fields = ('title', 'description')
+    inlines = [PhotoInline]
+
+    @admin.display(description="Antal Foton")
+    def get_photo_count(self, obj):
+        return obj.photo_count
+
+
+@admin.register(Photo)
+class PhotoAdmin(admin.ModelAdmin):
+    list_display = ('id', 'album', 'uploader', 'caption', 'taken_at', 'created_at')
+    list_filter = ('album', 'uploader', 'created_at')
+    search_fields = ('caption', 'uploader__username', 'album__title')
+    filter_horizontal = ('tagged_members',)
+
+
+@admin.register(PhotoLike)
+class PhotoLikeAdmin(admin.ModelAdmin):
+    list_display = ('user', 'photo', 'created_at')
+    list_filter = ('created_at',)

@@ -3,6 +3,12 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+try:
+    import pillow_heif
+    pillow_heif.register_heif_opener()
+except Exception:
+    pass
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     nickname = models.CharField(max_length=50, blank=True, null=True, verbose_name="Smeknamn")
@@ -251,3 +257,156 @@ class HerrklubbEvent(models.Model):
             'freebusy': 'busy',
         }
         return f"https://outlook.live.com/calendar/0/deeplink/compose?{urlencode(params)}"
+
+
+# --- HERRKLUBBEN PHOTO SHARING & GALLERY MODELS ---
+
+import os
+from io import BytesIO
+from django.core.files.base import ContentFile
+from PIL import Image, ImageOps, ExifTags
+
+
+class PhotoAlbum(models.Model):
+    title = models.CharField(max_length=200, verbose_name="Albumnamn / Mappnamn")
+    description = models.TextField(blank=True, verbose_name="Beskrivning / Notering")
+    event = models.ForeignKey(HerrklubbEvent, on_delete=models.SET_NULL, null=True, blank=True, related_name='photo_albums', verbose_name="Kopplat Event")
+    category = models.ForeignKey(BucketCategory, on_delete=models.SET_NULL, null=True, blank=True, related_name='photo_albums', verbose_name="Kategori")
+    folder_date = models.DateField(null=True, blank=True, verbose_name="Datum för aktivitet/resa")
+    cover_photo = models.ForeignKey('Photo', on_delete=models.SET_NULL, null=True, blank=True, related_name='cover_for_albums', verbose_name="Omslagsbild")
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='created_photo_albums', verbose_name="Skapad av")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Skapat datum")
+
+    class Meta:
+        ordering = ['-folder_date', '-created_at']
+        verbose_name = "Fotoalbum / Mapp"
+        verbose_name_plural = "Fotoalbum & Mappar"
+
+    def __str__(self):
+        date_part = f" ({self.folder_date.strftime('%Y-%m')})" if self.folder_date else ""
+        return f"📁 {self.title}{date_part}"
+
+    @property
+    def photo_count(self):
+        return self.photos.count()
+
+    def get_signature_photo(self):
+        """
+        Title/Signature photo of an Album is always the photo with the most tagged members.
+        If there are multiple with the same count, choose the first uploaded in the album.
+        """
+        from django.db.models import Count
+        return self.photos.annotate(
+            tagged_count=Count('tagged_members')
+        ).order_by('-tagged_count', 'created_at', 'id').first()
+
+    def get_cover_url(self):
+        photo = self.get_signature_photo()
+        if photo:
+            if photo.thumbnail:
+                return photo.thumbnail.url
+            if photo.image:
+                return photo.image.url
+        return None
+
+    @property
+    def contributors(self):
+        user_ids = self.photos.values_list('uploader_id', flat=True).distinct()
+        return User.objects.filter(id__in=user_ids).select_related('profile')
+
+
+class Photo(models.Model):
+    album = models.ForeignKey(PhotoAlbum, on_delete=models.CASCADE, related_name='photos', verbose_name="Album / Mapp")
+    image = models.ImageField(upload_to='albums/%Y/%m/', verbose_name="Originalbild")
+    thumbnail = models.ImageField(upload_to='albums/thumbnails/%Y/%m/', blank=True, null=True, verbose_name="Miniatyrbild")
+    caption = models.CharField(max_length=255, blank=True, verbose_name="Bildtext")
+    uploader = models.ForeignKey(User, on_delete=models.CASCADE, related_name='uploaded_photos', verbose_name="Uppladdad av")
+    tagged_members = models.ManyToManyField(User, related_name='tagged_photos', blank=True, verbose_name="Taggade medlemmar")
+    taken_at = models.DateTimeField(null=True, blank=True, verbose_name="Fotograferad tidpunkt")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Uppladdad tidpunkt")
+
+    class Meta:
+        ordering = ['-taken_at', '-created_at']
+        verbose_name = "Foto"
+        verbose_name_plural = "Foton"
+
+    def __str__(self):
+        uploader_name = self.uploader.profile.get_nickname() if hasattr(self.uploader, 'profile') else self.uploader.username
+        return f"Foto i {self.album.title} av {uploader_name}"
+
+    @property
+    def filename(self):
+        return os.path.basename(self.image.name) if self.image else ""
+
+    @property
+    def display_url(self):
+        if self.thumbnail:
+            return self.thumbnail.url
+        return self.image.url if self.image else ""
+
+    @property
+    def like_count(self):
+        return self.likes.count()
+
+    def is_liked_by(self, user):
+        if not user or not user.is_authenticated:
+            return False
+        return self.likes.filter(user=user).exists()
+
+    def generate_thumbnail_and_metadata(self):
+        if not self.image:
+            return
+        try:
+            self.image.seek(0)
+            img = Image.open(self.image)
+
+            # Auto-rotate image according to EXIF Orientation tag
+            img = ImageOps.exif_transpose(img)
+
+            # Extract EXIF taken_at if not already populated
+            if not self.taken_at:
+                try:
+                    exif_data = img.getexif()
+                    if exif_data:
+                        # 36867 is DateTimeOriginal, 306 is DateTime
+                        date_str = exif_data.get(36867) or exif_data.get(306)
+                        if date_str:
+                            from datetime import datetime
+                            # Format usually "YYYY:MM:DD HH:MM:SS"
+                            self.taken_at = datetime.strptime(str(date_str), "%Y:%m:%d %H:%M:%S")
+                except Exception:
+                    pass
+
+            # Generate high-quality WebP thumbnail (max 800x800 preserving aspect ratio)
+            thumb_img = img.copy()
+            thumb_img.thumbnail((800, 800), Image.Resampling.LANCZOS)
+
+            # Handle transparency/alpha conversion if saving to RGB/WebP
+            if thumb_img.mode in ("RGBA", "P"):
+                thumb_img = thumb_img.convert("RGB")
+
+            thumb_io = BytesIO()
+            thumb_img.save(thumb_io, format='WEBP', quality=85, optimize=True)
+            thumb_io.seek(0)
+
+            base_name = os.path.splitext(os.path.basename(self.image.name))[0]
+            thumb_filename = f"thumb_{base_name}.webp"
+            self.thumbnail.save(thumb_filename, ContentFile(thumb_io.getvalue()), save=False)
+        except Exception as e:
+            # Fallback gracefully if image library fails on unsupported raw formats
+            pass
+
+
+class PhotoLike(models.Model):
+    photo = models.ForeignKey(Photo, on_delete=models.CASCADE, related_name='likes')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='photo_likes')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('photo', 'user')
+        verbose_name = "Foto-gilla"
+        verbose_name_plural = "Foto-gillamarkeringar"
+
+    def __str__(self):
+        return f"{self.user.username} gillar foto #{self.photo_id}"
+

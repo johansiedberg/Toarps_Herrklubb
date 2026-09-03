@@ -268,6 +268,10 @@
                 <h3 class="h5 fw-bold text-white mb-0">Nästa Event / Resa</h3>
             </div>
             <div class="d-flex align-items-center gap-2">
+                <a href="{% url 'photo_gallery' %}" class="btn btn-sm btn-outline-warning rounded-pill px-3 py-1 small fw-semibold shadow-sm d-flex align-items-center gap-1.5" title="Öppna Fotoarkivet">
+                    <i class="fa-solid fa-camera-retro"></i>
+                    <span>Fotoarkiv</span>
+                </a>
                 {% if next_event %}
                     <form action="{% url 'delete_herrklubb_event' next_event.id %}" method="post" class="d-inline" onsubmit="return confirm('Är du säker på att du vill ta bort Nästa Event?');">
                         {% csrf_token %}

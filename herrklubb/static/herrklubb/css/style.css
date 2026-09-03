@@ -527,6 +527,58 @@ footer {
     font-weight: 600;
 }
 
+/* Mandatory Icon & Emoji Visual Spacing (5px-8px standard) */
+.me-1\.5 { margin-right: 7px !important; }
+.ms-1\.5 { margin-left: 7px !important; }
+.gap-1\.5 { gap: 7px !important; }
+.icon-gap { margin-right: 7px !important; display: inline-block; }
+.emoji-gap { margin-right: 7px !important; display: inline-block; }
+
+/* Circle Action Buttons (Default: border gold, transparent bg, gold icon. Hover: filled gold bg, dark icon) */
+.btn-circle-action {
+    background-color: transparent !important;
+    border: 1px solid rgba(234, 179, 8, 0.75) !important;
+    color: #eab308 !important;
+    transition: all 0.2s ease-in-out !important;
+    text-decoration: none !important;
+}
+
+.btn-circle-action i,
+.btn-circle-action span {
+    color: #eab308;
+    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
+.btn-circle-action:hover,
+.btn-circle-action:focus {
+    background-color: #eab308 !important;
+    border-color: #eab308 !important;
+    color: #0b0f19 !important;
+    box-shadow: 0 4px 14px rgba(234, 179, 8, 0.45) !important;
+    transform: translateY(-1px);
+}
+
+.btn-circle-action:hover i,
+.btn-circle-action:focus i {
+    color: #0b0f19 !important;
+}
+
+/* For composite folder download icon */
+.btn-circle-action .folder-icon-composite .fa-folder {
+    color: #eab308;
+}
+.btn-circle-action .folder-icon-composite .fa-arrow-down {
+    color: #0b0f19;
+}
+.btn-circle-action:hover .folder-icon-composite .fa-folder,
+.btn-circle-action:focus .folder-icon-composite .fa-folder {
+    color: #0b0f19 !important;
+}
+.btn-circle-action:hover .folder-icon-composite .fa-arrow-down,
+.btn-circle-action:focus .folder-icon-composite .fa-arrow-down {
+    color: #eab308 !important;
+}
+
 
 
 

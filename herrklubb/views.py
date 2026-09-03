@@ -1,3 +1,4 @@
+import os
 import datetime
 print('VIEWS IMPORTED DATETIME:', datetime)
 import calendar
@@ -840,3 +841,422 @@ def event_ics_export_view(request, event_id):
     response = HttpResponse(ics_data, content_type='text/calendar; charset=utf-8')
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
     return response
+
+
+# ==============================================================================
+# PHOTO SHARING & GALLERY VIEWS
+# ==============================================================================
+
+import io
+import zipfile
+import mimetypes
+from django.utils.text import slugify
+from .models import PhotoAlbum, Photo, PhotoLike
+
+
+@login_required
+@herrklubb_member_required
+def photo_gallery_view(request):
+    """Overview of all photo albums/folders with search, filters, and stats."""
+    albums_qs = PhotoAlbum.objects.select_related('created_by', 'category', 'event', 'cover_photo').prefetch_related('photos', 'photos__uploader')
+    
+    # Query filters
+    category_id = request.GET.get('category')
+    filter_type = request.GET.get('filter', 'all')
+    search_query = request.GET.get('q', '').strip()
+    
+    if category_id:
+        albums_qs = albums_qs.filter(category_id=category_id)
+        
+    if search_query:
+        albums_qs = albums_qs.filter(
+            Q(title__icontains=search_query) |
+            Q(description__icontains=search_query) |
+            Q(event__title__icontains=search_query)
+        )
+        
+    if filter_type == 'my_uploads':
+        albums_qs = albums_qs.filter(photos__uploader=request.user).distinct()
+    elif filter_type == 'tagged_me':
+        albums_qs = albums_qs.filter(photos__tagged_members=request.user).distinct()
+        
+    albums = list(albums_qs)
+    
+    # Statistics
+    total_albums = PhotoAlbum.objects.count()
+    total_photos = Photo.objects.count()
+    user_uploaded_count = Photo.objects.filter(uploader=request.user).count()
+    user_tagged_count = Photo.objects.filter(tagged_members=request.user).count()
+    
+    categories = BucketCategory.objects.all().order_by('order', 'name')
+    events = HerrklubbEvent.objects.all().order_by('-event_date')
+    members = User.objects.filter(profile__is_herrklubb_member=True).select_related('profile').order_by('first_name', 'username')
+    
+    context = {
+        'albums': albums,
+        'categories': categories,
+        'events': events,
+        'members': members,
+        'filter_type': filter_type,
+        'search_query': search_query,
+        'selected_category': int(category_id) if category_id and category_id.isdigit() else None,
+        'total_albums': total_albums,
+        'total_photos': total_photos,
+        'user_uploaded_count': user_uploaded_count,
+        'user_tagged_count': user_tagged_count,
+    }
+    return render(request, 'herrklubb/photo_gallery.html', context)
+
+
+@login_required
+@herrklubb_member_required
+@require_POST
+def create_photo_album_view(request):
+    """Create a new photo album/folder, optionally linking to an event."""
+    title = request.POST.get('title', '').strip()
+    if not title:
+        messages.error(request, "Vänligen ange ett albumnamn.")
+        return redirect('photo_gallery')
+        
+    description = request.POST.get('description', '').strip()
+    category_id = request.POST.get('category_id')
+    event_id = request.POST.get('event_id')
+    folder_date_str = request.POST.get('folder_date', '').strip()
+    
+    category = BucketCategory.objects.filter(id=category_id).first() if category_id else None
+    event = HerrklubbEvent.objects.filter(id=event_id).first() if event_id else None
+    
+    folder_date = None
+    if folder_date_str:
+        try:
+            folder_date = datetime.datetime.strptime(folder_date_str, '%Y-%m-%d').date()
+        except ValueError:
+            pass
+    elif event and event.event_date:
+        folder_date = event.event_date
+        
+    album = PhotoAlbum.objects.create(
+        title=title,
+        description=description,
+        category=category,
+        event=event,
+        folder_date=folder_date,
+        created_by=request.user
+    )
+    
+    # Handle initial photos if uploaded together with album creation
+    files = request.FILES.getlist('photos')
+    if files:
+        for f in files:
+            photo = Photo(album=album, image=f, uploader=request.user)
+            photo.save()
+            photo.generate_thumbnail_and_metadata()
+            photo.save()
+            
+    messages.success(request, f"Albumet '{album.title}' har skapats!")
+    return redirect('album_detail', album_id=album.id)
+
+
+@login_required
+@herrklubb_member_required
+def album_detail_view(request, album_id):
+    """Detailed album view with masonry gallery, lightbox, member tagging and upload modal."""
+    album = get_object_or_404(
+        PhotoAlbum.objects.select_related('created_by', 'category', 'event', 'cover_photo'),
+        id=album_id
+    )
+    
+    photos_qs = album.photos.select_related('uploader', 'uploader__profile').prefetch_related('tagged_members', 'tagged_members__profile', 'likes')
+    
+    # Filters within album
+    member_filter = request.GET.get('member')
+    if member_filter:
+        if member_filter == 'me':
+            photos_qs = photos_qs.filter(Q(uploader=request.user) | Q(tagged_members=request.user)).distinct()
+        elif member_filter.isdigit():
+            photos_qs = photos_qs.filter(Q(uploader_id=member_filter) | Q(tagged_members__id=member_filter)).distinct()
+            
+    photos = list(photos_qs)
+    
+    # Mark if current user liked each photo
+    user_liked_photo_ids = set(
+        PhotoLike.objects.filter(user=request.user, photo__album=album).values_list('photo_id', flat=True)
+    )
+    for p in photos:
+        p.is_liked = p.id in user_liked_photo_ids
+        
+    all_members = User.objects.filter(profile__is_herrklubb_member=True).select_related('profile').order_by('first_name', 'username')
+    categories = BucketCategory.objects.all().order_by('order', 'name')
+    events = HerrklubbEvent.objects.all().order_by('-event_date')
+    
+    context = {
+        'album': album,
+        'photos': photos,
+        'all_members': all_members,
+        'categories': categories,
+        'events': events,
+        'member_filter': member_filter,
+        'total_in_album': album.photos.count(),
+    }
+    return render(request, 'herrklubb/album_detail.html', context)
+
+
+@login_required
+@herrklubb_member_required
+@require_POST
+def edit_photo_album_view(request, album_id):
+    """Edit album metadata (title, description, date, category, cover)."""
+    album = get_object_or_404(PhotoAlbum, id=album_id)
+    
+    title = request.POST.get('title', '').strip()
+    if title:
+        album.title = title
+    album.description = request.POST.get('description', '').strip()
+    
+    category_id = request.POST.get('category_id')
+    album.category = BucketCategory.objects.filter(id=category_id).first() if category_id else None
+    
+    event_id = request.POST.get('event_id')
+    album.event = HerrklubbEvent.objects.filter(id=event_id).first() if event_id else None
+    
+    folder_date_str = request.POST.get('folder_date', '').strip()
+    if folder_date_str:
+        try:
+            album.folder_date = datetime.datetime.strptime(folder_date_str, '%Y-%m-%d').date()
+        except ValueError:
+            pass
+            
+    cover_photo_id = request.POST.get('cover_photo_id')
+    if cover_photo_id:
+        album.cover_photo = Photo.objects.filter(id=cover_photo_id, album=album).first()
+        
+    album.save()
+    messages.success(request, "Albumet har uppdaterats!")
+    return redirect('album_detail', album_id=album.id)
+
+
+@login_required
+@herrklubb_member_required
+@require_POST
+def delete_photo_album_view(request, album_id):
+    """Delete an album and its photos."""
+    album = get_object_or_404(PhotoAlbum, id=album_id)
+    album_title = album.title
+    album.delete()
+    messages.success(request, f"Albumet '{album_title}' och dess foton har tagits bort.")
+    return redirect('photo_gallery')
+
+
+@login_required
+@herrklubb_member_required
+@require_POST
+def upload_photos_view(request, album_id):
+    """Upload one or more photos to an album with EXIF auto-rotation and thumbnailing."""
+    album = get_object_or_404(PhotoAlbum, id=album_id)
+    files = request.FILES.getlist('photos')
+    
+    if not files:
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({'success': False, 'error': 'Inga bilder valdes.'}, status=400)
+        messages.error(request, "Inga bilder valdes för uppladdning.")
+        return redirect('album_detail', album_id=album.id)
+        
+    caption = request.POST.get('caption', '').strip()
+    tagged_member_ids = request.POST.getlist('tagged_members')
+    
+    tagged_users = []
+    if tagged_member_ids:
+        tagged_users = list(User.objects.filter(id__in=tagged_member_ids))
+        
+    created_photos = []
+    for f in files:
+        photo = Photo(
+            album=album,
+            image=f,
+            caption=caption,
+            uploader=request.user
+        )
+        photo.save()
+        photo.generate_thumbnail_and_metadata()
+        photo.save()
+        
+        if tagged_users:
+            photo.tagged_members.set(tagged_users)
+            
+        created_photos.append(photo)
+        
+    count = len(created_photos)
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({
+            'success': True,
+            'message': f'{count} bild(er) har laddats upp!',
+            'uploaded_count': count
+        })
+        
+    messages.success(request, f"{count} bild(er) har laddats upp till {album.title}!")
+    return redirect('album_detail', album_id=album.id)
+
+
+@login_required
+@herrklubb_member_required
+@require_POST
+def delete_photo_view(request, photo_id):
+    """Delete a single photo (allowed by uploader or superuser/admin)."""
+    photo = get_object_or_404(Photo, id=photo_id)
+    album_id = photo.album_id
+    
+    if photo.uploader != request.user and not request.user.is_superuser:
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({'success': False, 'error': 'Du har inte behörighet att radera detta foto.'}, status=403)
+        messages.error(request, "Du kan endast radera dina egna uppladdade bilder.")
+        return redirect('album_detail', album_id=album_id)
+        
+    # Delete thumbnail and image files
+    if photo.thumbnail and os.path.isfile(photo.thumbnail.path):
+        try:
+            os.remove(photo.thumbnail.path)
+        except OSError:
+            pass
+    if photo.image and os.path.isfile(photo.image.path):
+        try:
+            os.remove(photo.image.path)
+        except OSError:
+            pass
+            
+    photo.delete()
+    
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({'success': True, 'message': 'Bilden har raderats.'})
+        
+    messages.success(request, "Bilden har tagits bort.")
+    return redirect('album_detail', album_id=album_id)
+
+
+@login_required
+@herrklubb_member_required
+@require_POST
+def tag_photo_members_view(request, photo_id):
+    """Tag or untag members who appear in the photo."""
+    photo = get_object_or_404(Photo, id=photo_id)
+    
+    try:
+        data = json.loads(request.body)
+        member_id = data.get('member_id')
+        action = data.get('action')  # 'toggle', 'add', 'remove'
+    except (json.JSONDecodeError, TypeError):
+        member_id = request.POST.get('member_id')
+        action = request.POST.get('action', 'toggle')
+        
+    if not member_id:
+        return JsonResponse({'success': False, 'error': 'Medlem saknas.'}, status=400)
+        
+    target_user = get_object_or_404(User, id=member_id)
+    
+    if action == 'add':
+        photo.tagged_members.add(target_user)
+        is_tagged = True
+    elif action == 'remove':
+        photo.tagged_members.remove(target_user)
+        is_tagged = False
+    else:  # toggle
+        if photo.tagged_members.filter(id=target_user.id).exists():
+            photo.tagged_members.remove(target_user)
+            is_tagged = False
+        else:
+            photo.tagged_members.add(target_user)
+            is_tagged = True
+            
+    tagged_list = [
+        {
+            'id': u.id,
+            'name': u.profile.get_nickname() if hasattr(u, 'profile') else (u.get_full_name() or u.username),
+            'avatar': u.profile.get_avatar_url() if hasattr(u, 'profile') else None
+        }
+        for u in photo.tagged_members.select_related('profile').all()
+    ]
+    
+    return JsonResponse({
+        'success': True,
+        'is_tagged': is_tagged,
+        'member_id': target_user.id,
+        'tagged_members': tagged_list
+    })
+
+
+@login_required
+@herrklubb_member_required
+@require_POST
+def toggle_photo_like_view(request, photo_id):
+    """Toggle a heart reaction on a photo."""
+    photo = get_object_or_404(Photo, id=photo_id)
+    like_obj = PhotoLike.objects.filter(photo=photo, user=request.user).first()
+    
+    if like_obj:
+        like_obj.delete()
+        liked = False
+    else:
+        PhotoLike.objects.create(photo=photo, user=request.user)
+        liked = True
+        
+    return JsonResponse({
+        'success': True,
+        'liked': liked,
+        'like_count': photo.likes.count()
+    })
+
+
+@login_required
+@herrklubb_member_required
+def download_photo_view(request, photo_id):
+    """Download single high-res original photo."""
+    photo = get_object_or_404(Photo, id=photo_id)
+    
+    if not photo.image or not os.path.exists(photo.image.path):
+        messages.error(request, "Bildfilen kunde inte hittas på servern.")
+        return redirect('album_detail', album_id=photo.album_id)
+        
+    album_slug = slugify(photo.album.title) or "album"
+    ext = os.path.splitext(photo.image.name)[1].lower() or ".jpg"
+    safe_filename = f"ToarpsHK_{album_slug}_{photo.id}{ext}"
+    
+    mime_type, _ = mimetypes.guess_type(photo.image.path)
+    if not mime_type:
+        mime_type = 'application/octet-stream'
+        
+    with open(photo.image.path, 'rb') as f:
+        file_data = f.read()
+        
+    response = HttpResponse(file_data, content_type=mime_type)
+    response['Content-Disposition'] = f'attachment; filename="{safe_filename}"'
+    return response
+
+
+@login_required
+@herrklubb_member_required
+def download_album_zip_view(request, album_id):
+    """Pack all original high-resolution photos in an album into a ZIP file and download."""
+    album = get_object_or_404(PhotoAlbum, id=album_id)
+    photos = album.photos.all()
+    
+    if not photos.exists():
+        messages.warning(request, "Albumet innehåller inga bilder att ladda ner.")
+        return redirect('album_detail', album_id=album.id)
+        
+    buffer = io.BytesIO()
+    with zipfile.ZipFile(buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
+        for idx, photo in enumerate(photos, start=1):
+            if photo.image and os.path.exists(photo.image.path):
+                ext = os.path.splitext(photo.image.name)[1].lower() or ".jpg"
+                date_prefix = photo.taken_at.strftime('%Y%m%d_') if photo.taken_at else ""
+                uploader_name = slugify(photo.uploader.profile.get_nickname() if hasattr(photo.uploader, 'profile') else photo.uploader.username) or "medlem"
+                arch_filename = f"{idx:03d}_{date_prefix}{uploader_name}{ext}"
+                zip_file.write(photo.image.path, arcname=arch_filename)
+                
+    buffer.seek(0)
+    album_slug = slugify(album.title) or f"album_{album.id}"
+    zip_filename = f"ToarpsHK_{album_slug}.zip"
+    
+    response = HttpResponse(buffer.getvalue(), content_type='application/zip')
+    response['Content-Disposition'] = f'attachment; filename="{zip_filename}"'
+    return response
+

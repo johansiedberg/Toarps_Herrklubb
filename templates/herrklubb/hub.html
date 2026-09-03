@@ -37,11 +37,11 @@ background-repeat: no-repeat;{% endblock %}
     <div class="row g-4 justify-content-center">
 
         <!-- Card 1: Herrklubbssidan -->
-        <div class="col-md-6 col-lg-5">
+        <div class="col-md-6 col-lg-4">
             <div class="card h-100 border-0 rounded-4 shadow text-white text-decoration-none overflow-hidden transition-all hover-lift"
                 style="background: linear-gradient(145deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.9) 100%); border: 1px solid rgba(148, 163, 184, 0.15) !important;">
 
-                <div class="card-body p-4 p-lg-5 d-flex flex-column justify-content-between">
+                <div class="card-body p-4 p-lg-4 d-flex flex-column justify-content-between">
                     <div>
                         <div class="mb-3 text-warning">
                             <i class="fa-solid fa-bucket fa-2x"></i>
@@ -62,12 +62,38 @@ background-repeat: no-repeat;{% endblock %}
             </div>
         </div>
 
-        <!-- Card 2: Mästerskapstips -->
-        <div class="col-md-6 col-lg-5">
+        <!-- Card 2: Fotoarkiv & Bildgalleri -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 border-0 rounded-4 shadow text-white text-decoration-none overflow-hidden transition-all hover-lift"
+                style="background: linear-gradient(145deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.9) 100%); border: 1px solid rgba(234, 179, 8, 0.3) !important;">
+
+                <div class="card-body p-4 p-lg-4 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="mb-3 text-warning">
+                            <i class="fa-solid fa-camera-retro fa-2x"></i>
+                        </div>
+
+                        <h2 class="h4 fw-bold text-white mb-2">Klubbens Fotoarkiv</h2>
+                        <p class="text-secondary small mb-4" style="line-height: 1.6; opacity: 0.85;">
+                            Dela och ladda ner minnen från klubbens resor och träffar. Hitta foton där du är med och exportera hela album som ZIP.
+                        </p>
+                    </div>
+
+                    <a href="{% url 'photo_gallery' %}"
+                        class="btn btn-outline-warning rounded-pill fw-semibold px-4 py-2 text-decoration-none align-self-start shadow-sm"
+                        style="font-size: 0.9rem;">
+                        Vidare <i class="fa-solid fa-arrow-right ms-1.5"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 3: Mästerskapstips -->
+        <div class="col-md-6 col-lg-4">
             <div class="card h-100 border-0 rounded-4 shadow text-white text-decoration-none overflow-hidden transition-all hover-lift"
                 style="background: linear-gradient(145deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.9) 100%); border: 1px solid rgba(148, 163, 184, 0.15) !important;">
 
-                <div class="card-body p-4 p-lg-5 d-flex flex-column justify-content-between">
+                <div class="card-body p-4 p-lg-4 d-flex flex-column justify-content-between">
                     <div>
                         <div class="mb-3 text-info">
                             <i class="fa-solid fa-trophy fa-2x"></i>

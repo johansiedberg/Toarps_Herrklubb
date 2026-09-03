@@ -1,0 +1,861 @@
+{% extends 'herrklubb/base.html' %}
+{% load static %}
+
+{% block backdrop_style %}background: linear-gradient(180deg, rgba(11, 15, 25, 0.88) 0%, rgba(11, 15, 25, 0.96) 100%), url('{% static "herrklubb/img/ToarpsHK_backdrop.svg" %}'); background-size: cover; background-position: center; background-repeat: no-repeat;{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+    <!-- Breadcrumb & Top Bar -->
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0 py-1 px-3 rounded-pill bg-dark bg-opacity-60 border border-secondary border-opacity-25 small">
+                <li class="breadcrumb-item"><a href="{% url 'hub' %}" class="text-secondary text-decoration-none d-inline-flex align-items-center"><i class="fa-solid fa-house me-1.5"></i>Start</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'photo_gallery' %}" class="text-secondary text-decoration-none">Fotoarkiv</a></li>
+                <li class="breadcrumb-item active text-warning fw-semibold" aria-current="page">{{ album.title }}</li>
+            </ol>
+        </nav>
+
+        <div class="d-flex align-items-center gap-2">
+            <a href="{% url 'photo_gallery' %}" class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1.5 text-light d-inline-flex align-items-center">
+                <i class="fa-solid fa-arrow-left me-1.5"></i>Tillbaka till arkivet
+            </a>
+        </div>
+    </div>
+
+    <!-- Album Hero Banner -->
+    <div class="p-4 p-md-4 rounded-4 shadow-lg mb-4 text-white position-relative overflow-hidden" 
+         style="background: linear-gradient(135deg, rgba(15, 23, 42, 0.96) 0%, rgba(30, 41, 59, 0.92) 100%); border: 1px solid rgba(234, 179, 8, 0.35);">
+        
+        <!-- Top Right Corner Action Icons (Upload, ZIP Download, Edit) -->
+        <div class="position-absolute top-0 end-0 p-3 d-flex align-items-center gap-2 z-2">
+            <button type="button" class="btn btn-outline-warning btn-circle-action rounded-circle p-0 d-flex align-items-center justify-content-center shadow-sm" style="width: 38px; height: 38px;" data-bs-toggle="modal" data-bs-target="#uploadPhotosModal" title="Ladda upp foton">
+                <i class="fa-solid fa-cloud-arrow-up fs-5"></i>
+            </button>
+
+            {% if total_in_album > 0 %}
+                <a href="{% url 'download_album_zip' album.id %}" class="btn btn-outline-warning btn-circle-action rounded-circle p-0 d-flex align-items-center justify-content-center shadow-sm" style="width: 38px; height: 38px;" title="Ladda ner hela albumet (ZIP)">
+                    <span class="folder-icon-composite position-relative d-inline-flex align-items-center justify-content-center" style="width: 20px; height: 20px;">
+                        <i class="fa-solid fa-folder fs-5"></i>
+                        <i class="fa-solid fa-arrow-down position-absolute fw-bold" style="font-size: 0.52rem; margin-top: 2px;"></i>
+                    </span>
+                </a>
+            {% endif %}
+
+            <button type="button" class="btn btn-outline-warning btn-circle-action rounded-circle p-0 d-flex align-items-center justify-content-center shadow-sm" style="width: 38px; height: 38px;" data-bs-toggle="modal" data-bs-target="#editAlbumModal" title="Redigera albumdetaljer">
+                <i class="fa-solid fa-pen-to-square fs-5"></i>
+            </button>
+        </div>
+
+        <div class="row g-3 align-items-center">
+            <div class="col-12 pe-lg-5">
+                <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                    <span class="badge badge-tonal-silver rounded-pill px-3 py-1.5 small fw-semibold shadow-sm d-inline-flex align-items-center gap-2" style="color: #94a3b8 !important; border-color: rgba(148, 163, 184, 0.25) !important;">
+                        <i class="fa-solid fa-camera opacity-60"></i>
+                        <span>{{ total_in_album }} foto{% if total_in_album != 1 %}n{% endif %}</span>
+                    </span>
+                </div>
+
+                <h1 class="display-6 fw-extrabold text-white mb-2">{{ album.title }}</h1>
+
+                {% if album.event %}
+                    <div class="mb-2.5">
+                        <span class="badge badge-tonal-blue rounded-pill px-3 py-1.5 small d-inline-flex align-items-center gap-2" style="font-size: 0.85rem;">
+                            <i class="fa-solid fa-link text-info"></i>
+                            <strong class="text-white">{{ album.event.title }}</strong>
+                        </span>
+                    </div>
+                {% endif %}
+
+                {% if album.description %}
+                    <p class="text-secondary small mb-0" style="font-size: 0.9rem; line-height: 1.6; max-width: 700px;">
+                        {{ album.description }}
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="card bg-dark text-white border-0 shadow-sm rounded-4 overflow-hidden mb-4"
+         style="background: linear-gradient(145deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%); border: 1px solid rgba(255, 255, 255, 0.1) !important;">
+        <div class="card-body p-3 d-flex flex-wrap align-items-center gap-2">
+            
+            <span class="text-secondary small fw-semibold me-1 d-inline-flex align-items-center gap-1.5">
+                <i class="fa-solid fa-filter text-info"></i>
+                <span>Filter:</span>
+            </span>
+            
+            <a href="{% url 'album_detail' album.id %}" class="btn btn-sm {% if not member_filter %}btn-info text-dark fw-bold shadow-sm{% else %}btn-outline-secondary text-light{% endif %} rounded-pill px-3 py-1" style="font-size: 0.8rem;">
+                Alla foton ({{ total_in_album }})
+            </a>
+
+            <a href="{% url 'album_detail' album.id %}?member=me" class="btn btn-sm {% if member_filter == 'me' %}btn-info text-dark fw-bold shadow-sm{% else %}btn-outline-secondary text-light{% endif %} rounded-pill px-3 py-1 d-inline-flex align-items-center gap-2" style="font-size: 0.8rem;">
+                <i class="fa-solid fa-user-tag"></i>
+                <span>Foton med mig</span>
+            </a>
+
+            <!-- Member Dropdown with real names -->
+            <select class="form-select form-select-sm bg-dark text-light {% if member_filter and member_filter != 'me' %}border-info text-info fw-semibold{% else %}border-secondary border-opacity-30{% endif %} rounded-pill" style="width: auto; min-width: 175px; font-size: 0.8rem;" onchange="if(this.value){ window.location.href='{% url 'album_detail' album.id %}?member=' + this.value; } else { window.location.href='{% url 'album_detail' album.id %}'; }">
+                <option value="" disabled {% if not member_filter or member_filter == 'me' %}selected{% endif %}>Välj medlem...</option>
+                <option value="">-- Rensa personfilter --</option>
+                {% for m in all_members %}
+                    <option value="{{ m.id }}" {% if member_filter == m.id|stringformat:"i" %}selected{% endif %}>
+                        {% if m.get_full_name %}{{ m.get_full_name }}{% else %}{{ m.profile.get_nickname }}{% endif %}
+                    </option>
+                {% endfor %}
+            </select>
+
+        </div>
+    </div>
+
+    <!-- Photos Grid -->
+    {% if photos %}
+        <div class="row g-3" id="photoGalleryGrid">
+            {% for photo in photos %}
+                <div class="col-6 col-md-4 col-lg-3 photo-item" data-photo-id="{{ photo.id }}" data-photo-index="{{ forloop.counter0 }}">
+                    <div class="card h-100 border-0 rounded-4 overflow-hidden shadow-sm position-relative photo-card"
+                         style="background: #0f172a; border: 1px solid rgba(148, 163, 184, 0.15) !important;">
+                        
+                        <!-- Thumbnail Image -->
+                        <div class="photo-img-container" style="height: 220px; cursor: pointer;" onclick="openLightboxModal({{ forloop.counter0 }})">
+                            <img src="{{ photo.display_url }}" alt="{{ photo.caption|default:photo.filename }}" class="w-100 h-100" style="object-fit: cover; transition: transform 0.3s ease;">
+                            
+                            <!-- Hover Overlay -->
+                            <div class="photo-overlay position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-between p-2.5">
+                                <div class="d-flex justify-content-between align-items-center">
+                                     <span class="badge bg-dark bg-opacity-80 text-light rounded-pill px-2 py-1 small d-inline-flex align-items-center" style="font-size: 0.7rem;">
+                                         <i class="fa-solid fa-user me-1.5"></i>{{ photo.uploader.profile.get_nickname }}
+                                     </span>
+                                     <button type="button" class="btn btn-sm btn-dark bg-opacity-80 rounded-circle p-1 text-danger border-0 like-btn" onclick="event.stopPropagation(); toggleLike({{ photo.id }}, this)" title="Gilla bild">
+                                         <i class="fa-{% if photo.is_liked %}solid{% else %}regular{% endif %} fa-heart"></i>
+                                         <span class="like-count small ms-1">{{ photo.like_count }}</span>
+                                     </button>
+                                 </div>
+
+                                 <div class="d-flex justify-content-between align-items-end">
+                                     {% if photo.tagged_members.exists %}
+                                         <div class="d-flex -space-x-1.5">
+                                             {% for tm in photo.tagged_members.all|slice:":3" %}
+                                                 <span class="badge bg-info bg-opacity-90 text-dark rounded-pill px-1.5 py-0.5" style="font-size: 0.65rem;" title="{{ tm.profile.get_nickname }}">
+                                                     {{ tm.profile.get_nickname }}
+                                                 </span>
+                                             {% endfor %}
+                                             {% if photo.tagged_members.count > 3 %}
+                                                 <span class="badge bg-secondary rounded-pill px-1 py-0.5" style="font-size: 0.65rem;">+{{ photo.tagged_members.count|add:"-3" }}</span>
+                                             {% endif %}
+                                         </div>
+                                     {% else %}
+                                         <span></span>
+                                     {% endif %}
+                                     <span class="badge bg-dark bg-opacity-75 text-secondary rounded-pill px-2 py-0.5" style="font-size: 0.68rem;">
+                                         <i class="fa-solid fa-expand"></i>
+                                     </span>
+                                 </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="p-5 text-center rounded-4 bg-dark bg-opacity-50 border border-secondary border-opacity-20 my-4">
+            <div class="text-secondary mb-3">
+                <i class="fa-solid fa-camera fa-4x opacity-40"></i>
+            </div>
+            <h3 class="h5 fw-bold text-white mb-2">Inga foton hittades</h3>
+            <p class="text-secondary small mb-4 mx-auto" style="max-width: 480px;">
+                {% if member_filter %}
+                    Det fanns inga bilder taggade med den valda medlemmen i detta album.
+                {% else %}
+                    Det finns inga bilder uppladdade till detta album ännu. Var först med att dela dina bilder från aktiviteten!
+                {% endif %}
+            </p>
+            <button type="button" class="btn btn-warning rounded-pill px-4 py-2 fw-bold text-dark shadow-sm d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#uploadPhotosModal">
+                <i class="fa-solid fa-cloud-arrow-up me-2"></i>
+                <span>Ladda upp foton nu</span>
+            </button>
+        </div>
+    {% endif %}
+
+</div>
+
+<!-- Upload Photos Modal (Mobile Multi-upload & Drag & Drop) -->
+<!-- Upload Photos Modal (Optimized for iPhone / Android & Desktop) -->
+<div class="modal fade" id="uploadPhotosModal" tabindex="-1" aria-labelledby="uploadPhotosModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content text-start" style="background: #111827; border: 1px solid rgba(255, 255, 255, 0.15); color: #F3F4F6; border-radius: 1.25rem; backdrop-filter: blur(16px);">
+            <div class="modal-header border-bottom border-secondary border-opacity-25 pb-3">
+                <h5 class="modal-title fw-bold text-white d-flex align-items-center" id="uploadPhotosModalLabel">
+                    <i class="fa-solid fa-cloud-arrow-up text-warning me-2"></i>
+                    <span>Ladda upp foton till {{ album.title }}</span>
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Stäng"></button>
+            </div>
+            <form id="uploadPhotosForm" action="{% url 'upload_photos' album.id %}" method="post" enctype="multipart/form-data" onsubmit="handleUploadSubmit(event)">
+                {% csrf_token %}
+                <div class="modal-body py-4">
+
+                    <!-- Mobile-Optimized Dropzone & Action Buttons -->
+                    <div id="dropzoneArea" class="p-4 border border-secondary border-dashed rounded-4 text-center bg-dark bg-opacity-50 mb-3 transition-all">
+                        <i class="fa-solid fa-images text-warning fs-1 mb-2"></i>
+                        <h6 class="fw-bold text-white mb-1">Välj foton från din mobil eller dator</h6>
+                        <p class="text-secondary small mb-3">Stöd för iPhone (HEIC, Live Photos), Android & alla standardformat (JPEG, PNG, WebP)</p>
+                        
+                        <!-- Hidden Inputs -->
+                        <input type="file" id="photosInput" name="photos" multiple accept="image/*,.heic,.heif,.webp" class="d-none" onchange="handleFilesSelected(this, false)">
+                        <input type="file" id="cameraInput" accept="image/*" capture="environment" class="d-none" onchange="handleFilesSelected(this, true)">
+
+                        <div class="d-flex flex-wrap align-items-center justify-content-center gap-2">
+                            <button type="button" class="btn btn-warning rounded-pill px-3.5 py-2 fw-bold text-dark d-inline-flex align-items-center shadow-sm" onclick="document.getElementById('photosInput').click()">
+                                <i class="fa-solid fa-photo-film me-2"></i>
+                                <span>Välj från bildbibliotek</span>
+                            </button>
+                            <button type="button" class="btn btn-outline-light rounded-pill px-3.5 py-2 fw-semibold d-inline-flex align-items-center shadow-sm" onclick="document.getElementById('cameraInput').click()">
+                                <i class="fa-solid fa-camera text-warning me-2"></i>
+                                <span>Ta foto med kameran</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Selected Files Preview Container -->
+                    <div id="selectedFilesContainer" class="p-3 rounded-4 bg-dark bg-opacity-70 border border-secondary border-opacity-30 mb-3 d-none">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <span id="selectedFilesCount" class="text-warning small fw-bold d-inline-flex align-items-center">
+                                <i class="fa-solid fa-circle-check text-success me-1.5"></i>0 foton valda
+                            </span>
+                            <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-2.5 py-0.5 text-light" style="font-size: 0.75rem;" onclick="document.getElementById('photosInput').click()">
+                                <i class="fa-solid fa-plus me-1"></i>Lägg till fler
+                            </button>
+                        </div>
+                        <div id="selectedFilesPreview" class="row g-2" style="max-height: 220px; overflow-y: auto;">
+                            <!-- Thumbnails injected via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Optional Caption -->
+                    <div class="mb-3">
+                        <label class="form-label text-secondary small fw-semibold">Gemensam bildtext / Kommentar (Valfritt)</label>
+                        <input type="text" name="caption" class="form-control bg-dark border-secondary border-opacity-30 text-light" placeholder="T.ex. Kvällens middag, Matchboll, Utsikt från toppen...">
+                    </div>
+
+                    <!-- Tag Members in Uploaded Photos -->
+                    <div class="mb-2">
+                        <label class="form-label text-secondary small fw-semibold d-flex align-items-center">
+                            <i class="fa-solid fa-user-tag text-info me-2"></i><span>Vilka är med på bilderna? (Taggning)</span>
+                        </label>
+                        <div class="d-flex flex-wrap gap-1.5 p-2.5 rounded-3 bg-dark bg-opacity-40 border border-secondary border-opacity-20">
+                            {% for m in all_members %}
+                                <label class="btn btn-sm btn-outline-secondary rounded-pill px-2.5 py-1 small member-tag-label" style="font-size: 0.78rem; cursor: pointer;">
+                                    <input type="checkbox" name="tagged_members" value="{{ m.id }}" class="btn-check" autocomplete="off">
+                                    {{ m.profile.get_nickname }}
+                                </label>
+                            {% endfor %}
+                        </div>
+                        <div class="form-text text-muted small mt-1">Underlättar för medlemmarna att hitta alla bilder där de själva syns.</div>
+                    </div>
+
+                    <!-- Live Progress Bar for Mobile Upload -->
+                    <div id="uploadProgressBarContainer" class="p-3 rounded-3 bg-dark bg-opacity-80 border border-warning border-opacity-30 mt-3 d-none">
+                        <div class="d-flex justify-content-between align-items-center mb-1.5">
+                            <span id="uploadStatusText" class="small text-white fw-semibold d-inline-flex align-items-center">
+                                <i class="fa-solid fa-spinner fa-spin text-warning me-2"></i><span>Laddar upp foton...</span>
+                            </span>
+                            <span id="uploadPercentText" class="small text-warning fw-bold font-monospace">0%</span>
+                        </div>
+                        <div class="progress" style="height: 10px; background-color: rgba(255,255,255,0.1); border-radius: 999px;">
+                            <div id="uploadProgressBar" class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar" style="width: 0%;"></div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer border-top border-secondary border-opacity-25 pt-3">
+                    <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill px-3" data-bs-dismiss="modal">Avbryt</button>
+                    <button type="submit" id="startUploadBtn" class="btn btn-warning btn-sm rounded-pill px-4 fw-bold text-dark d-inline-flex align-items-center">
+                        <i class="fa-solid fa-cloud-arrow-up me-2"></i><span>Starta Uppladdning</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Album Modal -->
+<div class="modal fade" id="editAlbumModal" tabindex="-1" aria-labelledby="editAlbumModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-start" style="background: #111827; border: 1px solid rgba(255, 255, 255, 0.15); color: #F3F4F6; border-radius: 1.25rem;">
+            <div class="modal-header border-bottom border-secondary border-opacity-25 pb-3">
+                <h5 class="modal-title fw-bold text-white d-flex align-items-center" id="editAlbumModalLabel">
+                    <i class="fa-solid fa-pen-to-square text-warning me-2"></i><span>Redigera Albumdetaljer</span>
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Stäng"></button>
+            </div>
+            <form id="editAlbumForm" action="{% url 'edit_photo_album' album.id %}" method="post">
+                {% csrf_token %}
+                <div class="modal-body py-4">
+                    <div class="mb-3">
+                        <label class="form-label text-secondary small fw-semibold">Albumnamn / Titel</label>
+                        <input type="text" name="title" value="{{ album.title }}" required class="form-control bg-dark border-secondary border-opacity-30 text-light">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-secondary small fw-semibold">Kopplat Event</label>
+                        <select name="event_id" class="form-select bg-dark border-secondary border-opacity-30 text-light">
+                            <option value="">-- Inget event --</option>
+                            {% for ev in events %}
+                                <option value="{{ ev.id }}" {% if album.event_id == ev.id %}selected{% endif %}>{{ ev.title }} ({{ ev.event_date|date:"Y-m-d"|default:"Inget datum" }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-secondary small fw-semibold">Beskrivning</label>
+                        <textarea name="description" rows="3" class="form-control bg-dark border-secondary border-opacity-30 text-light">{{ album.description }}</textarea>
+                    </div>
+                </div>
+            </form>
+            <div class="modal-footer border-top border-secondary border-opacity-25 pt-3 d-flex justify-content-between align-items-center">
+                <div>
+                    {% if album.created_by == request.user or request.user.is_superuser %}
+                        <form action="{% url 'delete_photo_album' album.id %}" method="post" class="d-inline" onsubmit="return confirm('Är du säker på att du vill ta bort albumet och alla dess foton?');">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-3 d-inline-flex align-items-center">
+                                <i class="fa-solid fa-trash-can me-2"></i><span>Radera Album</span>
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill px-3" data-bs-dismiss="modal">Avbryt</button>
+                    <button type="submit" form="editAlbumForm" class="btn btn-warning btn-sm rounded-pill px-4 fw-bold text-dark d-inline-flex align-items-center">
+                        <i class="fa-solid fa-check me-2"></i><span>Spara ändringar</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Lightbox Fullscreen Modal -->
+<div class="modal fade" id="lightboxModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-fullscreen p-0 m-0">
+        <div class="modal-content text-start border-0 rounded-0" style="background: rgba(5, 7, 13, 0.96); backdrop-filter: blur(20px); color: #F3F4F6;">
+            
+            <!-- Lightbox Top Navigation Bar -->
+            <div class="p-3 d-flex align-items-center justify-content-between border-bottom border-secondary border-opacity-20" style="background: rgba(15, 23, 42, 0.75);">
+                <div class="d-flex align-items-center gap-2">
+                    <span id="lightboxCounter" class="badge bg-dark border border-secondary border-opacity-30 rounded-pill px-3 py-1.5 text-warning font-monospace small">
+                        Foto 1 av {{ photos|length }}
+                    </span>
+                    <span id="lightboxCaptionHeader" class="text-light small fw-medium d-none d-md-inline ms-2 text-truncate" style="max-width: 300px;"></span>
+                </div>
+
+                <div class="d-flex align-items-center gap-2">
+                    <a id="lightboxDownloadBtn" href="#" class="btn btn-sm btn-outline-light rounded-pill px-3 py-1.5 small fw-semibold d-inline-flex align-items-center" title="Ladda ner i originalupplösning">
+                        <i class="fa-solid fa-download text-warning me-2"></i>
+                        <span class="d-none d-sm-inline">Ladda ner</span>
+                    </a>
+                    <button type="button" class="btn btn-sm btn-outline-secondary rounded-circle px-2.5 py-1 text-light" data-bs-dismiss="modal" title="Stäng">
+                        <i class="fa-solid fa-xmark fs-5"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Lightbox Main Image & Prev/Next Arrows -->
+            <div class="modal-body p-0 d-flex flex-column justify-content-between position-relative overflow-hidden" style="flex: 1;">
+                
+                <div class="position-relative d-flex align-items-center justify-content-center w-100 h-100" style="min-height: 60vh;">
+                    
+                    <!-- Prev Button -->
+                    <button type="button" class="btn btn-dark bg-opacity-60 text-white rounded-circle position-absolute start-0 ms-3 p-3 border border-secondary border-opacity-30 z-3 lightbox-nav-btn" onclick="prevLightboxPhoto()" title="Föregående bild (Vänsterpil)">
+                        <i class="fa-solid fa-chevron-left fs-4"></i>
+                    </button>
+
+                    <!-- Main Image Display -->
+                    <img id="lightboxImage" src="" alt="Förhandsgranskning" class="img-fluid rounded-3 shadow-2xl" style="max-height: calc(100vh - 220px); max-width: 95vw; object-fit: contain; transition: opacity 0.2s ease;">
+
+                    <!-- Next Button -->
+                    <button type="button" class="btn btn-dark bg-opacity-60 text-white rounded-circle position-absolute end-0 me-3 p-3 border border-secondary border-opacity-30 z-3 lightbox-nav-btn" onclick="nextLightboxPhoto()" title="Nästa bild (Högerpil)">
+                        <i class="fa-solid fa-chevron-right fs-4"></i>
+                    </button>
+                </div>
+
+                <!-- Lightbox Bottom Details Bar -->
+                <div class="p-3 border-top border-secondary border-opacity-20" style="background: rgba(15, 23, 42, 0.85);">
+                    <div class="container-fluid d-flex flex-wrap align-items-center justify-content-between gap-3">
+                        
+                        <!-- Uploader & Metadata -->
+                        <div class="d-flex align-items-center gap-2.5">
+                            <div id="lightboxUploaderAvatar"></div>
+                            <div>
+                                <span class="d-block small text-light fw-bold" id="lightboxUploaderName">Fotograf</span>
+                                <span class="d-block small text-secondary" style="font-size: 0.75rem;" id="lightboxDateTaken">Datum</span>
+                            </div>
+                        </div>
+
+                        <!-- Tagged Members & Interactive Tagging Dropdown -->
+                        <div class="d-flex flex-wrap align-items-center gap-2">
+                            <span class="text-secondary small fw-semibold d-none d-md-inline d-inline-flex align-items-center"><i class="fa-solid fa-user-tag text-info me-1.5"></i>Med på fotot:</span>
+                            <div id="lightboxTaggedMembersContainer" class="d-flex flex-wrap gap-1">
+                                <!-- Tags injected via JS -->
+                            </div>
+                            
+                            <!-- Add/Remove Tag Dropdown -->
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-outline-info rounded-pill px-2.5 py-0.5 small d-inline-flex align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 0.75rem;">
+                                    <i class="fa-solid fa-plus me-1.5"></i>Tagga
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow-lg" style="background-color: #111827; border-color: rgba(255,255,255,0.15); max-height: 250px; overflow-y: auto;">
+                                    <li><h6 class="dropdown-header text-warning small">Klicka för att tagga/avtagga:</h6></li>
+                                    {% for m in all_members %}
+                                        <li>
+                                            <a class="dropdown-item d-flex align-items-center justify-content-between small py-1.5" href="javascript:void(0)" onclick="toggleMemberTag({{ m.id }})">
+                                                <span>{{ m.profile.get_nickname }}</span>
+                                                <i id="tagCheckIcon_{{ m.id }}" class="fa-solid fa-check text-info d-none ms-2"></i>
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Reactions & Delete action -->
+                        <div class="d-flex align-items-center gap-2">
+                            <button type="button" id="lightboxLikeBtn" class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1 small fw-semibold d-inline-flex align-items-center" onclick="toggleLightboxLike()">
+                                <i class="fa-regular fa-heart me-1.5"></i><span id="lightboxLikeCount">0</span>
+                            </button>
+
+                            <button type="button" id="lightboxDeleteBtn" class="btn btn-sm btn-outline-secondary rounded-pill px-2.5 py-1 text-danger small d-none" onclick="deleteCurrentLightboxPhoto()" title="Radera detta foto">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Raw Photos JSON Dataset for Lightbox -->
+<script>
+    const ALBUM_PHOTOS = [
+        {% for p in photos %}
+        {
+            id: {{ p.id }},
+            displayUrl: "{{ p.display_url }}",
+            originalUrl: "{% url 'download_photo' p.id %}",
+            uploaderId: {{ p.uploader.id }},
+            uploaderName: "{{ p.uploader.profile.get_nickname|escapejs }}",
+            uploaderAvatar: "{{ p.uploader.profile.get_avatar_url|default:'' }}",
+            caption: "{{ p.caption|escapejs }}",
+            takenAt: "{% if p.taken_at %}{{ p.taken_at|date:'Y-m-d H:i' }}{% else %}{{ p.created_at|date:'Y-m-d H:i' }}{% endif %}",
+            likeCount: {{ p.like_count }},
+            isLiked: {% if p.is_liked %}true{% else %}false{% endif %},
+            canDelete: {% if p.uploader == request.user or request.user.is_superuser %}true{% else %}false{% endif %},
+            taggedMembers: [
+                {% for tm in p.tagged_members.all %}
+                {
+                    id: {{ tm.id }},
+                    name: "{{ tm.profile.get_nickname|escapejs }}"
+                }{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            ]
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ];
+    const CURRENT_USER_ID = {{ request.user.id }};
+    const CSRF_TOKEN = "{{ csrf_token }}";
+    let currentPhotoIndex = 0;
+
+    // Lightbox Controls
+    function openLightboxModal(index) {
+        if (index < 0 || index >= ALBUM_PHOTOS.length) return;
+        currentPhotoIndex = index;
+        updateLightboxView();
+        const modal = new bootstrap.Modal(document.getElementById('lightboxModal'));
+        modal.show();
+    }
+
+    function updateLightboxView() {
+        const photo = ALBUM_PHOTOS[currentPhotoIndex];
+        if (!photo) return;
+
+        document.getElementById('lightboxCounter').textContent = `Foto ${currentPhotoIndex + 1} av ${ALBUM_PHOTOS.length}`;
+        document.getElementById('lightboxImage').src = photo.displayUrl;
+        document.getElementById('lightboxDownloadBtn').href = photo.originalUrl;
+        document.getElementById('lightboxCaptionHeader').textContent = photo.caption || "";
+        document.getElementById('lightboxUploaderName').textContent = `Uppladdat av ${photo.uploaderName}`;
+        document.getElementById('lightboxDateTaken').textContent = photo.takenAt ? `Fotograferat: ${photo.takenAt}` : '';
+
+        // Avatar
+        const avatarContainer = document.getElementById('lightboxUploaderAvatar');
+        if (photo.uploaderAvatar) {
+            avatarContainer.innerHTML = `<img src="${photo.uploaderAvatar}" class="rounded-circle border border-secondary" style="width: 32px; height: 32px; object-fit: cover;">`;
+        } else {
+            avatarContainer.innerHTML = `<div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white border border-secondary" style="width: 32px; height: 32px; font-size: 0.8rem;">${photo.uploaderName.charAt(0).toUpperCase()}</div>`;
+        }
+
+        // Like Button
+        const likeBtn = document.getElementById('lightboxLikeBtn');
+        const heartIcon = likeBtn.querySelector('i');
+        const likeCountSpan = document.getElementById('lightboxLikeCount');
+        likeCountSpan.textContent = photo.likeCount;
+        if (photo.isLiked) {
+            heartIcon.className = "fa-solid fa-heart text-danger me-1";
+            likeBtn.classList.add('btn-danger', 'text-white');
+            likeBtn.classList.remove('btn-outline-danger');
+        } else {
+            heartIcon.className = "fa-regular fa-heart me-1";
+            likeBtn.classList.remove('btn-danger', 'text-white');
+            likeBtn.classList.add('btn-outline-danger');
+        }
+
+        // Delete Button
+        const deleteBtn = document.getElementById('lightboxDeleteBtn');
+        if (photo.canDelete) {
+            deleteBtn.classList.remove('d-none');
+        } else {
+            deleteBtn.classList.add('d-none');
+        }
+
+        // Render Tagged Members
+        renderTaggedMembers(photo);
+    }
+
+    function renderTaggedMembers(photo) {
+        const container = document.getElementById('lightboxTaggedMembersContainer');
+        container.innerHTML = "";
+        
+        const taggedSet = new Set(photo.taggedMembers.map(m => m.id));
+
+        // Update dropdown icons
+        document.querySelectorAll('[id^="tagCheckIcon_"]').forEach(el => {
+            const mId = parseInt(el.id.replace('tagCheckIcon_', ''));
+            if (taggedSet.has(mId)) {
+                el.classList.remove('d-none');
+            } else {
+                el.classList.add('d-none');
+            }
+        });
+
+        if (photo.taggedMembers.length === 0) {
+            container.innerHTML = `<span class="text-secondary small italic" style="font-size: 0.75rem;">Inga medlemmar taggade</span>`;
+            return;
+        }
+
+        photo.taggedMembers.forEach(m => {
+            const badge = document.createElement('span');
+            badge.className = "badge bg-info bg-opacity-20 text-info border border-info border-opacity-30 rounded-pill px-2 py-1 small d-flex align-items-center gap-1";
+            badge.style.fontSize = "0.75rem";
+            badge.innerHTML = `<i class="fa-solid fa-user-check"></i> ${m.name} <i class="fa-solid fa-xmark ms-1 opacity-75" style="cursor: pointer;" onclick="toggleMemberTag(${m.id})"></i>`;
+            container.appendChild(badge);
+        });
+    }
+
+    function prevLightboxPhoto() {
+        if (currentPhotoIndex > 0) {
+            currentPhotoIndex--;
+        } else {
+            currentPhotoIndex = ALBUM_PHOTOS.length - 1;
+        }
+        updateLightboxView();
+    }
+
+    function nextLightboxPhoto() {
+        if (currentPhotoIndex < ALBUM_PHOTOS.length - 1) {
+            currentPhotoIndex++;
+        } else {
+            currentPhotoIndex = 0;
+        }
+        updateLightboxView();
+    }
+
+    // Keyboard support (Left/Right arrow keys)
+    document.addEventListener('keydown', function(e) {
+        const modal = document.getElementById('lightboxModal');
+        if (modal.classList.contains('show')) {
+            if (e.key === 'ArrowLeft') prevLightboxPhoto();
+            if (e.key === 'ArrowRight') nextLightboxPhoto();
+        }
+    });
+
+    // Touch Swipe support for mobile
+    let touchStartX = 0;
+    let touchEndX = 0;
+    document.getElementById('lightboxModal').addEventListener('touchstart', e => {
+        touchStartX = e.changedTouches[0].screenX;
+    }, {passive: true});
+    document.getElementById('lightboxModal').addEventListener('touchend', e => {
+        touchEndX = e.changedTouches[0].screenX;
+        if (touchEndX < touchStartX - 50) nextLightboxPhoto();
+        if (touchEndX > touchStartX + 50) prevLightboxPhoto();
+    }, {passive: true});
+
+    // Toggle Member Tagging via AJAX
+    function toggleMemberTag(memberId) {
+        const photo = ALBUM_PHOTOS[currentPhotoIndex];
+        if (!photo) return;
+
+        fetch(`/herrklubb/foto/${photo.id}/tagga/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': CSRF_TOKEN,
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({ member_id: memberId, action: 'toggle' })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                photo.taggedMembers = data.tagged_members;
+                renderTaggedMembers(photo);
+            }
+        });
+    }
+
+    // Toggle Photo Like via AJAX
+    function toggleLightboxLike() {
+        const photo = ALBUM_PHOTOS[currentPhotoIndex];
+        if (!photo) return;
+        toggleLike(photo.id, null);
+    }
+
+    function toggleLike(photoId, btnElement) {
+        fetch(`/herrklubb/foto/${photoId}/gilla/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': CSRF_TOKEN,
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                // Update photo in dataset
+                const p = ALBUM_PHOTOS.find(x => x.id === photoId);
+                if (p) {
+                    p.isLiked = data.liked;
+                    p.likeCount = data.like_count;
+                }
+                // Update lightbox if open
+                if (document.getElementById('lightboxModal').classList.contains('show')) {
+                    updateLightboxView();
+                }
+                // Update card in grid
+                const card = document.querySelector(`[data-photo-id="${photoId}"]`);
+                if (card) {
+                    const icon = card.querySelector('.like-btn i');
+                    const countSpan = card.querySelector('.like-count');
+                    if (icon) icon.className = data.liked ? "fa-solid fa-heart" : "fa-regular fa-heart";
+                    if (countSpan) countSpan.textContent = data.like_count;
+                }
+            }
+        });
+    }
+
+    // Delete Photo from Lightbox
+    function deleteCurrentLightboxPhoto() {
+        const photo = ALBUM_PHOTOS[currentPhotoIndex];
+        if (!photo) return;
+        if (!confirm("Är du säker på att du vill ta bort detta foto?")) return;
+
+        fetch(`/herrklubb/foto/${photo.id}/radera/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': CSRF_TOKEN,
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload();
+            }
+        });
+    }
+
+    // Mobile-Optimized File Selection & Live AJAX Upload
+    let selectedUploadFiles = [];
+
+    function handleFilesSelected(input, isCamera) {
+        if (!input.files || input.files.length === 0) return;
+
+        Array.from(input.files).forEach(file => {
+            // Avoid duplicate file additions
+            const exists = selectedUploadFiles.some(f => f.name === file.name && f.size === file.size);
+            if (!exists) {
+                selectedUploadFiles.push(file);
+            }
+        });
+
+        // Reset input so same file can be re-selected if removed
+        input.value = '';
+        renderSelectedFiles();
+    }
+
+    function removeSelectedFile(index) {
+        selectedUploadFiles.splice(index, 1);
+        renderSelectedFiles();
+    }
+
+    function renderSelectedFiles() {
+        const container = document.getElementById('selectedFilesContainer');
+        const preview = document.getElementById('selectedFilesPreview');
+        const countLabel = document.getElementById('selectedFilesCount');
+
+        if (selectedUploadFiles.length === 0) {
+            container.classList.add('d-none');
+            preview.innerHTML = '';
+            return;
+        }
+
+        container.classList.remove('d-none');
+        countLabel.innerHTML = `<i class="fa-solid fa-circle-check text-success me-1.5"></i>${selectedUploadFiles.length} foto${selectedUploadFiles.length > 1 ? 'n' : ''} valda`;
+
+        preview.innerHTML = '';
+        selectedUploadFiles.forEach((file, idx) => {
+            const col = document.createElement('div');
+            col.className = 'col-4 col-sm-3 position-relative';
+
+            const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
+            const isHeic = file.name.toLowerCase().endsWith('.heic') || file.name.toLowerCase().endsWith('.heif');
+
+            col.innerHTML = `
+                <div class="position-relative rounded-3 overflow-hidden border border-secondary border-opacity-40" style="height: 75px; background: #1e293b;">
+                    <img src="${URL.createObjectURL(file)}" alt="${file.name}" class="w-100 h-100" style="object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('d-none');">
+                    <div class="w-100 h-100 d-none d-flex flex-column align-items-center justify-content-center text-secondary small p-1 text-center" style="font-size: 0.65rem;">
+                        <i class="fa-solid fa-file-image mb-1"></i>
+                        <span>${isHeic ? 'HEIC Foto' : 'Foto'}</span>
+                    </div>
+                    <button type="button" class="btn btn-danger btn-sm rounded-circle p-0 position-absolute top-0 end-0 m-1 d-flex align-items-center justify-content-center shadow" style="width: 22px; height: 22px; font-size: 0.7rem;" onclick="removeSelectedFile(${idx})" title="Ta bort">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                    <div class="position-absolute bottom-0 start-0 w-100 px-1 py-0.5 bg-dark bg-opacity-80 text-light text-truncate" style="font-size: 0.6rem;">
+                        ${sizeMb > 0 ? sizeMb + ' MB' : file.name}
+                    </div>
+                </div>
+            `;
+            preview.appendChild(col);
+        });
+    }
+
+    function handleUploadSubmit(event) {
+        event.preventDefault();
+
+        if (selectedUploadFiles.length === 0) {
+            alert('Vänligen välj minst ett foto från mobilen/datorn eller ta ett foto med kameran.');
+            return;
+        }
+
+        const form = document.getElementById('uploadPhotosForm');
+        const submitBtn = document.getElementById('startUploadBtn');
+        const progressContainer = document.getElementById('uploadProgressBarContainer');
+        const progressBar = document.getElementById('uploadProgressBar');
+        const statusText = document.getElementById('uploadStatusText');
+        const percentText = document.getElementById('uploadPercentText');
+
+        // Prepare FormData
+        const formData = new FormData(form);
+        // Remove standard file input entries and append our selectedUploadFiles array
+        formData.delete('photos');
+        selectedUploadFiles.forEach(file => {
+            formData.append('photos', file, file.name);
+        });
+
+        // Show Progress UI & Disable button
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i><span>Laddar upp...</span>';
+        progressContainer.classList.remove('d-none');
+        progressBar.style.width = '0%';
+        percentText.textContent = '0%';
+        statusText.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-warning me-2"></i><span>Laddar upp ${selectedUploadFiles.length} foton till albumet...</span>`;
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', form.action, true);
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+        xhr.upload.onprogress = function(e) {
+            if (e.lengthComputable) {
+                const percent = Math.round((e.loaded / e.total) * 100);
+                progressBar.style.width = percent + '%';
+                percentText.textContent = percent + '%';
+                if (percent === 100) {
+                    statusText.innerHTML = '<i class="fa-solid fa-cog fa-spin text-info me-2"></i><span>Bearbetar & skapar miniatyrer...</span>';
+                }
+            }
+        };
+
+        xhr.onload = function() {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                try {
+                    const data = JSON.parse(xhr.responseText);
+                    statusText.innerHTML = '<i class="fa-solid fa-circle-check text-success me-2"></i><span>Uppladdning klar! Uppdaterar sidan...</span>';
+                    progressBar.className = 'progress-bar bg-success';
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 600);
+                } catch(err) {
+                    window.location.reload();
+                }
+            } else {
+                alert('Ett fel uppstod vid uppladdning av bilderna. Försök igen.');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up me-2"></i><span>Starta Uppladdning</span>';
+                progressContainer.classList.add('d-none');
+            }
+        };
+
+        xhr.onerror = function() {
+            alert('Nätverksfel vid uppladdning. Kontrollera din uppkoppling och försök igen.');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up me-2"></i><span>Starta Uppladdning</span>';
+            progressContainer.classList.add('d-none');
+        };
+
+        xhr.send(formData);
+    }
+
+    // Member Tag Button Toggle state in upload modal
+    document.querySelectorAll('.member-tag-label input').forEach(input => {
+        input.addEventListener('change', function() {
+            const label = this.closest('label');
+            if (this.checked) {
+                label.classList.add('btn-info', 'text-dark', 'fw-bold');
+                label.classList.remove('btn-outline-secondary');
+            } else {
+                label.classList.remove('btn-info', 'text-dark', 'fw-bold');
+                label.classList.add('btn-outline-secondary');
+            }
+        });
+    });
+</script>
+
+<style>
+    .photo-card {
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .photo-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5) !important;
+    }
+    .photo-card:hover img {
+        transform: scale(1.05);
+    }
+    .photo-overlay {
+        background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.7) 100%);
+        opacity: 0.9;
+        transition: opacity 0.2s ease;
+    }
+    .lightbox-nav-btn {
+        transition: transform 0.2s ease, background-color 0.2s ease;
+    }
+    .lightbox-nav-btn:hover {
+        transform: scale(1.15);
+        background-color: rgba(234, 179, 8, 0.9) !important;
+        color: #000 !important;
+    }
+</style>
+{% endblock %}

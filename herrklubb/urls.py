@@ -7,7 +7,11 @@ from .views import (
     calendar_view, add_unavailability_view, delete_unavailability_view,
     save_herrklubb_event_view, delete_herrklubb_event_view, toggle_event_coordinator_view,
     toggle_event_participation_view, event_ics_export_view,
-    predictions_sso_login
+    predictions_sso_login,
+    photo_gallery_view, create_photo_album_view, album_detail_view,
+    edit_photo_album_view, delete_photo_album_view, upload_photos_view,
+    delete_photo_view, tag_photo_members_view, toggle_photo_like_view,
+    download_photo_view, download_album_zip_view
 )
 
 urlpatterns = [
@@ -30,7 +34,19 @@ urlpatterns = [
     path('herrklubb/event/coordinator/<int:event_id>/', toggle_event_coordinator_view, name='toggle_event_coordinator'),
     path('herrklubb/event/participant/<int:event_id>/<str:status>/', toggle_event_participation_view, name='toggle_event_participation'),
     path('herrklubb/event/<int:event_id>/ics/', event_ics_export_view, name='event_ics_export'),
+    path('herrklubb/foto/', photo_gallery_view, name='photo_gallery'),
+    path('herrklubb/foto/skapa/', create_photo_album_view, name='create_photo_album'),
+    path('herrklubb/foto/album/<int:album_id>/', album_detail_view, name='album_detail'),
+    path('herrklubb/foto/album/<int:album_id>/redigera/', edit_photo_album_view, name='edit_photo_album'),
+    path('herrklubb/foto/album/<int:album_id>/radera/', delete_photo_album_view, name='delete_photo_album'),
+    path('herrklubb/foto/album/<int:album_id>/ladda-upp/', upload_photos_view, name='upload_photos'),
+    path('herrklubb/foto/album/<int:album_id>/zip/', download_album_zip_view, name='download_album_zip'),
+    path('herrklubb/foto/<int:photo_id>/ladda-ner/', download_photo_view, name='download_photo'),
+    path('herrklubb/foto/<int:photo_id>/radera/', delete_photo_view, name='delete_photo'),
+    path('herrklubb/foto/<int:photo_id>/tagga/', tag_photo_members_view, name='tag_photo_members'),
+    path('herrklubb/foto/<int:photo_id>/gilla/', toggle_photo_like_view, name='toggle_photo_like'),
     path('predictions/login/', predictions_sso_login, name='predictions_sso_login'),
     path('profile/avatar/', upload_avatar_view, name='upload_avatar'),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
 ]
+
