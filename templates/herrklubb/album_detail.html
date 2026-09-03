@@ -203,19 +203,23 @@
                         <h6 class="fw-bold text-white mb-1">Välj foton från din mobil eller dator</h6>
                         <p class="text-secondary small mb-3">Stöd för iPhone (HEIC, Live Photos), Android & alla standardformat (JPEG, PNG, WebP)</p>
                         
-                        <!-- Hidden Inputs -->
-                        <input type="file" id="photosInput" name="photos" multiple accept="image/*,.heic,.heif,.webp" class="d-none" onchange="handleFilesSelected(this, false)">
-                        <input type="file" id="cameraInput" accept="image/*" capture="environment" class="d-none" onchange="handleFilesSelected(this, true)">
+                        <!-- Native Mobile File Inputs (Accessible hidden, NOT display:none so iOS WebKit doesn't block) -->
+                        <input type="file" id="photosInput" name="photos" multiple accept="image/*" 
+                               style="position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none;" 
+                               onchange="handleFilesSelected(this, false)">
+                        <input type="file" id="cameraInput" accept="image/*" capture="environment" 
+                               style="position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none;" 
+                               onchange="handleFilesSelected(this, true)">
 
                         <div class="d-flex flex-wrap align-items-center justify-content-center gap-2">
-                            <button type="button" class="btn btn-warning rounded-pill px-3.5 py-2 fw-bold text-dark d-inline-flex align-items-center shadow-sm" onclick="document.getElementById('photosInput').click()">
+                            <label for="photosInput" class="btn btn-warning rounded-pill px-3.5 py-2 fw-bold text-dark d-inline-flex align-items-center shadow-sm" style="cursor: pointer;">
                                 <i class="fa-solid fa-photo-film me-2"></i>
                                 <span>Välj från bildbibliotek</span>
-                            </button>
-                            <button type="button" class="btn btn-outline-light rounded-pill px-3.5 py-2 fw-semibold d-inline-flex align-items-center shadow-sm" onclick="document.getElementById('cameraInput').click()">
+                            </label>
+                            <label for="cameraInput" class="btn btn-outline-light rounded-pill px-3.5 py-2 fw-semibold d-inline-flex align-items-center shadow-sm" style="cursor: pointer;">
                                 <i class="fa-solid fa-camera text-warning me-2"></i>
                                 <span>Ta foto med kameran</span>
-                            </button>
+                            </label>
                         </div>
                     </div>
 
@@ -225,9 +229,9 @@
                             <span id="selectedFilesCount" class="text-warning small fw-bold d-inline-flex align-items-center">
                                 <i class="fa-solid fa-circle-check text-success me-1.5"></i>0 foton valda
                             </span>
-                            <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-2.5 py-0.5 text-light" style="font-size: 0.75rem;" onclick="document.getElementById('photosInput').click()">
+                            <label for="photosInput" class="btn btn-sm btn-outline-secondary rounded-pill px-2.5 py-0.5 text-light" style="font-size: 0.75rem; cursor: pointer;">
                                 <i class="fa-solid fa-plus me-1"></i>Lägg till fler
-                            </button>
+                            </label>
                         </div>
                         <div id="selectedFilesPreview" class="row g-2" style="max-height: 220px; overflow-y: auto;">
                             <!-- Thumbnails injected via JS -->
@@ -392,29 +396,43 @@
                             </div>
                         </div>
 
-                        <!-- Tagged Members & Interactive Tagging Dropdown -->
-                        <div class="d-flex flex-wrap align-items-center gap-2">
-                            <span class="text-secondary small fw-semibold d-none d-md-inline d-inline-flex align-items-center"><i class="fa-solid fa-user-tag text-info me-1.5"></i>Med på fotot:</span>
-                            <div id="lightboxTaggedMembersContainer" class="d-flex flex-wrap gap-1">
-                                <!-- Tags injected via JS -->
+                        <!-- Interactive Two-Row Member Tagging List (Row 1: 6, Row 2: 5 - left-aligned, tight around name) -->
+                        <div class="d-flex flex-column align-items-start gap-1.5 my-2 my-md-0" style="max-width: 640px;">
+                            <div class="d-flex align-items-center justify-content-between px-0.5">
+                                <span class="text-secondary small fw-semibold d-inline-flex align-items-center gap-1.5" style="font-size: 0.72rem;">
+                                    <i class="fa-solid fa-user-tag text-info"></i>
+                                    <span>Tagga medlemmar på fotot:</span>
+                                </span>
                             </div>
                             
-                            <!-- Add/Remove Tag Dropdown -->
-                            <div class="dropdown">
-                                <button class="btn btn-sm btn-outline-info rounded-pill px-2.5 py-0.5 small d-inline-flex align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 0.75rem;">
-                                    <i class="fa-solid fa-plus me-1.5"></i>Tagga
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow-lg" style="background-color: #111827; border-color: rgba(255,255,255,0.15); max-height: 250px; overflow-y: auto;">
-                                    <li><h6 class="dropdown-header text-warning small">Klicka för att tagga/avtagga:</h6></li>
-                                    {% for m in all_members %}
-                                        <li>
-                                            <a class="dropdown-item d-flex align-items-center justify-content-between small py-1.5" href="javascript:void(0)" onclick="toggleMemberTag({{ m.id }})">
-                                                <span>{{ m.profile.get_nickname }}</span>
-                                                <i id="tagCheckIcon_{{ m.id }}" class="fa-solid fa-check text-info d-none ms-2"></i>
-                                            </a>
-                                        </li>
-                                    {% endfor %}
-                                </ul>
+                            <!-- Row 1: exactly 6 members -->
+                            <div class="d-flex justify-content-start gap-1.5 w-100 flex-nowrap">
+                                {% for m in all_members|slice:":6" %}
+                                    <button type="button" 
+                                            class="btn btn-sm btn-outline-secondary rounded-pill px-2.5 py-0.5 small member-tag-chip" 
+                                            id="lightboxMemberTagBtn_{{ m.id }}"
+                                            data-member-id="{{ m.id }}"
+                                            onclick="toggleMemberTag({{ m.id }})"
+                                            style="font-size: 0.76rem; border-color: rgba(148, 163, 184, 0.3); color: #cbd5e1; transition: all 0.15s ease; white-space: nowrap;"
+                                            title="Klicka för att tagga/avtagga {{ m.profile.get_nickname }}">
+                                        {{ m.profile.get_nickname }}
+                                    </button>
+                                {% endfor %}
+                            </div>
+
+                            <!-- Row 2: exactly 5 members -->
+                            <div class="d-flex justify-content-start gap-1.5 w-100 flex-nowrap">
+                                {% for m in all_members|slice:"6:11" %}
+                                    <button type="button" 
+                                            class="btn btn-sm btn-outline-secondary rounded-pill px-2.5 py-0.5 small member-tag-chip" 
+                                            id="lightboxMemberTagBtn_{{ m.id }}"
+                                            data-member-id="{{ m.id }}"
+                                            onclick="toggleMemberTag({{ m.id }})"
+                                            style="font-size: 0.76rem; border-color: rgba(148, 163, 184, 0.3); color: #cbd5e1; transition: all 0.15s ease; white-space: nowrap;"
+                                            title="Klicka för att tagga/avtagga {{ m.profile.get_nickname }}">
+                                        {{ m.profile.get_nickname }}
+                                    </button>
+                                {% endfor %}
                             </div>
                         </div>
 
@@ -525,32 +543,21 @@
     }
 
     function renderTaggedMembers(photo) {
-        const container = document.getElementById('lightboxTaggedMembersContainer');
-        container.innerHTML = "";
-        
-        const taggedSet = new Set(photo.taggedMembers.map(m => m.id));
+        const taggedSet = new Set((photo.taggedMembers || []).map(m => m.id));
 
-        // Update dropdown icons
-        document.querySelectorAll('[id^="tagCheckIcon_"]').forEach(el => {
-            const mId = parseInt(el.id.replace('tagCheckIcon_', ''));
+        document.querySelectorAll('[id^="lightboxMemberTagBtn_"]').forEach(btn => {
+            const mId = parseInt(btn.getAttribute('data-member-id'));
             if (taggedSet.has(mId)) {
-                el.classList.remove('d-none');
+                btn.className = "btn btn-sm btn-info text-dark fw-bold rounded-pill px-2.5 py-0.5 small shadow-sm member-tag-chip";
+                btn.style.borderColor = "";
+                btn.style.color = "#0f172a";
+                btn.style.opacity = "1";
             } else {
-                el.classList.add('d-none');
+                btn.className = "btn btn-sm btn-outline-secondary rounded-pill px-2.5 py-0.5 small member-tag-chip";
+                btn.style.borderColor = "rgba(148, 163, 184, 0.3)";
+                btn.style.color = "#cbd5e1";
+                btn.style.opacity = "0.75";
             }
-        });
-
-        if (photo.taggedMembers.length === 0) {
-            container.innerHTML = `<span class="text-secondary small italic" style="font-size: 0.75rem;">Inga medlemmar taggade</span>`;
-            return;
-        }
-
-        photo.taggedMembers.forEach(m => {
-            const badge = document.createElement('span');
-            badge.className = "badge bg-info bg-opacity-20 text-info border border-info border-opacity-30 rounded-pill px-2 py-1 small d-flex align-items-center gap-1";
-            badge.style.fontSize = "0.75rem";
-            badge.innerHTML = `<i class="fa-solid fa-user-check"></i> ${m.name} <i class="fa-solid fa-xmark ms-1 opacity-75" style="cursor: pointer;" onclick="toggleMemberTag(${m.id})"></i>`;
-            container.appendChild(badge);
         });
     }
 
@@ -677,27 +684,38 @@
         });
     }
 
-    // Mobile-Optimized File Selection & Live AJAX Upload
+    // Mobile-Optimized File Selection & Resilient Upload Pipeline
     let selectedUploadFiles = [];
+
+    function syncSelectedFilesToFormInput() {
+        try {
+            const dt = new DataTransfer();
+            selectedUploadFiles.forEach(file => dt.items.add(file));
+            const input = document.getElementById('photosInput');
+            if (input) input.files = dt.files;
+        } catch(e) {
+            // DataTransfer fallback for older environments
+        }
+    }
 
     function handleFilesSelected(input, isCamera) {
         if (!input.files || input.files.length === 0) return;
 
-        Array.from(input.files).forEach(file => {
-            // Avoid duplicate file additions
+        for (let i = 0; i < input.files.length; i++) {
+            const file = input.files[i];
             const exists = selectedUploadFiles.some(f => f.name === file.name && f.size === file.size);
             if (!exists) {
                 selectedUploadFiles.push(file);
             }
-        });
+        }
 
-        // Reset input so same file can be re-selected if removed
-        input.value = '';
+        syncSelectedFilesToFormInput();
         renderSelectedFiles();
     }
 
     function removeSelectedFile(index) {
         selectedUploadFiles.splice(index, 1);
+        syncSelectedFilesToFormInput();
         renderSelectedFiles();
     }
 
@@ -722,13 +740,17 @@
 
             const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
             const isHeic = file.name.toLowerCase().endsWith('.heic') || file.name.toLowerCase().endsWith('.heif');
+            let previewSrc = '';
+            try {
+                previewSrc = URL.createObjectURL(file);
+            } catch(e) {}
 
             col.innerHTML = `
                 <div class="position-relative rounded-3 overflow-hidden border border-secondary border-opacity-40" style="height: 75px; background: #1e293b;">
-                    <img src="${URL.createObjectURL(file)}" alt="${file.name}" class="w-100 h-100" style="object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('d-none');">
-                    <div class="w-100 h-100 d-none d-flex flex-column align-items-center justify-content-center text-secondary small p-1 text-center" style="font-size: 0.65rem;">
-                        <i class="fa-solid fa-file-image mb-1"></i>
-                        <span>${isHeic ? 'HEIC Foto' : 'Foto'}</span>
+                    ${previewSrc ? `<img src="${previewSrc}" alt="${file.name}" class="w-100 h-100" style="object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('d-none');">` : ''}
+                    <div class="w-100 h-100 ${previewSrc ? 'd-none' : ''} d-flex flex-column align-items-center justify-content-center text-secondary small p-1 text-center" style="font-size: 0.65rem;">
+                        <i class="fa-solid fa-file-image mb-1 fs-5 text-warning"></i>
+                        <span class="text-truncate px-1">${isHeic ? 'HEIC' : 'Foto'}</span>
                     </div>
                     <button type="button" class="btn btn-danger btn-sm rounded-circle p-0 position-absolute top-0 end-0 m-1 d-flex align-items-center justify-content-center shadow" style="width: 22px; height: 22px; font-size: 0.7rem;" onclick="removeSelectedFile(${idx})" title="Ta bort">
                         <i class="fa-solid fa-xmark"></i>
@@ -743,23 +765,36 @@
     }
 
     function handleUploadSubmit(event) {
-        event.preventDefault();
+        const form = document.getElementById('uploadPhotosForm');
+        const photosInput = document.getElementById('photosInput');
+        const cameraInput = document.getElementById('cameraInput');
+
+        // Check if files were picked directly on inputs if selectedUploadFiles array is empty
+        if (selectedUploadFiles.length === 0) {
+            if (photosInput && photosInput.files && photosInput.files.length > 0) {
+                Array.from(photosInput.files).forEach(f => selectedUploadFiles.push(f));
+            } else if (cameraInput && cameraInput.files && cameraInput.files.length > 0) {
+                Array.from(cameraInput.files).forEach(f => selectedUploadFiles.push(f));
+            }
+        }
 
         if (selectedUploadFiles.length === 0) {
-            alert('Vänligen välj minst ett foto från mobilen/datorn eller ta ett foto med kameran.');
+            event.preventDefault();
+            alert('Vänligen välj minst ett foto från mobilen eller ta ett foto med kameran.');
             return;
         }
 
-        const form = document.getElementById('uploadPhotosForm');
+        event.preventDefault();
+
         const submitBtn = document.getElementById('startUploadBtn');
         const progressContainer = document.getElementById('uploadProgressBarContainer');
         const progressBar = document.getElementById('uploadProgressBar');
         const statusText = document.getElementById('uploadStatusText');
         const percentText = document.getElementById('uploadPercentText');
 
-        // Prepare FormData
+        // Sync files into form input and build FormData
+        syncSelectedFilesToFormInput();
         const formData = new FormData(form);
-        // Remove standard file input entries and append our selectedUploadFiles array
         formData.delete('photos');
         selectedUploadFiles.forEach(file => {
             formData.append('photos', file, file.name);
@@ -771,19 +806,20 @@
         progressContainer.classList.remove('d-none');
         progressBar.style.width = '0%';
         percentText.textContent = '0%';
-        statusText.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-warning me-2"></i><span>Laddar upp ${selectedUploadFiles.length} foton till albumet...</span>`;
+        statusText.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-warning me-2"></i><span>Laddar upp ${selectedUploadFiles.length} foto${selectedUploadFiles.length > 1 ? 'n' : ''}...</span>`;
 
         const xhr = new XMLHttpRequest();
         xhr.open('POST', form.action, true);
         xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        xhr.setRequestHeader('X-CSRFToken', CSRF_TOKEN);
 
         xhr.upload.onprogress = function(e) {
             if (e.lengthComputable) {
-                const percent = Math.round((e.loaded / e.total) * 100);
+                const percent = Math.min(99, Math.round((e.loaded / e.total) * 100));
                 progressBar.style.width = percent + '%';
                 percentText.textContent = percent + '%';
-                if (percent === 100) {
-                    statusText.innerHTML = '<i class="fa-solid fa-cog fa-spin text-info me-2"></i><span>Bearbetar & skapar miniatyrer...</span>';
+                if (percent >= 99) {
+                    statusText.innerHTML = '<i class="fa-solid fa-cog fa-spin text-info me-2"></i><span>Bearbetar foton & skapar miniatyrer...</span>';
                 }
             }
         };
@@ -792,16 +828,23 @@
             if (xhr.status >= 200 && xhr.status < 300) {
                 try {
                     const data = JSON.parse(xhr.responseText);
-                    statusText.innerHTML = '<i class="fa-solid fa-circle-check text-success me-2"></i><span>Uppladdning klar! Uppdaterar sidan...</span>';
+                    progressBar.style.width = '100%';
+                    percentText.textContent = '100%';
                     progressBar.className = 'progress-bar bg-success';
+                    statusText.innerHTML = '<i class="fa-solid fa-circle-check text-success me-2"></i><span>Uppladdning klar! Uppdaterar sidan...</span>';
                     setTimeout(() => {
                         window.location.reload();
-                    }, 600);
+                    }, 500);
                 } catch(err) {
                     window.location.reload();
                 }
             } else {
-                alert('Ett fel uppstod vid uppladdning av bilderna. Försök igen.');
+                let errMsg = 'Ett fel uppstod vid uppladdning.';
+                try {
+                    const d = JSON.parse(xhr.responseText);
+                    if (d.error) errMsg = d.error;
+                } catch(e) {}
+                alert(errMsg + ' (Status: ' + xhr.status + ')');
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up me-2"></i><span>Starta Uppladdning</span>';
                 progressContainer.classList.add('d-none');
@@ -809,10 +852,9 @@
         };
 
         xhr.onerror = function() {
-            alert('Nätverksfel vid uppladdning. Kontrollera din uppkoppling och försök igen.');
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up me-2"></i><span>Starta Uppladdning</span>';
-            progressContainer.classList.add('d-none');
+            // Mobile network or proxy fallback: submit standard form natively
+            statusText.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin text-warning me-2"></i><span>Slutför via standarduppladdning...</span>';
+            form.submit();
         };
 
         xhr.send(formData);

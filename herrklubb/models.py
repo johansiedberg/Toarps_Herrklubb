@@ -368,12 +368,15 @@ class Photo(models.Model):
                 try:
                     exif_data = img.getexif()
                     if exif_data:
-                        # 36867 is DateTimeOriginal, 306 is DateTime
                         date_str = exif_data.get(36867) or exif_data.get(306)
                         if date_str:
                             from datetime import datetime
-                            # Format usually "YYYY:MM:DD HH:MM:SS"
-                            self.taken_at = datetime.strptime(str(date_str), "%Y:%m:%d %H:%M:%S")
+                            from django.utils import timezone
+                            clean_str = str(date_str).strip()[:19]
+                            dt = datetime.strptime(clean_str, "%Y:%m:%d %H:%M:%S")
+                            if timezone.is_naive(dt):
+                                dt = timezone.make_aware(dt)
+                            self.taken_at = dt
                 except Exception:
                     pass
 
@@ -381,8 +384,8 @@ class Photo(models.Model):
             thumb_img = img.copy()
             thumb_img.thumbnail((800, 800), Image.Resampling.LANCZOS)
 
-            # Handle transparency/alpha conversion if saving to RGB/WebP
-            if thumb_img.mode in ("RGBA", "P"):
+            # Ensure RGB mode for clean WebP compression
+            if thumb_img.mode != "RGB":
                 thumb_img = thumb_img.convert("RGB")
 
             thumb_io = BytesIO()
